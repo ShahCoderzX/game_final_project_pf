@@ -7,14 +7,9 @@
 // Constant Created Library
 #include "constant.h"
 
-// Functions
-void clear(SDL_Window* window, SDL_Renderer* renderer, TTF_Font* font, TTF_Font* fontHeading, SDL_Texture* backgroundTexture);
-void renderText(SDL_Renderer* renderer, const char* text, int x, int y, TTF_Font* font, Uint8 r_color, Uint8 g_color, Uint8 b_color) ;
-bool checkButtonClick(int mouseX, int mouseY, SDL_Rect* button);
-void renderText_Heading(SDL_Renderer* renderer, const char* text, int x, int y, TTF_Font* font);
+#include "functions.h"
 
 int main(int argc, char* args[]){
-
     // SDL INIT CHECK
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
         printf("SDL_Init Error: %s\n", SDL_GetError());
@@ -50,7 +45,8 @@ int main(int argc, char* args[]){
 
     // Surface
     SDL_Texture* main_backgroundTexture = IMG_LoadTexture(renderer, "./image/mainbackground.png");
-    SDL_Texture* towerGame_mainPage_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_background.jpg");
+    SDL_Texture* towerGame_homePage_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_background.jpg");
+    SDL_Texture* towerGame_mainPage_backgroundTexture = IMG_LoadTexture(renderer, "./image/main_tower_background.jpg");
     SDL_Texture* mainBackground = main_backgroundTexture;
 
     if(!main_backgroundTexture || !towerGame_mainPage_backgroundTexture){
@@ -65,6 +61,8 @@ int main(int argc, char* args[]){
     TTF_Font* font = TTF_OpenFont("./font/font.otf", 28);
     TTF_Font* mainfont = TTF_OpenFont("./font/mainfont.ttf", 20);
     TTF_Font* fontHeading = TTF_OpenFont("./font/font.otf", 100);
+    TTF_Font* towerGame_font = TTF_OpenFont("./font/tower_font.ttf", 30);
+    TTF_Font* towerGame_fontHeading = TTF_OpenFont("./font/tower_font.ttf", 100);
 
     if(!font || !mainfont || !fontHeading){
         printf("Font Error: %s\n", TTF_GetError());
@@ -147,8 +145,8 @@ int main(int argc, char* args[]){
     // Snake Game
 
     // All For Tower Game
+    bool towerGame_start_bt = false;
     bool towerGame = false;
-    bool towerGame_val = false;
     bool towerGame_Started = false;
     bool towerGame_homemenu = false;
     bool towerGame_levelmenu = false;
@@ -210,8 +208,7 @@ int main(int argc, char* args[]){
                         if(checkButtonClick(mouseX, mouseY, &towerGame_play_Button)){
                             selectedGame_page = false;
                             towerGame = true;
-                            towerGame_homemenu = true;
-                            towerGame_val = true;
+                            towerGame_start_bt = true;
                         }else if(checkButtonClick(mouseX, mouseY, &selectedPage_back_Button)){
                             selectedGame_page_HomePage_menu = true;
                             selectedGame_page_largeGames_menu = false;
@@ -223,29 +220,20 @@ int main(int argc, char* args[]){
 
                 // If Tower Game is True
                 if(towerGame){
-                    
-                    mainBackground = towerGame_mainPage_backgroundTexture;
+                    if(towerGame_start_bt){
+                        mainBackground = towerGame_mainPage_backgroundTexture;
+                    }else{
+                        mainBackground = towerGame_homePage_backgroundTexture;
+                    }
                     if(towerGame_homemenu){
                         if(checkButtonClick(mouseX, mouseY, &continueButton)){
                             printf("Continue Game");
                         }else if(checkButtonClick(mouseX, mouseY, &levelButton)){
-                            if(towerGame_val){
-                                towerGame_levelmenu = false;
-                                towerGame_homemenu = true;
-                                towerGame_val = false;
-                            }else{
                                 towerGame_levelmenu = true;
                                 towerGame_homemenu = false;
-                            }
                         }else if(checkButtonClick(mouseX, mouseY, &optionButton)){
-                            if(towerGame_val == 1){
-                                towerGame_optionmenu = false;
-                                towerGame_homemenu = true;
-                                towerGame_val = false;
-                            }else{
                                 towerGame_optionmenu = true;
                                 towerGame_homemenu = false;
-                            }
                         }else if(checkButtonClick(mouseX, mouseY, &quitButton)){
                             towerGame = false;
                             selectedGame_page = true;
@@ -314,13 +302,29 @@ int main(int argc, char* args[]){
                             towerGame_optionmenu = true;
                         }
                     }
+
                 }
 
             }else if(event.type == SDL_KEYDOWN){
                 if(event.key.keysym.sym == SDLK_ESCAPE){
                     running = false;
                 }
+                if(towerGame){
+                    switch (event.key.keysym.sym)
+                    {
+                    case SDLK_RETURN:
+                        if(towerGame_start_bt){
+                            towerGame_start_bt = false;
+                            towerGame_homemenu = true;
+                            mainBackground = towerGame_homePage_backgroundTexture;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                }
             }
+            
         }
         else if(gameStarted){
             if (event.type == SDL_KEYDOWN) {
@@ -378,7 +382,13 @@ int main(int argc, char* args[]){
 
     // If Tower Game is True
     if(towerGame){
-        if(!towerGame_Started && towerGame_homemenu){
+        if(!towerGame_Started && towerGame_start_bt){
+            // Render button text
+            renderText(renderer, "DECK", (Windows_Width/2)-100, (Windows_Height/2)-200, towerGame_fontHeading,0 ,0, 0);
+            renderText(renderer, "OF", (Windows_Width/2)-40, (Windows_Height/2) - 100 , towerGame_fontHeading,0 ,0, 0);
+            renderText(renderer, "DOMINIONS", (Windows_Width/2)-240, (Windows_Height/2), towerGame_fontHeading,0 ,0, 0);
+            renderText(renderer, "Press \"Enter\" to start the Game", (Windows_Width/2)-250, (Windows_Height-100), towerGame_font,255 , 255, 255);
+        }else if(!towerGame_Started && towerGame_homemenu){
             SDL_SetRenderDrawColor(renderer,0, 0, 0, 1);
             // Render Button
             SDL_RenderFillRect(renderer, &continueButton);
@@ -436,7 +446,7 @@ int main(int argc, char* args[]){
             SDL_RenderFillRect(renderer, &option_menuHomeButton);
 
             // Render Button Text
-            renderText_Heading(renderer, "Music", (Windows_Width/2) - 100, 100, fontHeading);
+            renderText_Heading(renderer, "Music", (Windows_Width/2) - 100, 100, fontHeading, 0, 0, 0);
             renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
             renderText(renderer, "Music", option_musicButton.x + 70, option_musicButton.y + 26, font,225 ,225, 225);
             renderText(renderer, (music) ? "On" : "Off", option_music_on_off_Button.x + 80, option_music_on_off_Button.y + 26, font,225 ,225, 225);
@@ -448,7 +458,7 @@ int main(int argc, char* args[]){
             SDL_RenderFillRect(renderer, &option_menuHomeButton);
 
             // Render Button Text
-            renderText_Heading(renderer, "Sound", (Windows_Width/2) - 100, 100, fontHeading);
+            renderText_Heading(renderer, "Sound", (Windows_Width/2) - 100, 100, fontHeading, 0, 0, 0);
             renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
             renderText(renderer, "Sound", option_soundButton.x + 70, option_soundButton.y + 26, font,225 ,225, 225);
             renderText(renderer, (sound) ? "On" : "Off", option_sound_on_off_Button.x + 80, option_music_on_off_Button.y + 26, font,225 ,225, 225);
@@ -468,7 +478,7 @@ int main(int argc, char* args[]){
 
             // Render Button Text
             renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
-            renderText_Heading(renderer, "Controller", (Windows_Width/2) - 200, 100, fontHeading);
+            renderText_Heading(renderer, "Controller", (Windows_Width/2) - 200, 100, fontHeading, 0, 0, 0);
 
             renderText(renderer, "W", option_controllerButton_1.x + 30, option_controllerButton_1.y + 26, font,225 ,225, 225);
             renderText(renderer, "Forward", option_controllerButton_1.x + 220, option_controllerButton_1.y + 26, font,225 ,225, 225);
@@ -493,7 +503,7 @@ int main(int argc, char* args[]){
             SDL_RenderFillRect(renderer, &option_menuHomeButton);
             // Render Button Text
             renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
-            renderText_Heading(renderer, "Shop", (Windows_Width/2) - 90, 100, fontHeading);
+            renderText_Heading(renderer, "Shop", (Windows_Width/2) - 90, 100, fontHeading, 0, 0, 0);
             renderText(renderer, "Shop is Empty", (Windows_Width/2) - 80, 300, font, 225, 225, 225);
 
         }
@@ -512,41 +522,3 @@ int main(int argc, char* args[]){
 
 }
 
-// Functions
-void clear(SDL_Window* window, SDL_Renderer* renderer, TTF_Font* font, TTF_Font* fontHeading, SDL_Texture* backgroundTexture){
-    TTF_CloseFont(font);
-    TTF_CloseFont(fontHeading);
-    SDL_DestroyTexture(backgroundTexture);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    TTF_Quit();
-    SDL_Quit();
-
-}
-
-// Check for button click
-bool checkButtonClick(int mouseX, int mouseY, SDL_Rect* button) {
-    return mouseX >= button->x && mouseX <= button->x + button->w &&
-           mouseY >= button->y && mouseY <= button->y + button->h;
-}
-
-// RenderText
-void renderText(SDL_Renderer* renderer, const char* text, int x, int y, TTF_Font* font,Uint8 r_color,Uint8 g_color,Uint8 b_color) {
-    SDL_Color color = { r_color, g_color, b_color }; // White color
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect dstRect = { x, y, surface->w, surface->h };
-    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
-}
-
-void renderText_Heading(SDL_Renderer* renderer, const char* text, int x, int y, TTF_Font* font) {
-    SDL_Color color = { 0, 0, 0, 255}; // White color
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect dstRect = { x, y, surface->w, surface->h };
-    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
-}
