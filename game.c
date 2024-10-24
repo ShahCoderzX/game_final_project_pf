@@ -158,8 +158,8 @@ int main(int argc, char* args[]){
     bool gameStarted = false;
 
     // For Main Home/ First  Page
-    bool selectedGame_page = false;   //! Ture Karo
-    bool selectedGame_page_HomePage_menu = false; //! Ture Karo
+    bool selectedGame_page = true;   //! Ture Karo
+    bool selectedGame_page_HomePage_menu = true; //! Ture Karo
     bool selectedGame_page_smallGames_menu = false;
     bool selectedGame_page_largeGames_menu = false;
 
@@ -167,8 +167,8 @@ int main(int argc, char* args[]){
 
     // All For Tower Game
     bool towerGame_start_bt = false;
-    bool towerGame = true; //! False Karo
-    bool towerGame_Started = true; //! False Karo
+    bool towerGame = false; //! False Karo
+    bool towerGame_Started = false; //! False Karo
     bool towerGame_homemenu = false;
     bool towerGame_levelmenu = false;
     bool towerGame_optionmenu = false;
@@ -177,7 +177,7 @@ int main(int argc, char* args[]){
     bool towerGame_option_soundMenu = false;
     bool towerGame_option_controllerMenu = false;
     // Tower Game Levels
-    bool towerGame_Started_level1 = true; //! False Karo
+    bool towerGame_Started_level1 = false; //! False Karo
     bool towerGame_Started_level2 = false;
     bool towerGame_Started_level3 = false;
     bool towerGame_Started_level4 = false;
@@ -424,93 +424,97 @@ int main(int argc, char* args[]){
         }
     }
     
-    
-    if (archer.active) {
-        archer.y += archer.vy; 
-        archer.vy += 0.5; 
-        
+    if(towerGame_Started){
+        if(towerGame_Started_level1){
 
-        if (archer.y >= archerY) {
-            archer.y = archerY; 
-            archer.vy = 0; 
-            archer.active = false; 
-        }
-    }
-    tower_attack_timer += deltaTime;  // Update the timer
-    
-        if (tower_attack_timer >= tower_attack_delay) {
-            if(!tower_bomb.active){
-                tower_bomb.vx += 20;
-                tower_bomb.vy += -18;
-                tower_bomb.active = true;
-            }
-        }
-        // tower_bomb.active = true;
-    if(tower_bomb.active){
-        tower_bomb.x += tower_bomb.vx;
-        tower_bomb.y += tower_bomb.vy;
-        tower_bomb.vy += 0.5;
-        if(tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &archer)){
-            if(checkCollisionArcher(&tower_bomb, &archer)){
-                if(archer_health >0){
-                    archer_health_box.w -= 10;  
-                    archer_health = archer_health_box.w/4;
+            if (archer.active) {
+                archer.y += archer.vy; 
+                archer.vy += 0.5; 
+                
+
+                if (archer.y >= archerY) {
+                    archer.y = archerY; 
+                    archer.vy = 0; 
+                    archer.active = false; 
                 }
             }
-            tower_bomb.vx = 0;
-            tower_bomb.vy = 0;
-            tower_bomb.x = tower_attacker.x;
-            tower_bomb.y = tower_attacker.y;
-            tower_attack_timer = 0.0f;
-            tower_bomb.active = false;
-        }
-    }
-
-    if(archer_arrow.active){
-        archer_arrow.x += archer_arrow.vx;
-        archer_arrow.y += archer_arrow.vy;
-        archer_arrow.vy += 0.5;      
-      
-      // Adjust the angle of the arrow based on its vertical velocity (vy)
-        if (archer_arrow.vy < -25) {
-            archer_arrow.angle = 35;    // Very steep upwards
-        } else if (archer_arrow.vy < -20) {
-            archer_arrow.angle = 30;    // Steep upwards
-        } else if (archer_arrow.vy < -15) {
-            archer_arrow.angle = 25;    // Upwards
-        } else if (archer_arrow.vy < -10) {
-            archer_arrow.angle = 20;    // Slightly upwards
-        } else if (archer_arrow.vy < -5) {
-            archer_arrow.angle = 15;    // Almost horizontal upwards
-        } else if (archer_arrow.vy < 0) {
-            archer_arrow.angle = 0;     // Horizontal
-        } else if (archer_arrow.vy < 5) {
-            archer_arrow.angle = -5;    // Slightly downwards
-        } else if (archer_arrow.vy < 10) {
-            archer_arrow.angle = -15;   // More downwards
-        } else if (archer_arrow.vy < 15) {
-            archer_arrow.angle = -25;   // Further downwards
-        } else if (archer_arrow.vy < 20) {
-            archer_arrow.angle = -35;   // Almost vertical downwards
-        } else {
-            archer_arrow.angle = -45;   // Steep downwards
-        }
-
-
-
-        if(archer_arrow.x > Windows_Width || archer_arrow.y > Windows_Height || checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y)){
-            if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y)){
-                if(tower_attacker_health>0){
-                    tower_health_box.w -= 10;
-                    tower_attacker_health = tower_health_box.w/4;
+            tower_attack_timer += deltaTime;  // Update the timer
+            
+                if (tower_attack_timer >= tower_attack_delay) {
+                    if(!tower_bomb.active){
+                        tower_bomb.vx += 20;
+                        tower_bomb.vy += -18;
+                        tower_bomb.active = true;
+                    }
+                }
+                // tower_bomb.active = true;
+            if(tower_bomb.active){
+                tower_bomb.x += tower_bomb.vx;
+                tower_bomb.y += tower_bomb.vy;
+                tower_bomb.vy += 0.5;
+                if(tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &archer)){
+                    if(checkCollisionArcher(&tower_bomb, &archer)){
+                        if(archer_health >0){
+                            archer_health_box.w -= 10;  
+                            archer_health = archer_health_box.w/4;
+                        }
+                    }
+                    tower_bomb.vx = 0;
+                    tower_bomb.vy = 0;
+                    tower_bomb.x = tower_attacker.x;
+                    tower_bomb.y = tower_attacker.y;
+                    tower_attack_timer = 0.0f;
+                    tower_bomb.active = false;
                 }
             }
-            archer_arrow.vx = 0;
-            archer_arrow.vy = 0;
-            archer_arrow.x = archer.x;
-            archer_arrow.y = archer.y;
-            archer_arrow.active = false;  
-            archer_arrow.angle = 0;  
+
+            if(archer_arrow.active){
+                archer_arrow.x += archer_arrow.vx;
+                archer_arrow.y += archer_arrow.vy;
+                archer_arrow.vy += 0.5;      
+            
+            // Adjust the angle of the arrow based on its vertical velocity (vy)
+                if (archer_arrow.vy < -25) {
+                    archer_arrow.angle = 35;    // Very steep upwards
+                } else if (archer_arrow.vy < -20) {
+                    archer_arrow.angle = 30;    // Steep upwards
+                } else if (archer_arrow.vy < -15) {
+                    archer_arrow.angle = 25;    // Upwards
+                } else if (archer_arrow.vy < -10) {
+                    archer_arrow.angle = 20;    // Slightly upwards
+                } else if (archer_arrow.vy < -5) {
+                    archer_arrow.angle = 15;    // Almost horizontal upwards
+                } else if (archer_arrow.vy < 0) {
+                    archer_arrow.angle = 0;     // Horizontal
+                } else if (archer_arrow.vy < 5) {
+                    archer_arrow.angle = -5;    // Slightly downwards
+                } else if (archer_arrow.vy < 10) {
+                    archer_arrow.angle = -15;   // More downwards
+                } else if (archer_arrow.vy < 15) {
+                    archer_arrow.angle = -25;   // Further downwards
+                } else if (archer_arrow.vy < 20) {
+                    archer_arrow.angle = -35;   // Almost vertical downwards
+                } else {
+                    archer_arrow.angle = -45;   // Steep downwards
+                }
+
+
+
+                if(archer_arrow.x > Windows_Width || archer_arrow.y > Windows_Height || checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y)){
+                    if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y)){
+                        if(tower_attacker_health>0){
+                            tower_health_box.w -= 10;
+                            tower_attacker_health = tower_health_box.w/4;
+                        }
+                    }
+                    archer_arrow.vx = 0;
+                    archer_arrow.vy = 0;
+                    archer_arrow.x = archer.x;
+                    archer_arrow.y = archer.y;
+                    archer_arrow.active = false;  
+                    archer_arrow.angle = 0;  
+                }
+            }
         }
     }
 
