@@ -5,6 +5,20 @@
 #include "main.h"
 #include "sdl.h"
 
+typedef struct 
+{
+    float x,y;
+    float vx,vy;
+    bool active;
+}Pointer;
+typedef struct 
+{
+    float x,y;
+    float vx,vy;
+    bool active;
+    float angle;
+}Arrow;
+
 //! All Functions --------------------->
 // Clear Function
 void clear(SDL_Window* window, SDL_Renderer* renderer, TTF_Font* font, TTF_Font* fontHeading, SDL_Texture* backgroundTexture);
@@ -20,6 +34,13 @@ void renderText_Heading(SDL_Renderer* renderer, const char* text, int x, int y, 
 
 
 //! ---------------------x---------------------x
+
+// ! Tower Game Function
+//  Check if arrow hits the tower
+bool checkCollisionTower(Arrow *arrow, int towerX, int towerY);
+// Check if tower bomb hits the archer
+bool checkCollisionArcher(Pointer *towerbomb, Pointer *archer);
+
 
 //! Tower Game Function declaration --------------------->
 
