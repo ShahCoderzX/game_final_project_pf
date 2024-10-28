@@ -48,6 +48,10 @@ int main(int argc, char* args[]){
         }
     }
 
+    // Calculate scaling factors based on the original resolution
+    float ScaleX = (float)Windows_Width / 1920;
+    float ScaleY = (float)Windows_Height / 1080;
+
     // Create SDL Window
     SDL_Window *window = SDL_CreateWindow(
         "Impact Gamer", 
@@ -161,20 +165,27 @@ int main(int argc, char* args[]){
     SDL_Rect option_controllerButton_6 = {option_controllerButton_5.x, option_controllerButton_5.y + 90, 200, 80};
     SDL_Rect option_controllerButton_7 = {option_controllerButton_6.x, option_controllerButton_6.y + 90, 200, 80};
     SDL_Rect option_controllerButton_8 = {option_controllerButton_7.x, option_controllerButton_7.y + 90, 200, 80};
+    // !
+    int towerHeight = (Windows_Height * 300) / 1080;
     // Tower Characters
-    SDL_Rect tower_attacker = {100, Windows_Height - (tower_attacker.h + 300), 100, 300};
-    // SDL_Rect archer_character = {Windows_Width-(archer_character.w + 100), Windows_Height - (archer_character.h + 300), 200, 160};
-    int archerX = Windows_Width-(200 + 100);
-    int archerY = Windows_Height - (160 + 300);
-    Pointer archer = {(float)archerX, (float)archerY, 0, 0, false};
+    SDL_Rect tower_attacker = {(Windows_Width*100)/1920, Windows_Height - (towerHeight+(int)(Windows_Height * 0.28)), (Windows_Width*100)/1920, towerHeight};
     Pointer tower_bomb = {(float)tower_attacker.x, (float)tower_attacker.y, 0, 0, false};
+    
+    // SDL_Rect archer_character = {Windows_Width-(archer_character.w + 100), Windows_Height - (archer_character.h + 300), 200, 160};
+    int archerWidth = (Windows_Width * 300) / 1920;
+    int archerHeight = (Windows_Height * 200) / 1080;
+    int archerX = Windows_Width - (int)((200 * ScaleX) + (100 * ScaleY));
+    int archerY = Windows_Height - (int)((160 * ScaleY) + (300 * ScaleY));
+    Pointer archer = {(float)archerX, (float)archerY, 0, 0, false};
     Arrow archer_arrow = {(float)archer.x, (float)archer.y, 0, 0, false, (float)0};
+
+
     // Health Bar
-    SDL_Rect tower_health_box= {100, 100, 400, 60};
+    SDL_Rect tower_health_box= {(Windows_Width*100)/1920, (Windows_Height * 100) / 1080, 400, 60};
     SDL_Rect tower_health_box_outline= {tower_health_box.x,tower_health_box.y,tower_health_box.w,tower_health_box.h};
     SDL_Rect tower_health_box_innerfill= {tower_health_box.x,tower_health_box.y,tower_health_box.w,tower_health_box.h};
-
-    SDL_Rect archer_health_box = {Windows_Width-archer_health_box.w - 100, 100, 400, 60};
+    
+    SDL_Rect archer_health_box = {Windows_Width-archer_health_box.w - (Windows_Width*100)/1920, (Windows_Height * 100) / 1080, 400, 60};
     SDL_Rect archer_health_box_outline = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
     SDL_Rect archer_health_box_innerfill = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
 
@@ -409,24 +420,24 @@ int main(int argc, char* args[]){
                         {
                         case SDLK_LEFT:
                             if(archer.x > (Windows_Width - 200)/2){
-                                archer.x -= 8;
+                                archer.x -= 8*ScaleX;
                             }
                             break;
                         case SDLK_RIGHT:
                             if(archer.x < Windows_Width - (200)){
-                                archer.x += 8;
+                                archer.x += 8*ScaleX;
                             }
                             break;
                         case SDLK_UP: 
                             if (archer.y >= archerY) {  
-                                archer.vy = -10; 
+                                archer.vy = -10*ScaleY; 
                                 archer.active = true; 
                             }
                             break;
                         case SDLK_f: 
                             if(!archer_arrow.active){
-                                archer_arrow.vx = -18;
-                                archer_arrow.vy = -22;
+                                archer_arrow.vx = -18*ScaleX;
+                                archer_arrow.vy = -22*ScaleY;
                                 archer_arrow.active = true;
                                 archer_arrow.angle = 0;
                             }
@@ -457,7 +468,7 @@ int main(int argc, char* args[]){
 
             if (archer.active) {
                 archer.y += archer.vy; 
-                archer.vy += 0.5; 
+                archer.vy += 0.5*ScaleY; 
                 
 
                 if (archer.y >= archerY) {
@@ -470,8 +481,8 @@ int main(int argc, char* args[]){
             
             if (tower_attack_timer >= tower_attack_delay) {
                 if(!tower_bomb.active){
-                    tower_bomb.vx += 20;
-                    tower_bomb.vy += -18;
+                    tower_bomb.vx += 20 * ScaleX;
+                    tower_bomb.vy += -18 * ScaleY;
                     tower_bomb.active = true;
                 }
             }
@@ -479,7 +490,7 @@ int main(int argc, char* args[]){
             if(tower_bomb.active){
                 tower_bomb.x += tower_bomb.vx;
                 tower_bomb.y += tower_bomb.vy;
-                tower_bomb.vy += 0.5;
+                tower_bomb.vy += 0.5 * ScaleY;
                 if(tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &archer)){
                     if(checkCollisionArcher(&tower_bomb, &archer)){
                         if(archer_health >0){
@@ -732,7 +743,7 @@ int main(int argc, char* args[]){
                 SDL_RenderFillRect(renderer, &tower_attacker);
 
 
-                SDL_Rect archer_rect = {(int)archer.x, (int)archer.y, 300, 200};
+                SDL_Rect archer_rect = {(int)archer.x, (int)archer.y, archerWidth, archerHeight};
                 SDL_RenderCopy(renderer,archer_texture, NULL, &archer_rect);
                 // SDL_SetRenderDrawColor(renderer, 0, 0, 255, 1);
                 // SDL_RenderFillRect(renderer, &archer_rect);
