@@ -7,11 +7,13 @@
 // Constant Created Library
 #include "constant.h"
 
+// Own Functions Created Library
 #include "functions.h"
 
-
-
 int main(int argc, char* args[]){
+
+    int Windows_Width, Windows_Height;
+
     // SDL INIT CHECK
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
         printf("SDL_Init Error: %s\n", SDL_GetError());
@@ -25,9 +27,30 @@ int main(int argc, char* args[]){
         return 1;
     }
 
+    // Give The Values of Windows Resoltuion
+    SDL_Rect screenDisplay;
+    if(SDL_GetDisplayBounds(0, &screenDisplay) == 0){
+        if(screenDisplay.w >= 1920 && screenDisplay.h >= 1080){
+            Windows_Width = 1920;
+            Windows_Height = 1080;
+        }else if(screenDisplay.w >= 1280 && screenDisplay.h >= 720){
+            Windows_Width = 1280;
+            Windows_Height = 720;
+        }else if(screenDisplay.w >= 1024 && screenDisplay.h <= 768){
+            Windows_Width = 1024;
+            Windows_Height = 768;
+        }else if(screenDisplay.w >= 800 && screenDisplay.h <= 600){
+            Windows_Width = 800;
+            Windows_Height = 600;
+        }else{
+            Windows_Width = screenDisplay.w;
+            Windows_Height = screenDisplay.h;
+        }
+    }
+
     // Create SDL Window
     SDL_Window *window = SDL_CreateWindow(
-        "Game", 
+        "Impact Gamer", 
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
         Windows_Width, Windows_Height, SDL_WINDOW_SHOWN
     );
@@ -40,20 +63,24 @@ int main(int argc, char* args[]){
 
     // Create Renderer
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+
+    // Check Renderer
     if(!renderer){
         printf("Renderer Error: %s", SDL_GetError());
         return 1;
     }
 
-    // Surface
+    // Surface Texture
     SDL_Texture* main_backgroundTexture = IMG_LoadTexture(renderer, "./image/mainbackground.png");
     SDL_Texture* towerGame_homePage_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_background.jpg");
     SDL_Texture* towerGame_mainPage_backgroundTexture = IMG_LoadTexture(renderer, "./image/main_tower_background.jpg");
     SDL_Texture* towerGame_level1_background = IMG_LoadTexture(renderer, "./image/towerGame_level1_background.jpg");
     SDL_Texture* arrow = IMG_LoadTexture(renderer, "./image/arrow.png");
     SDL_Texture* archer_texture = IMG_LoadTexture(renderer, "./image/archer.png");
+    // Main Background Texture
     SDL_Texture* mainBackground = main_backgroundTexture;
 
+    // Check For all Background Texture
     if(!main_backgroundTexture || !towerGame_mainPage_backgroundTexture || !towerGame_homePage_backgroundTexture || !towerGame_level1_background){
         printf("Texture Error: %s", SDL_GetError());
         SDL_DestroyRenderer(renderer);
@@ -69,7 +96,8 @@ int main(int argc, char* args[]){
     TTF_Font* towerGame_font = TTF_OpenFont("./font/tower_font.ttf", 30);
     TTF_Font* towerGame_fontHeading = TTF_OpenFont("./font/tower_font.ttf", 100);
 
-    if(!font || !mainfont || !fontHeading){
+    // Check All The Fonts
+    if(!font || !mainfont || !fontHeading || !towerGame_font || !towerGame_fontHeading){
         printf("Font Error: %s\n", TTF_GetError());
         SDL_DestroyTexture(main_backgroundTexture);
         SDL_DestroyTexture(towerGame_mainPage_backgroundTexture);
@@ -99,7 +127,6 @@ int main(int argc, char* args[]){
     SDL_Rect optionButton = {continueButton.x, levelButton.y + 90, 200, 80};
     SDL_Rect quitButton = {continueButton.x, optionButton.y + 90, 200, 80};
     
-
     // Level Menu Button
     SDL_Rect menuHomeButton = {20, 20, 100, 80};
     SDL_Rect level1Button = {(Windows_Width/2)-200, (Windows_Height/2)- 300, 100, 80};
@@ -158,8 +185,8 @@ int main(int argc, char* args[]){
     bool gameStarted = false;
 
     // For Main Home/ First  Page
-    bool selectedGame_page = true;   //! Ture Karo
-    bool selectedGame_page_HomePage_menu = true; //! Ture Karo
+    bool selectedGame_page = true;   //! True Karo
+    bool selectedGame_page_HomePage_menu = true; //! True Karo
     bool selectedGame_page_smallGames_menu = false;
     bool selectedGame_page_largeGames_menu = false;
 
@@ -176,6 +203,7 @@ int main(int argc, char* args[]){
     bool towerGame_option_musicMenu = false;
     bool towerGame_option_soundMenu = false;
     bool towerGame_option_controllerMenu = false;
+
     // Tower Game Levels
     bool towerGame_Started_level1 = false; //! False Karo
     bool towerGame_Started_level2 = false;
@@ -185,19 +213,19 @@ int main(int argc, char* args[]){
     bool towerGame_Started_level6 = false;
     bool towerGame_Started_level7 = false;
     bool towerGame_Started_level8 = false;
+
     // Health For Tower Game
     int tower_attacker_health = tower_health_box.w/4;
     int archer_health = archer_health_box.w/4;
+
 
     // ON / OFF
     bool music = false;
     bool sound = false;
 
     // !
-
     float tower_attack_timer = 0.0f;  // Timer for tracking attack delay
     const float tower_attack_delay = 1.0f;  // Delay in seconds
-    
 
     // Inside your game loop:
     float deltaTime = 0.016f;  // Assume you calculate the delta time from the frame rate (e.g., 1/60 seconds)
@@ -440,13 +468,13 @@ int main(int argc, char* args[]){
             }
             tower_attack_timer += deltaTime;  // Update the timer
             
-                if (tower_attack_timer >= tower_attack_delay) {
-                    if(!tower_bomb.active){
-                        tower_bomb.vx += 20;
-                        tower_bomb.vy += -18;
-                        tower_bomb.active = true;
-                    }
+            if (tower_attack_timer >= tower_attack_delay) {
+                if(!tower_bomb.active){
+                    tower_bomb.vx += 20;
+                    tower_bomb.vy += -18;
+                    tower_bomb.active = true;
                 }
+            }
                 // tower_bomb.active = true;
             if(tower_bomb.active){
                 tower_bomb.x += tower_bomb.vx;
@@ -745,10 +773,7 @@ int main(int argc, char* args[]){
     SDL_RenderPresent(renderer);
 }
 
-
-
     clear(window, renderer, font, fontHeading, main_backgroundTexture);
-    
 
 }
 
