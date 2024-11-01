@@ -27,25 +27,36 @@ int main(int argc, char* args[]){
         return 1;
     }
 
+     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        return 1;
+    }
+
+    Mix_Chunk *button_sound = Mix_LoadWAV("./audio/button_sound.mp3");
+    Mix_Chunk *towerGame_backgroundMusic = Mix_LoadWAV("./audio/deckofdominions/background.mp3");
+
+
     // Give The Values of Windows Resoltuion
     SDL_Rect screenDisplay;
     if(SDL_GetDisplayBounds(0, &screenDisplay) == 0){
-        if(screenDisplay.w >= 1920 && screenDisplay.h >= 1080){
-            Windows_Width = 1920;
-            Windows_Height = 1080;
-        }else if(screenDisplay.w >= 1280 && screenDisplay.h >= 720){
-            Windows_Width = 1280;
-            Windows_Height = 720;
-        }else if(screenDisplay.w >= 1024 && screenDisplay.h <= 768){
-            Windows_Width = 1024;
-            Windows_Height = 768;
-        }else if(screenDisplay.w >= 800 && screenDisplay.h <= 600){
-            Windows_Width = 800;
-            Windows_Height = 600;
-        }else{
-            Windows_Width = screenDisplay.w;
-            Windows_Height = screenDisplay.h;
-        }
+        // if(screenDisplay.w >= 1920 && screenDisplay.h >= 1080){
+        //     Windows_Width = 1920;
+        //     Windows_Height = 1080;
+        // }else if(screenDisplay.w >= 1280 && screenDisplay.h >= 720){
+        //     Windows_Width = 1280;
+        //     Windows_Height = 720;
+        // }else if(screenDisplay.w >= 1024 && screenDisplay.h <= 768){
+        //     Windows_Width = 1024;
+        //     Windows_Height = 768;
+        // }else if(screenDisplay.w >= 800 && screenDisplay.h <= 600){
+        //     Windows_Width = 800;
+        //     Windows_Height = 600;
+        // }else{
+        //     Windows_Width = screenDisplay.w;
+        //     Windows_Height = screenDisplay.h;
+        // }
+        Windows_Width = screenDisplay.w;
+        Windows_Height = screenDisplay.h;
     }
 
     // Calculate scaling factors based on the original resolution
@@ -58,6 +69,9 @@ int main(int argc, char* args[]){
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
         Windows_Width, Windows_Height, SDL_WINDOW_SHOWN
     );
+
+    // Set the window to fullscreen mode
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP); 
 
     // Check Window
     if(!window){
@@ -74,9 +88,173 @@ int main(int argc, char* args[]){
         return 1;
     }
 
+    // All Tower Game Button Textures
+    // Menu Page
+    SDL_Texture* start_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/start.png");
+    SDL_Texture* continue_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/continue.png");
+    SDL_Texture* level_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level.png");
+    SDL_Texture* option_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/option.png");
+    SDL_Texture* control_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/controls.png");
+    SDL_Texture* quit_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/quit.png");
+
+    // Define Tower Menu button dimensions
+    const int tower_menu_button_width = (Windows_Width * 220) / 1920; 
+    const int tower_menu_button_height = (Windows_Height * 74) / 1080; 
+
+    // Calculate the total height of all buttons and spacing
+    const int total_buttons_height = (tower_menu_button_height * 4) + (Windows_Height * 16 / 1080 * 3); // 4 buttons + 3 spacings
+    const int starting_y_position = (Windows_Height / 2) - (total_buttons_height / 2); // Calculate the starting y position for vertical centering
+    const int center_button_horizontally = (Windows_Width / 2) - (tower_menu_button_width / 2);
+
+    // Initialize button rectangles
+    SDL_Rect continue_button_rect = {
+        center_button_horizontally, 
+        starting_y_position, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+
+    SDL_Rect level_button_rect = {
+        center_button_horizontally, 
+        continue_button_rect.y + tower_menu_button_height + (Windows_Height * 16) / 1080, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+
+    SDL_Rect option_button_rect = {
+        center_button_horizontally, 
+        level_button_rect.y + tower_menu_button_height + (Windows_Height * 16) / 1080, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+
+    SDL_Rect quit_button_rect = {
+        center_button_horizontally,
+        option_button_rect.y + tower_menu_button_height + (Windows_Height * 16) / 1080, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+
+
+    // Tower Levels Button
+    SDL_Texture* level1_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level1.png");
+    SDL_Texture* level2_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level2.png");
+    SDL_Texture* level3_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level3.png");
+    SDL_Texture* level4_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level4.png");
+    SDL_Texture* level5_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level5.png");
+    SDL_Texture* level6_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level6.png");
+    SDL_Texture* level7_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level7.png");
+    SDL_Texture* level8_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level8.png");
+
+    const int tower_menu_level_button_Width = (Windows_Width*110)/1920;
+    const int tower_menu_level_button_Height = (Windows_Height*70)/1080;
+
+    SDL_Rect level1_button_rect = {
+        (Windows_Width*720)/1920, 
+        starting_y_position, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+    SDL_Rect level2_button_rect = {
+        level1_button_rect.x + (Windows_Width*130)/1920, 
+        starting_y_position, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+    SDL_Rect level3_button_rect = {
+        level2_button_rect.x + (Windows_Width*130)/1920, 
+        starting_y_position, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+    SDL_Rect level4_button_rect = {
+        level3_button_rect.x + (Windows_Width*130)/1920, 
+        starting_y_position, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+    SDL_Rect level5_button_rect = {
+        (Windows_Width*720)/1920, 
+        starting_y_position + (Windows_Height*100)/1080, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+    SDL_Rect level6_button_rect = {
+        level5_button_rect.x + (Windows_Width*130)/1920, 
+        starting_y_position + (Windows_Height*100)/1080, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+    SDL_Rect level7_button_rect = {
+        level6_button_rect.x + (Windows_Width*130)/1920, 
+        starting_y_position + (Windows_Height*100)/1080, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+    SDL_Rect level8_button_rect = {
+        level7_button_rect.x + (Windows_Width*130)/1920, 
+        starting_y_position + (Windows_Height*100)/1080, 
+        tower_menu_level_button_Width, 
+        tower_menu_level_button_Height
+    };
+
+   
+    SDL_Texture* shop_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/shop.png");
+    SDL_Texture* sound_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/sound.png");
+    SDL_Texture* music_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/music.png");
+    SDL_Texture* on_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/on.png");
+    SDL_Texture* off_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/off.png");
+
+    SDL_Rect back_button_rect = {(Windows_Width*100)/1920, // Center horizontally
+    continue_button_rect.y - (tower_menu_button_height + (Windows_Height * 40) / 1080), // Adjusted position above continue button
+    tower_menu_button_width,
+    tower_menu_button_height};
+
+    // Option Buttons
+    SDL_Rect shop_button_rect = {
+        center_button_horizontally, 
+        starting_y_position, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+
+    SDL_Rect music_button_rect = {
+        center_button_horizontally,
+        shop_button_rect.y + tower_menu_button_height + (Windows_Height * 16) / 1080, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+
+    SDL_Rect sound_button_rect = {
+        center_button_horizontally, 
+        music_button_rect.y + tower_menu_button_height + (Windows_Height * 16) / 1080, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+
+    SDL_Rect control_button_rect = {
+        center_button_horizontally, 
+        sound_button_rect.y + tower_menu_button_height + (Windows_Height * 16) / 1080, 
+        tower_menu_button_width,
+        tower_menu_button_height
+    };
+    
+    SDL_Rect music_on_off_button_rect = {(Windows_Width*750)/1920, starting_y_position, tower_menu_button_width, tower_menu_button_height};
+    SDL_Rect sound_on_off_button_rect = {(Windows_Width*750)/1920, starting_y_position, tower_menu_button_width, tower_menu_button_height};
+    SDL_Rect on_button_rect = {(Windows_Width*770)/1920 + tower_menu_button_width, starting_y_position, tower_menu_button_width, tower_menu_button_height};
+    SDL_Rect off_button_rect = {(Windows_Width*770)/1920 + tower_menu_button_width, starting_y_position, tower_menu_button_width, tower_menu_button_height};
+
+    SDL_Texture* back_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/back.png"); 
+
     // Surface Texture
     SDL_Texture* main_backgroundTexture = IMG_LoadTexture(renderer, "./image/mainbackground.png");
-    SDL_Texture* towerGame_homePage_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_background.jpg");
+    SDL_Texture* towerGame_homePage_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_background.png");
+    SDL_Texture* towerGame_option_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_option_background.png");
+    SDL_Texture* towerGame_level_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_level_background.png");
+    SDL_Texture* towerGame_shop_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_shop_background.png");
+    SDL_Texture* towerGame_sound_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_sound_background.png");
+    SDL_Texture* towerGame_music_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_music_background.png");
+    SDL_Texture* towerGame_control_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_control_background.png");
     SDL_Texture* towerGame_mainPage_backgroundTexture = IMG_LoadTexture(renderer, "./image/main_tower_background.jpg");
     SDL_Texture* towerGame_level1_background = IMG_LoadTexture(renderer, "./image/towerGame_level1_background.jpg");
     SDL_Texture* arrow = IMG_LoadTexture(renderer, "./image/arrow.png");
@@ -125,46 +303,7 @@ int main(int argc, char* args[]){
     
 
     // For Tower Game
-    // Home Menu Buttons
-    SDL_Rect continueButton = {(Windows_Width/2)-100, (Windows_Height/2)-200, 200, 80};
-    SDL_Rect levelButton = {continueButton.x, continueButton.y + 90, 200, 80};
-    SDL_Rect optionButton = {continueButton.x, levelButton.y + 90, 200, 80};
-    SDL_Rect quitButton = {continueButton.x, optionButton.y + 90, 200, 80};
     
-    // Level Menu Button
-    SDL_Rect menuHomeButton = {20, 20, 100, 80};
-    SDL_Rect level1Button = {(Windows_Width/2)-200, (Windows_Height/2)- 300, 100, 80};
-    SDL_Rect level2Button = {level1Button.x + 120, level1Button.y, 100, 80};
-    SDL_Rect level3Button = {level2Button.x + 120, level1Button.y, 100, 80};
-    SDL_Rect level4Button = {level3Button.x + 120, level1Button.y, 100, 80};
-    SDL_Rect level5Button = {level1Button.x, level1Button.y + 100, 100, 80};
-    SDL_Rect level6Button = {level2Button.x, level1Button.y + 100, 100, 80};
-    SDL_Rect level7Button = {level3Button.x, level1Button.y + 100, 100, 80};
-    SDL_Rect level8Button = {level4Button.x, level1Button.y + 100, 100, 80};
-
-    // Option Menu Button
-    SDL_Rect shopButton = {(Windows_Width/2)-100, (Windows_Height/2)-200, 200, 80};
-    SDL_Rect musicButton = {shopButton.x, shopButton.y + 90, 200, 80};
-    SDL_Rect soundButton = {shopButton.x, musicButton.y + 90, 200, 80};
-    SDL_Rect controllerButton = {shopButton.x, soundButton.y + 90, 200, 80};
-
-    // Option -----> Other Button
-    SDL_Rect option_menuHomeButton = {20, 20, 100, 80};
-    // Music Menu 
-    SDL_Rect option_musicButton = {(Windows_Width/2)-200, (Windows_Height/2)-200, 200, 80};
-    SDL_Rect option_music_on_off_Button = {option_musicButton.x + 220, option_musicButton.y, 200, 80};
-    // Sound Menu 
-    SDL_Rect option_soundButton = {(Windows_Width/2)-200, (Windows_Height/2)-200, 200, 80};
-    SDL_Rect option_sound_on_off_Button = {option_soundButton.x + 220, option_soundButton.y, 200, 80};
-    // Controller Menu
-    SDL_Rect option_controllerButton_1 = {(Windows_Width/2)-200, (Windows_Height/2)-300, 200, 80};
-    SDL_Rect option_controllerButton_2 = {option_controllerButton_1.x, option_controllerButton_1.y + 90, 200, 80};
-    SDL_Rect option_controllerButton_3 = {option_controllerButton_2.x, option_controllerButton_2.y + 90, 200, 80};
-    SDL_Rect option_controllerButton_4 = {option_controllerButton_3.x, option_controllerButton_3.y + 90, 200, 80};
-    SDL_Rect option_controllerButton_5 = {option_controllerButton_4.x, option_controllerButton_4.y + 90, 200, 80};
-    SDL_Rect option_controllerButton_6 = {option_controllerButton_5.x, option_controllerButton_5.y + 90, 200, 80};
-    SDL_Rect option_controllerButton_7 = {option_controllerButton_6.x, option_controllerButton_6.y + 90, 200, 80};
-    SDL_Rect option_controllerButton_8 = {option_controllerButton_7.x, option_controllerButton_7.y + 90, 200, 80};
     // !
     int towerHeight = (Windows_Height * 300) / 1080;
     // Tower Characters
@@ -205,6 +344,7 @@ int main(int argc, char* args[]){
 
     // All For Tower Game
     bool towerGame_start_bt = false;
+    bool towerGame_account = false;
     bool towerGame = false; //! False Karo
     bool towerGame_Started = false; //! False Karo
     bool towerGame_homemenu = false;
@@ -297,96 +437,184 @@ int main(int argc, char* args[]){
                         }
                     }
                 }
-
-                // If Snake Game is True
-
-                // If Tower Game is True
+                
                 if(towerGame){
                     if(!towerGame_Started){
                         if(towerGame_start_bt){
                             mainBackground = towerGame_mainPage_backgroundTexture;
-                        }else{
-                            mainBackground = towerGame_homePage_backgroundTexture;
+                            if(music){
+                                Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
+                            }
                         }
-                        if(towerGame_homemenu){
-                            if(checkButtonClick(mouseX, mouseY, &continueButton)){
+                        else if(towerGame_homemenu){
+                            if(checkButtonClick(mouseX, mouseY, &continue_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Continue Game");
-                            }else if(checkButtonClick(mouseX, mouseY, &levelButton)){
-                                    towerGame_levelmenu = true;
-                                    towerGame_homemenu = false;
-                            }else if(checkButtonClick(mouseX, mouseY, &optionButton)){
-                                    towerGame_optionmenu = true;
-                                    towerGame_homemenu = false;
-                            }else if(checkButtonClick(mouseX, mouseY, &quitButton)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                                towerGame_levelmenu = true;
+                                towerGame_homemenu = false;
+                                mainBackground = towerGame_level_backgroundTexture;
+                            }else if(checkButtonClick(mouseX, mouseY, &option_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                                towerGame_optionmenu = true;
+                                towerGame_homemenu = false;
+                                mainBackground = towerGame_option_backgroundTexture;
+                            }else if(checkButtonClick(mouseX, mouseY, &quit_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                                Mix_HaltChannel(0);
                                 towerGame = false;
                                 selectedGame_page = true;
                                 mainBackground = main_backgroundTexture;
                             }
                         }else if(towerGame_levelmenu){
-                            if(checkButtonClick(mouseX, mouseY, &menuHomeButton)){
+                            if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_homemenu = true;
                                 towerGame_levelmenu = false;
-                            }else if(checkButtonClick(mouseX, mouseY, &level1Button)){
+                                mainBackground = towerGame_homePage_backgroundTexture;
+                            }else if(checkButtonClick(mouseX, mouseY, &level1_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_Started_level1 = true;
                                 towerGame_Started = true;
                                 mainBackground = towerGame_level1_background;
                                 towerGame_levelmenu = false;
                                 towerGame_homemenu = true;
-                            }else if(checkButtonClick(mouseX, mouseY, &level2Button)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level2_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Level");
-                            }else if(checkButtonClick(mouseX, mouseY, &level3Button)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level3_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Level");
-                            }else if(checkButtonClick(mouseX, mouseY, &level4Button)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level4_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Level");
-                            }else if(checkButtonClick(mouseX, mouseY, &level5Button)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level5_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Level");
-                            }else if(checkButtonClick(mouseX, mouseY, &level6Button)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level6_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Level");
-                            }else if(checkButtonClick(mouseX, mouseY, &level7Button)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level7_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Level");
-                            }else if(checkButtonClick(mouseX, mouseY, &level8Button)){
+                            }else if(checkButtonClick(mouseX, mouseY, &level8_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 printf("Level");
                             }
                         }else if(towerGame_optionmenu){
-                            if(checkButtonClick(mouseX, mouseY, &menuHomeButton)){
+                            if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_optionmenu = false;
                                 towerGame_homemenu  = true;
-                            }else if(checkButtonClick(mouseX, mouseY, &musicButton)){
+                                mainBackground = towerGame_homePage_backgroundTexture;
+                            }else if(checkButtonClick(mouseX, mouseY, &music_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_optionmenu = false;
                                 towerGame_option_musicMenu = true;
-                            }else if(checkButtonClick(mouseX, mouseY, &shopButton)){
+                                mainBackground = towerGame_music_backgroundTexture;
+                            }else if(checkButtonClick(mouseX, mouseY, &shop_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_optionmenu = false;
                                 towerGame_option_shopMenu = true;
-                            }else if(checkButtonClick(mouseX, mouseY, &soundButton)){
+                                mainBackground = towerGame_shop_backgroundTexture;
+                            }else if(checkButtonClick(mouseX, mouseY, &sound_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_optionmenu = false;
                                 towerGame_option_soundMenu = true;
-                            }else if(checkButtonClick(mouseX, mouseY, &controllerButton)){
+                                mainBackground = towerGame_sound_backgroundTexture;
+                            }else if(checkButtonClick(mouseX, mouseY, &control_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_optionmenu = false;
                                 towerGame_option_controllerMenu = true;
+                                mainBackground = towerGame_control_backgroundTexture;
                             }
                         }else if(towerGame_option_musicMenu){
-                            if(checkButtonClick(mouseX, mouseY, &option_music_on_off_Button)){
+                            if(checkButtonClick(mouseX, mouseY, &music_on_off_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 music = !music;
-                            }else if(checkButtonClick(mouseX, mouseY, &option_menuHomeButton)){
+                                if(music){
+                                    Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
+                                }else{
+                                    Mix_HaltChannel(0);
+                                }
+                            }else if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_option_musicMenu = false;
                                 towerGame_optionmenu = true;
+                                mainBackground = towerGame_option_backgroundTexture;
                             }
                         }else if(towerGame_option_soundMenu){
-                            if(checkButtonClick(mouseX, mouseY, &option_sound_on_off_Button)){
+                            if(checkButtonClick(mouseX, mouseY, &sound_on_off_button_rect)){
                                 sound = !sound;
-                            }else if(checkButtonClick(mouseX, mouseY, &option_menuHomeButton)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                            }else if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_option_soundMenu = false;
                                 towerGame_optionmenu = true;
+                                mainBackground = towerGame_option_backgroundTexture;
                             }
                         }else if(towerGame_option_controllerMenu){
-                            if(checkButtonClick(mouseX, mouseY, &option_menuHomeButton)){
+                            if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_option_controllerMenu = false;
                                 towerGame_optionmenu = true;
+                                mainBackground = towerGame_option_backgroundTexture;
                             }
                         }else if(towerGame_option_shopMenu){
-                            if(checkButtonClick(mouseX, mouseY, &option_menuHomeButton)){
+                            if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_option_shopMenu = false;
                                 towerGame_optionmenu = true;
+                                mainBackground = towerGame_option_backgroundTexture;
                             }
                         }
                     }else if(towerGame_Started){
@@ -607,123 +835,49 @@ int main(int argc, char* args[]){
                 renderText(renderer, "DOMINIONS", (Windows_Width/2)-240, (Windows_Height/2), towerGame_fontHeading,0 ,0, 0);
                 renderText(renderer, "Press \"Enter\" to start the Game", (Windows_Width/2)-250, (Windows_Height-100), towerGame_font,255 , 255, 255);
             }else if(towerGame_homemenu){
-                SDL_SetRenderDrawColor(renderer,0, 0, 0, 1);
-                // Render Button
-                SDL_RenderFillRect(renderer, &continueButton);
-                SDL_RenderFillRect(renderer, &levelButton);
-                SDL_RenderFillRect(renderer, &optionButton);
-                SDL_RenderFillRect(renderer, &quitButton);
-
-                // Render button text
-                renderText(renderer, "Continue Game", continueButton.x + 30, continueButton.y + 24, font,225 ,225, 225);
-                renderText(renderer, "Levels", levelButton.x + 60, levelButton.y + 24, font,225 ,225, 225);
-                renderText(renderer, "Options", optionButton.x + 60, optionButton.y + 24, font,225 ,225, 225);
-                renderText(renderer, "Quit Game", quitButton.x + 50, quitButton.y + 24, font,225 ,225, 225);
+                SDL_RenderCopy(renderer, continue_button, NULL, &continue_button_rect);
+                SDL_RenderCopy(renderer, level_button, NULL, &level_button_rect);
+                SDL_RenderCopy(renderer, option_button, NULL, &option_button_rect);
+                SDL_RenderCopy(renderer, quit_button, NULL, &quit_button_rect);
             }else if(towerGame_levelmenu){
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
-                SDL_RenderFillRect(renderer, &menuHomeButton);
-                SDL_RenderFillRect(renderer, &level1Button);
-                SDL_RenderFillRect(renderer, &level2Button);
-                SDL_RenderFillRect(renderer, &level3Button);
-                SDL_RenderFillRect(renderer, &level4Button);
-                SDL_RenderFillRect(renderer, &level5Button);
-                SDL_RenderFillRect(renderer, &level6Button);
-                SDL_RenderFillRect(renderer, &level7Button);
-                SDL_RenderFillRect(renderer, &level8Button);
-
-                // Render the button text
-                renderText(renderer, "Back", menuHomeButton.x + 30, menuHomeButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, "1", level1Button.x + 45, level1Button.y + 26, font,225 ,225, 225);
-                renderText(renderer, "2", level2Button.x + 45, level2Button.y + 26, font,225 ,225, 225);
-                renderText(renderer, "3", level3Button.x + 45, level3Button.y + 26, font,225 ,225, 225);
-                renderText(renderer, "4", level4Button.x + 45, level4Button.y + 26, font,225 ,225, 225);
-                renderText(renderer, "5", level5Button.x + 45, level5Button.y + 26, font,225 ,225, 225);
-                renderText(renderer, "6", level6Button.x + 45, level6Button.y + 26, font,225 ,225, 225);
-                renderText(renderer, "7", level7Button.x + 45, level7Button.y + 26, font,225 ,225, 225);
-                renderText(renderer, "8", level8Button.x + 45, level8Button.y + 26, font,225 ,225, 225);
+                SDL_RenderCopy(renderer, back_button, NULL, &back_button_rect);
+                SDL_RenderCopy(renderer, level1_button, NULL, &level1_button_rect);
+                SDL_RenderCopy(renderer, level2_button, NULL, &level2_button_rect);
+                SDL_RenderCopy(renderer, level3_button, NULL, &level3_button_rect);
+                SDL_RenderCopy(renderer, level4_button, NULL, &level4_button_rect);
+                SDL_RenderCopy(renderer, level5_button, NULL, &level5_button_rect);
+                SDL_RenderCopy(renderer, level6_button, NULL, &level6_button_rect);
+                SDL_RenderCopy(renderer, level7_button, NULL, &level7_button_rect);
+                SDL_RenderCopy(renderer, level8_button, NULL, &level8_button_rect);
             }else if(towerGame_optionmenu){
-                SDL_SetRenderDrawColor(renderer,0, 0, 0, 1);
-                // Render Button
-                SDL_RenderFillRect(renderer, &menuHomeButton);
-                SDL_RenderFillRect(renderer, &shopButton);
-                SDL_RenderFillRect(renderer, &musicButton);
-                SDL_RenderFillRect(renderer, &soundButton);
-                SDL_RenderFillRect(renderer, &controllerButton);
 
-                // Render Button Text
-                renderText(renderer, "Back", menuHomeButton.x + 30, menuHomeButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Shop", shopButton.x + 75, shopButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Music", musicButton.x + 70, musicButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Sound", soundButton.x + 70, soundButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Controller", controllerButton.x + 40, controllerButton.y + 26, font,225 ,225, 225);
+                SDL_RenderCopy(renderer, shop_button, NULL, &shop_button_rect);
+                SDL_RenderCopy(renderer, music_button, NULL, &music_button_rect);
+                SDL_RenderCopy(renderer, sound_button, NULL, &sound_button_rect);
+                SDL_RenderCopy(renderer, control_button, NULL, &control_button_rect);
+                SDL_RenderCopy(renderer, back_button, NULL, &back_button_rect);
+
             }else if(towerGame_option_musicMenu){
-                SDL_SetRenderDrawColor(renderer,0, 0, 0, 1);
-                // Render Button
-                SDL_RenderFillRect(renderer, &option_musicButton);
-                SDL_RenderFillRect(renderer, &option_music_on_off_Button);
-                SDL_RenderFillRect(renderer, &option_menuHomeButton);
-
-                // Render Button Text
-                renderText_Heading(renderer, "Music", (Windows_Width/2) - 100, 100, fontHeading, 0, 0, 0);
-                renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Music", option_musicButton.x + 70, option_musicButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, (music) ? "On" : "Off", option_music_on_off_Button.x + 80, option_music_on_off_Button.y + 26, font,225 ,225, 225);
+                SDL_RenderCopy(renderer, back_button, NULL, &back_button_rect);
+                SDL_RenderCopy(renderer, music_button, NULL, &music_on_off_button_rect);
+                if(music){
+                    SDL_RenderCopy(renderer, on_button, NULL, &on_button_rect);
+                }else{
+                    SDL_RenderCopy(renderer, off_button, NULL, &off_button_rect);
+                }
             }else if(towerGame_option_soundMenu){
-                SDL_SetRenderDrawColor(renderer,0, 0, 0, 1);
-                // Render Button
-                SDL_RenderFillRect(renderer, &option_soundButton);
-                SDL_RenderFillRect(renderer, &option_sound_on_off_Button);
-                SDL_RenderFillRect(renderer, &option_menuHomeButton);
-
-                // Render Button Text
-                renderText_Heading(renderer, "Sound", (Windows_Width/2) - 100, 100, fontHeading, 0, 0, 0);
-                renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Sound", option_soundButton.x + 70, option_soundButton.y + 26, font,225 ,225, 225);
-                renderText(renderer, (sound) ? "On" : "Off", option_sound_on_off_Button.x + 80, option_music_on_off_Button.y + 26, font,225 ,225, 225);
+                SDL_RenderCopy(renderer, back_button, NULL, &back_button_rect);
+                SDL_RenderCopy(renderer, sound_button, NULL, &sound_on_off_button_rect);
+                if(sound){
+                    SDL_RenderCopy(renderer, on_button, NULL, &on_button_rect);
+                }else{
+                    SDL_RenderCopy(renderer, off_button, NULL, &off_button_rect);
+                }
             }else if(towerGame_option_controllerMenu){
-                SDL_SetRenderDrawColor(renderer,0, 0, 0, 1);
-                // Render Button
-                SDL_RenderFillRect(renderer, &option_menuHomeButton);
-                SDL_RenderFillRect(renderer, &option_controllerButton_1);
-                SDL_RenderFillRect(renderer, &option_controllerButton_2);
-                SDL_RenderFillRect(renderer, &option_controllerButton_3);
-                SDL_RenderFillRect(renderer, &option_controllerButton_4);
-                SDL_RenderFillRect(renderer, &option_controllerButton_5);
-                SDL_RenderFillRect(renderer, &option_controllerButton_6);
-                SDL_RenderFillRect(renderer, &option_controllerButton_7);
-                SDL_RenderFillRect(renderer, &option_controllerButton_8);
-
-
-                // Render Button Text
-                renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
-                renderText_Heading(renderer, "Controller", (Windows_Width/2) - 200, 100, fontHeading, 0, 0, 0);
-
-                renderText(renderer, "W", option_controllerButton_1.x + 30, option_controllerButton_1.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Forward", option_controllerButton_1.x + 220, option_controllerButton_1.y + 26, font,225 ,225, 225);
-                renderText(renderer, "S", option_controllerButton_2.x + 30, option_controllerButton_2.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Backward", option_controllerButton_2.x + 220, option_controllerButton_2.y + 26, font,225 ,225, 225);
-                renderText(renderer, "L", option_controllerButton_3.x + 30, option_controllerButton_3.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Left", option_controllerButton_3.x + 220, option_controllerButton_3.y + 26, font,225 ,225, 225);
-                renderText(renderer, "R", option_controllerButton_4.x + 30, option_controllerButton_4.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Right", option_controllerButton_4.x + 220, option_controllerButton_4.y + 26, font,225 ,225, 225);
-
-                renderText(renderer, "F", option_controllerButton_5.x + 30, option_controllerButton_5.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Attack", option_controllerButton_5.x + 220, option_controllerButton_5.y + 26, font,225 ,225, 225);
-                renderText(renderer, "H", option_controllerButton_6.x + 30, option_controllerButton_6.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Heal", option_controllerButton_6.x + 220, option_controllerButton_6.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Space", option_controllerButton_7.x + 30, option_controllerButton_7.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Jump", option_controllerButton_7.x + 220, option_controllerButton_7.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Ctrl", option_controllerButton_8.x + 30, option_controllerButton_8.y + 26, font,225 ,225, 225);
-                renderText(renderer, "Crouch", option_controllerButton_8.x + 220, option_controllerButton_8.y + 26, font,225 ,225, 225);
-
+                SDL_RenderCopy(renderer, back_button, NULL, &back_button_rect);
             }else if(towerGame_option_shopMenu){
-                SDL_SetRenderDrawColor(renderer,0, 0, 0, 1);
-                SDL_RenderFillRect(renderer, &option_menuHomeButton);
-                // Render Button Text
-                renderText(renderer, "Back", option_menuHomeButton.x + 30, option_menuHomeButton.y + 26, font,225 ,225, 225);
-                renderText_Heading(renderer, "Shop", (Windows_Width/2) - 90, 100, fontHeading, 0, 0, 0);
-                renderText(renderer, "Shop is Empty", (Windows_Width/2) - 80, 300, font, 225, 225, 225);
 
+                SDL_RenderCopy(renderer, back_button, NULL, &back_button_rect);
             }
         }else if(towerGame_Started){
             if(towerGame_Started_level1){
