@@ -9,6 +9,7 @@
 
 // Own Functions Created Library
 #include "functions.h"
+int width,height;
 
 int main(int argc, char* args[]){
 
@@ -19,7 +20,15 @@ int main(int argc, char* args[]){
         printf("SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
-
+    SDL_Rect displayBounds;
+ if (SDL_GetDisplayBounds(0, &displayBounds) != 0) {
+        printf("SDL_GetDisplayBounds Error: %s\n", SDL_GetError());
+    } else {
+        // Save width and height
+        width = displayBounds.w;
+        height = displayBounds.h;
+        printf("Display Resolution: %dx%d\n", width, height);
+    }
     // Initialize SDl Text --> TTF
     if (TTF_Init() != 0) {
         printf("TTF_Init Error: %s\n", TTF_GetError());
@@ -56,8 +65,8 @@ int main(int argc, char* args[]){
         //     Windows_Width = screenDisplay.w;
         //     Windows_Height = screenDisplay.h;
         // }
-        Windows_Width = screenDisplay.w;
-        Windows_Height = screenDisplay.h;
+        Windows_Width = width;
+        Windows_Height = height;
     }
 
     // Calculate scaling factors based on the original resolution
@@ -1151,10 +1160,10 @@ int main(int argc, char* args[]){
 
 
                 SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, 40, 40};
-                SDL_SetRenderDrawColor(renderer, 150, 75, 0, 1);
+                SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
                 SDL_RenderFillRect(renderer, &tower_bomb_rect);
 
-                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 1);
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
                 SDL_RenderFillRect(renderer, &tower_attacker);
 
 
@@ -1165,20 +1174,20 @@ int main(int argc, char* args[]){
 
 
                 // Health
-                SDL_SetRenderDrawColor(renderer, 240, 236, 235,1);
+                SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
                 SDL_RenderFillRect(renderer, &archer_health_box_innerfill);
                 SDL_RenderFillRect(renderer, &tower_health_box_innerfill);
 
                 char towerHealth_val[50];
                 sprintf(towerHealth_val, "Tower Health: %d %%", tower_attacker_health);
                 renderText(renderer, towerHealth_val, tower_health_box.x, tower_health_box.y-40, font, 0, 0, 0);
-                SDL_SetRenderDrawColor(renderer, 182,33,45, 1);
+                SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
                 SDL_RenderFillRect(renderer, &tower_health_box);
 
                 char archerHealth_val[50];
                 sprintf(archerHealth_val, "Archer Health: %d %%", archer_health);
                 renderText(renderer, archerHealth_val, archer_health_box.x, archer_health_box.y-40, font, 0, 0, 0);
-                SDL_SetRenderDrawColor(renderer, 127,23,31, 1);
+                SDL_SetRenderDrawColor(renderer, 127,23,31, 255);
                 SDL_RenderFillRect(renderer, &archer_health_box);
 
                 
