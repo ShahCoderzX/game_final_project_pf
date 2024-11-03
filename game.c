@@ -93,6 +93,16 @@ int main(int argc, char* args[]){
     const int tower_menu_button_width = (Windows_Width * 220) / 1920; 
     const int tower_menu_button_height = (Windows_Height * 74) / 1080; 
 
+    // Select Section textures
+    SDL_Texture* select_menu_playDeck_button = IMG_LoadTexture(renderer, "./image/playdeck.png");
+    SDL_Texture* select_menu_quit_button = IMG_LoadTexture(renderer, "./image/quitselect.png");
+
+    const int select_button_Width = (Windows_Width*300)/1920;
+    const int select_button_Height = (Windows_Width*80)/1080;
+
+    SDL_Rect select_menu_playDeck_button_rect = {(Windows_Width/2)-(select_button_Width)/2, (Windows_Height/2)-(select_button_Height/2)-(Windows_Height*60)/1080, select_button_Width, select_button_Height};
+    SDL_Rect select_menu_quit_button_rect = {(Windows_Width/2)-(select_button_Width)/2, select_menu_playDeck_button_rect.y + select_button_Height + (Windows_Height*30)/1080, select_button_Width, select_button_Height};
+
     // All Tower Game Button Textures
     // Menu Page
     SDL_Texture* start_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/start.png");
@@ -368,9 +378,6 @@ int main(int argc, char* args[]){
 
     // For Main Home/ First  Page
     bool selectedGame_page = true;   //! True Karo
-    bool selectedGame_page_HomePage_menu = true; //! True Karo
-    bool selectedGame_page_smallGames_menu = false;
-    bool selectedGame_page_largeGames_menu = false;
 
     // For Account 
     char username[20] = "";
@@ -440,44 +447,17 @@ int main(int argc, char* args[]){
                 
                 // Selected Game Page
                 if(selectedGame_page){
-
                     mainBackground = main_backgroundTexture;
 
-                    if(selectedGame_page_HomePage_menu){
-
-                        if(checkButtonClick(mouseX, mouseY, &smallGames_play_Button)){
-                            selectedGame_page_smallGames_menu = true;
-                            selectedGame_page_HomePage_menu = false;
-                        }else if(checkButtonClick(mouseX, mouseY, &largeGames_play_Button)){
-                            selectedGame_page_largeGames_menu = true;
-                            selectedGame_page_HomePage_menu = false;
-                        }else if(checkButtonClick(mouseX, mouseY, &quitGame_play_Button)){
-                            selectedGame_page_largeGames_menu = false;
-                            selectedGame_page_HomePage_menu = false;
-                            selectedGame_page = false;
-                            running = false;
-                        }
-
-                    }else if(selectedGame_page_smallGames_menu){
-                        if(checkButtonClick(mouseX, mouseY, &snakeGame_play_Button)){
-                            printf("Snake Game Play");
-                        }else if(checkButtonClick(mouseX, mouseY, &tictactoeGame_play_Button)){
-                            printf("Tic Tac Toe Game Play");
-                        }else if(checkButtonClick(mouseX, mouseY, &flappybirdGame_play_Button)){
-                            printf("Flappy Bird Game Play");
-                        }else if(checkButtonClick(mouseX, mouseY, &selectedPage_back_Button)){
-                            selectedGame_page_HomePage_menu = true;
-                            selectedGame_page_smallGames_menu = false;
-                        }
-                    }else if(selectedGame_page_largeGames_menu){
-                        if(checkButtonClick(mouseX, mouseY, &towerGame_play_Button)){
-                            selectedGame_page = false;
-                            towerGame = true;
-                            towerGame_start_bt = true;
-                        }else if(checkButtonClick(mouseX, mouseY, &selectedPage_back_Button)){
-                            selectedGame_page_HomePage_menu = true;
-                            selectedGame_page_largeGames_menu = false;
-                        }
+                    if(checkButtonClick(mouseX, mouseY, &select_menu_playDeck_button_rect)){
+                        Mix_PlayChannel(1, button_sound, 0); 
+                        selectedGame_page = false;
+                        towerGame = true;
+                        towerGame_start_bt = true;
+                    }else if(checkButtonClick(mouseX, mouseY, &select_menu_quit_button_rect)){
+                        Mix_PlayChannel(1, button_sound, 0); 
+                        selectedGame_page = false;
+                        running = false;
                     }
                 }
                 
@@ -620,11 +600,8 @@ int main(int argc, char* args[]){
                                 if(sound){
                                     Mix_PlayChannel(1, button_sound, 0); 
                                 }
-                                Mix_HaltChannel(0);
                                 towerGame = false;
                                 running = false;
-                                // selectedGame_page = true;
-                                // mainBackground = main_backgroundTexture;
                             }
                         }else if(towerGame_levelmenu){
                             if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
@@ -987,37 +964,8 @@ int main(int argc, char* args[]){
 
     // If Selected Page is true
     if(selectedGame_page){
-        if(selectedGame_page_HomePage_menu){
-            SDL_SetRenderDrawColor(renderer, 225, 225, 225, 1);
-
-            SDL_RenderFillRect(renderer, &smallGames_play_Button);
-            SDL_RenderFillRect(renderer, &largeGames_play_Button);
-            SDL_RenderFillRect(renderer, &quitGame_play_Button);
-
-            renderText(renderer, "Play Small Games", smallGames_play_Button.x + 10, smallGames_play_Button.y + 28, mainfont, 0, 0, 0);
-            renderText(renderer, "Play Large Games", largeGames_play_Button.x + 10, largeGames_play_Button.y + 28, mainfont,0,0,0);
-            renderText(renderer, "Quit Game", quitGame_play_Button.x + 50, quitGame_play_Button.y + 28, mainfont,0,0,0);
-        }else if(selectedGame_page_smallGames_menu){
-            SDL_SetRenderDrawColor(renderer, 225, 225, 225, 1);
-
-            SDL_RenderFillRect(renderer, &snakeGame_play_Button);
-            SDL_RenderFillRect(renderer, &tictactoeGame_play_Button);
-            SDL_RenderFillRect(renderer, &flappybirdGame_play_Button);
-            SDL_RenderFillRect(renderer, &selectedPage_back_Button);
-
-            renderText(renderer, "Snake Game", snakeGame_play_Button.x + 42, snakeGame_play_Button.y + 28, mainfont, 0, 0, 0);
-            renderText(renderer, "Tic Tac Toe", tictactoeGame_play_Button.x + 42, tictactoeGame_play_Button.y + 28, mainfont, 0, 0, 0);
-            renderText(renderer, "Flappy Bird", flappybirdGame_play_Button.x + 46, flappybirdGame_play_Button.y + 28, mainfont, 0, 0, 0);
-            renderText(renderer, "Back", selectedPage_back_Button.x + 14, selectedPage_back_Button.y + 20, mainfont, 0, 0, 0);
-        }else if(selectedGame_page_largeGames_menu){
-            SDL_SetRenderDrawColor(renderer, 225, 225, 225, 1);
-
-            SDL_RenderFillRect(renderer, &towerGame_play_Button);
-            SDL_RenderFillRect(renderer, &selectedPage_back_Button);
-
-            renderText(renderer, "Deck of Dominion", towerGame_play_Button.x + 14, towerGame_play_Button.y + 28, mainfont, 0, 0, 0);
-            renderText(renderer, "Back", selectedPage_back_Button.x + 14, selectedPage_back_Button.y + 20, mainfont, 0, 0, 0);
-        }
+        SDL_RenderCopy(renderer, select_menu_playDeck_button, NULL, &select_menu_playDeck_button_rect);
+        SDL_RenderCopy(renderer, select_menu_quit_button, NULL, &select_menu_quit_button_rect);
     }
 
 
