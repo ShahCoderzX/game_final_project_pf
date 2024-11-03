@@ -84,5 +84,78 @@ bool checkCollisionArcher(Pointer *towerbomb, Pointer *archer) {
     return SDL_HasIntersection(&arrowRect, &towerRect);
 }
 
+// Create Account Function
+typedef struct {
+    char username[20];
+    char password[20];
+    int money;
+} Account;
+
+// UserName Exist or not 
+int usernameExists(const char* username) {
+    FILE *file = fopen("accounts.txt", "r");
+    Account account;
+
+    if (file == NULL) {
+        return 0; 
+    }
+
+    while (fscanf(file, "%s %s %f", account.username, account.password, &account.money) != EOF) {
+        if (strcmp(account.username, username) == 0) {
+            fclose(file);
+            return 1; // Username already exists
+        }
+    }
+
+    fclose(file);
+    return 0; // Username does not exist
+}
+// Create Account
+int createAccount(char* username, char* password) {
+    Account newAccount;
+    FILE *file = fopen("accounts.txt", "a");
+
+    if (file == NULL) {
+        return 0;
+    }
+
+    strcpy(newAccount.username,username);
+    strcpy(newAccount.password,password);
+    newAccount.money = 100;
+
+    // fprintf(file, "%s %s %d\n", newAccount.username, newAccount.password, newAccount.money);
+    fwrite(&newAccount, sizeof(Account), 1, file);
+    fclose(file);
+
+    return 1;
+}
+// Login Account
+int login(char* username, char* password) {
+    Account account;
+    int found = 0, account_money = 0;
+    FILE *file = fopen("accounts.txt", "r");
+
+    if (file == NULL) {
+        return 0;
+    }
+
+    // Read account details from text file using fscanf
+    // fread(&account, sizeof(Account), 1, file)
+    // fscanf(file, "%s %s %d", account.username, account.password, &account.money) != EOF
+    while (fread(&account, sizeof(Account), 1, file)) {
+        if (strcmp(account.username, username) == 0 && strcmp(account.password, password) == 0) {
+            found = 1;
+            account_money = account.money;
+            break;
+        }
+    }
+
+    if (!found) {
+        return 0;
+    }
+
+    fclose(file);
+    return account_money;
+}
 
 //! ---------------------x---------------------x

@@ -34,6 +34,7 @@ int main(int argc, char* args[]){
 
     Mix_Chunk *button_sound = Mix_LoadWAV("./audio/button_sound.mp3");
     Mix_Chunk *towerGame_backgroundMusic = Mix_LoadWAV("./audio/deckofdominions/background.mp3");
+    Mix_Chunk *typing_SoundEffect = Mix_LoadWAV("./audio/deckofdominions/typing.mp3");
 
 
     // Give The Values of Windows Resoltuion
@@ -87,6 +88,10 @@ int main(int argc, char* args[]){
         printf("Renderer Error: %s", SDL_GetError());
         return 1;
     }
+    
+    // Define Tower Menu button dimensions
+    const int tower_menu_button_width = (Windows_Width * 220) / 1920; 
+    const int tower_menu_button_height = (Windows_Height * 74) / 1080; 
 
     // All Tower Game Button Textures
     // Menu Page
@@ -96,10 +101,34 @@ int main(int argc, char* args[]){
     SDL_Texture* option_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/option.png");
     SDL_Texture* control_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/controls.png");
     SDL_Texture* quit_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/quit.png");
+    SDL_Texture* back_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/back.png"); 
 
-    // Define Tower Menu button dimensions
-    const int tower_menu_button_width = (Windows_Width * 220) / 1920; 
-    const int tower_menu_button_height = (Windows_Height * 74) / 1080; 
+    // Account Buttons
+    SDL_Texture* account_create_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/create.png");
+    SDL_Texture* account_login_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/login.png");
+
+    // Tower Game Account Menu
+    const int account_main_Width = 800;
+    const int account_main_Height = 600;
+    SDL_Rect account_main_rect = {(Windows_Width/2)-(account_main_Width/2), (Windows_Height/2)-(account_main_Height/2), account_main_Width, account_main_Height};
+
+    const int account_input_Width = 600;
+    const int account_input_Height = 50;
+    SDL_Rect account_username = {(account_main_rect.x)+100, account_main_rect.y+220, account_input_Width, account_input_Height};
+    SDL_Rect account_password = {(account_main_rect.x)+100, account_username.y+140, account_input_Width, account_input_Height};
+
+    // Account Buttons
+    SDL_Rect account_create_button1_rect = {account_main_rect.x + (account_main_rect.w/2 - tower_menu_button_width/
+    2), account_main_rect.y + (account_main_rect.h - 150), tower_menu_button_width, tower_menu_button_height};
+    SDL_Rect account_login_button1_rect = {account_main_rect.x + (account_main_rect.w/2 - tower_menu_button_width/
+    2), account_main_rect.y + (account_main_rect.h - 150), tower_menu_button_width, tower_menu_button_height};
+
+    SDL_Rect account_create_button_rect = {account_main_rect.x+(account_main_rect.w/2 - (tower_menu_button_width*2+20)/2), account_main_rect.y + (account_main_rect.h/2 - tower_menu_button_height/2), tower_menu_button_width, tower_menu_button_height};
+    SDL_Rect account_login_button_rect = {account_create_button_rect.x+tower_menu_button_width+20 , account_main_rect.y + (account_main_rect.h/2 - tower_menu_button_height/2), tower_menu_button_width, tower_menu_button_height};
+
+    // Typwriter Blinker for Account Input
+    SDL_Rect account_username_typewriter = {account_username.x+10, account_username.y + 4, 4, 42};
+    SDL_Rect account_password_typewriter = {account_password.x+10, account_password.y + 4, 4, 42};
 
     // Calculate the total height of all buttons and spacing
     const int total_buttons_height = (tower_menu_button_height * 4) + (Windows_Height * 16 / 1080 * 3); // 4 buttons + 3 spacings
@@ -244,7 +273,7 @@ int main(int argc, char* args[]){
     SDL_Rect on_button_rect = {(Windows_Width*770)/1920 + tower_menu_button_width, starting_y_position, tower_menu_button_width, tower_menu_button_height};
     SDL_Rect off_button_rect = {(Windows_Width*770)/1920 + tower_menu_button_width, starting_y_position, tower_menu_button_width, tower_menu_button_height};
 
-    SDL_Texture* back_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/back.png"); 
+    
 
     // Surface Texture
     SDL_Texture* main_backgroundTexture = IMG_LoadTexture(renderer, "./image/mainbackground.png");
@@ -255,7 +284,7 @@ int main(int argc, char* args[]){
     SDL_Texture* towerGame_sound_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_sound_background.png");
     SDL_Texture* towerGame_music_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_music_background.png");
     SDL_Texture* towerGame_control_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_control_background.png");
-    SDL_Texture* towerGame_mainPage_backgroundTexture = IMG_LoadTexture(renderer, "./image/main_tower_background.jpg");
+    SDL_Texture* towerGame_mainPage_backgroundTexture = IMG_LoadTexture(renderer, "./image/main_tower_background.png");
     SDL_Texture* towerGame_level1_background = IMG_LoadTexture(renderer, "./image/towerGame_level1_background.jpg");
     SDL_Texture* arrow = IMG_LoadTexture(renderer, "./image/arrow.png");
     SDL_Texture* archer_texture = IMG_LoadTexture(renderer, "./image/archer.png");
@@ -277,6 +306,9 @@ int main(int argc, char* args[]){
     TTF_Font* fontHeading = TTF_OpenFont("./font/font.otf", 100);
     TTF_Font* towerGame_font = TTF_OpenFont("./font/tower_font.ttf", 30);
     TTF_Font* towerGame_fontHeading = TTF_OpenFont("./font/tower_font.ttf", 100);
+    TTF_Font* poppinsFont_Head = TTF_OpenFont("./font/poppinsFont.ttf", 60);
+    TTF_Font* poppinsFont_Normal = TTF_OpenFont("./font/poppinsFont.ttf", 30);
+    TTF_Font* poppinsFont_Small = TTF_OpenFont("./font/poppinsFont.ttf", 20);
 
     // Check All The Fonts
     if(!font || !mainfont || !fontHeading || !towerGame_font || !towerGame_fontHeading){
@@ -340,11 +372,22 @@ int main(int argc, char* args[]){
     bool selectedGame_page_smallGames_menu = false;
     bool selectedGame_page_largeGames_menu = false;
 
-    // Snake Game
+    // For Account 
+    char username[20] = "";
+    char password[20] = "";
+    bool username_active = false;
+    bool password_active = false;
+    bool account_problem = false;
+    bool account_true = false;
+    char account_problem_str[50] = ""; 
+    char account_true_str[50] = "";
 
     // All For Tower Game
     bool towerGame_start_bt = false;
     bool towerGame_account = false;
+    bool towerGame_account_choose = false;
+    bool towerGame_account_create = false;
+    bool towerGame_account_login = false;
     bool towerGame = false; //! False Karo
     bool towerGame_Started = false; //! False Karo
     bool towerGame_homemenu = false;
@@ -372,7 +415,7 @@ int main(int argc, char* args[]){
 
     // ON / OFF
     bool music = false;
-    bool sound = false;
+    bool sound = true;
 
     // !
     float tower_attack_timer = 0.0f;  // Timer for tracking attack delay
@@ -444,6 +487,113 @@ int main(int argc, char* args[]){
                             mainBackground = towerGame_mainPage_backgroundTexture;
                             if(music){
                                 Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
+                            }
+                            if(towerGame_account){
+                                if(towerGame_account_choose){
+                                    if(checkButtonClick(mouseX, mouseY, &account_create_button_rect)){
+                                        if(sound){
+                                            Mix_PlayChannel(1, button_sound, 0); 
+                                        }
+                                        towerGame_account_choose = false;
+                                        towerGame_account_create = true;
+                                    }else if(checkButtonClick(mouseX, mouseY, &account_login_button_rect)){
+                                        if(sound){
+                                            Mix_PlayChannel(1, button_sound, 0); 
+                                        }
+                                        towerGame_account_choose = false;
+                                        towerGame_account_login = true;
+                                    }
+                                }else if(towerGame_account_create){
+                                    if(checkButtonClick(mouseX, mouseY, &account_username)){
+                                        password_active = false;
+                                        username_active = true;
+                                    }else if(checkButtonClick(mouseX, mouseY, &account_password)){
+                                        username_active = false;
+                                        password_active = true;
+                                    }if(checkButtonClick(mouseX, mouseY, &account_create_button1_rect)){
+                                        if(sound){
+                                            Mix_PlayChannel(1, button_sound, 0); 
+                                        }
+                                        if(strlen(username)>4 && strlen(password)>4){
+                                            if(usernameExists(username)){
+                                                account_true = false;
+                                                account_true_str[0] = '\0';
+                                                account_problem = true;
+                                                account_problem_str[0] = '\0';
+                                                strcat(account_problem_str, "Username Already Exists");
+                                            }else{
+                                                if(createAccount(username, password)){
+                                                    account_problem = false;
+                                                    account_problem_str[0] = '\0';
+                                                    username[0] = '\0';
+                                                    password[0] = '\0';
+                                                    account_true = true;
+                                                    strcpy(account_true_str, "Your Account Created Successfully");
+                                                }else{
+                                                    account_true = false;
+                                                    account_true_str[0] = '\0';
+                                                    account_problem = true;
+                                                    account_problem_str[0] = '\0';
+                                                    strcat(account_problem_str, "Error in Creating Account. Try Again!");
+                                                }
+                                            }
+                                            account_username_typewriter.x = account_username.x + 10;
+                                            account_password_typewriter.x = account_password.x + 10;
+                                        }else{
+                                            account_problem = true;
+                                            account_problem_str[0] = '\0';
+                                            strcat(account_problem_str, "Minimum Length of username and passowrd is 5");
+                                        }
+                                    }
+                                }else if(towerGame_account_login){
+                                    if(checkButtonClick(mouseX, mouseY, &account_username)){
+                                        password_active = false;
+                                        username_active = true;
+                                    }else if(checkButtonClick(mouseX, mouseY, &account_password)){
+                                        username_active = false;
+                                        password_active = true;
+                                    }if(checkButtonClick(mouseX, mouseY, &account_login_button1_rect)){
+                                        if(sound){
+                                            Mix_PlayChannel(1, button_sound, 0); 
+                                        }
+                                        if(strlen(username)>4 && strlen(password)>4){
+                                            int result = login(username, password);
+                                            if(!result){
+                                                account_true = false;
+                                                account_true_str[0] = '\0';
+                                                account_problem = true;
+                                                account_problem_str[0] = '\0';
+                                                strcat(account_problem_str, "Invalid username or password!");
+                                            }else{
+                                                account_problem = false;
+                                                account_problem_str[0] = '\0';
+                                                account_true = false;
+                                                account_true_str[0] = '\0';
+                                                username[0] = '\0';
+                                                password[0] = '\0'; 
+
+                                                username_active = false;
+                                                password_active = false;
+                                                towerGame_start_bt = false;
+                                                towerGame_account = false;
+                                                towerGame_account_choose = false;
+                                                towerGame_account_create = false;
+                                                towerGame_homemenu = true;
+                                                mainBackground = towerGame_homePage_backgroundTexture;
+                                                towerGame_account_login = false;
+                                                music = true;
+                                                Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
+                                                printf("\nYour left Money is: %d", result);
+                                            }
+                                            account_username_typewriter.x = account_username.x + 10;
+                                            account_password_typewriter.x = account_password.x + 10;
+                                        }else{
+                                            account_problem = true;
+                                            account_problem_str[0] = '\0';
+                                            strcat(account_problem_str, "Minimum Length of username and passowrd is 5");
+                                        }
+                                    }
+                                }
                             }
                         }
                         else if(towerGame_homemenu){
@@ -625,6 +775,20 @@ int main(int argc, char* args[]){
                     }
                 }
 
+            }else if (event.type == SDL_TEXTINPUT) {
+                if(username_active){
+                    if (strlen(username) < sizeof(username) - 1) {
+                        account_username_typewriter.x +=  20;
+                        strcat(username, event.text.text);
+                        Mix_PlayChannel(2, typing_SoundEffect, 0);
+                }
+                }else if(password_active){
+                    if (strlen(password) < sizeof(password) - 1) {
+                        account_password_typewriter.x +=  20;
+                        strcat(password, event.text.text);
+                        Mix_PlayChannel(2, typing_SoundEffect, 0);
+                    }
+                }    
             }else if(event.type == SDL_KEYDOWN){
                 if(event.key.keysym.sym == SDLK_ESCAPE){
                     running = false;
@@ -635,11 +799,42 @@ int main(int argc, char* args[]){
                         {
                         case SDLK_RETURN:
                             if(towerGame_start_bt){
-                                towerGame_start_bt = false;
-                                towerGame_homemenu = true;
-                                mainBackground = towerGame_homePage_backgroundTexture;
+                                if(!towerGame_account){
+                                    // towerGame_start_bt = true;
+                                    towerGame_account = true;
+                                    towerGame_account_choose = true;
+                                    // towerGame_homemenu = true;
+                                    // mainBackground = towerGame_homePage_backgroundTexture;
+                                }
                             }
                             break;
+                        case SDLK_BACKSPACE:
+                            if(username_active && strlen(username) > 0){
+                                username[strlen(username) - 1] = '\0';
+                                account_username_typewriter.x -=  20;
+                                Mix_PlayChannel(2, typing_SoundEffect, 0);
+                            }else if(password_active && strlen(password) > 0){
+                                password[strlen(password)-1] = '\0';
+                                account_password_typewriter.x -=  20;
+                                Mix_PlayChannel(2, typing_SoundEffect, 0);
+                            }
+                            break;
+                        case SDLK_TAB:
+                            if(!towerGame_account_choose && (towerGame_account_create || towerGame_account_login)){
+                                towerGame_account_choose = true;
+                                towerGame_account_create = false;
+                                towerGame_account_login = false;
+                                username_active = false;
+                                password_active = false;
+                                account_problem = false;
+                                account_true = false;
+                                account_username_typewriter.x = account_username.x + 10;
+                                account_password_typewriter.x = account_password.x + 10;
+                                account_true_str[0] = '\0';
+                                account_problem_str[0] = '\0';
+                                username[0] = '\0';
+                                password[0] = '\0';
+                            }
                         default:
                             break;
                         }
@@ -829,11 +1024,76 @@ int main(int argc, char* args[]){
     if(towerGame){
         if(!towerGame_Started){
             if(towerGame_start_bt){
-                // Render button text
-                renderText(renderer, "DECK", (Windows_Width/2)-100, (Windows_Height/2)-200, towerGame_fontHeading,0 ,0, 0);
-                renderText(renderer, "OF", (Windows_Width/2)-40, (Windows_Height/2) - 100 , towerGame_fontHeading,0 ,0, 0);
-                renderText(renderer, "DOMINIONS", (Windows_Width/2)-240, (Windows_Height/2), towerGame_fontHeading,0 ,0, 0);
-                renderText(renderer, "Press \"Enter\" to start the Game", (Windows_Width/2)-250, (Windows_Height-100), towerGame_font,255 , 255, 255);
+                // // Render button text
+                // renderText(renderer, "DECK", (Windows_Width/2)-100, (Windows_Height/2)-200, towerGame_fontHeading,0 ,0, 0);
+                // renderText(renderer, "OF", (Windows_Width/2)-40, (Windows_Height/2) - 100 , towerGame_fontHeading,0 ,0, 0);
+                // renderText(renderer, "DOMINIONS", (Windows_Width/2)-240, (Windows_Height/2), towerGame_fontHeading,0 ,0, 0);
+                // renderText(renderer, "Press \"Enter\" to start the Game", (Windows_Width/2)-250, (Windows_Height-100), towerGame_font,255 , 255, 255);
+                if(towerGame_account){
+                        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 240);
+                        SDL_RenderFillRect(renderer, &account_main_rect);
+                    if(towerGame_account_choose){
+                        renderText(renderer, "GAME ACCOUNT", account_main_rect.x + 160, account_main_rect.y + 50, poppinsFont_Head, 225, 225, 225);
+                        SDL_RenderCopy(renderer, account_create_button, NULL, &account_create_button_rect);
+                        SDL_RenderCopy(renderer, account_login_button, NULL, &account_login_button_rect);
+                    }else if(towerGame_account_create){
+                        renderText(renderer, "Create Your Account", account_main_rect.x + 80, account_main_rect.y + 50, poppinsFont_Head, 225, 225, 225);
+                        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+                        renderText(renderer, "Enter Your Username", account_username.x, account_username.y - 60, poppinsFont_Normal, 255,255,255);
+                        SDL_RenderFillRect(renderer, &account_username);
+                        if(strlen(username) > 0){
+                            renderText(renderer, username, account_username.x+10, account_username.y+4, poppinsFont_Normal, 0,0,0);
+                        }
+
+                        renderText(renderer, "Enter Your Password", account_password.x, account_password.y - 60, poppinsFont_Normal, 255,255,255);
+                        SDL_RenderFillRect(renderer, &account_password);
+                        if(strlen(password) > 0){
+                            renderText(renderer, password, account_password.x+10, account_password.y+4, poppinsFont_Normal, 0,0,0);
+                        }
+                        SDL_RenderCopy(renderer, account_create_button, NULL, &account_create_button1_rect);
+                        if(account_problem){
+                            renderText(renderer, account_problem_str, account_main_rect.x+100, account_login_button1_rect.h + account_login_button1_rect.y+4, poppinsFont_Small, 255,0,0);
+                        }
+                        if(account_true){
+                            renderText(renderer, account_true_str, account_main_rect.x+100, account_login_button1_rect.h + account_login_button1_rect.y+4, poppinsFont_Small, 0,255,0);
+                        }
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                        if(username_active){
+                            SDL_RenderFillRect(renderer, &account_username_typewriter);
+                        }
+                        if(password_active){
+                            SDL_RenderFillRect(renderer, &account_password_typewriter);
+                        }
+                    }else if(towerGame_account_login){
+                        renderText(renderer, "Login Your Account", account_main_rect.x + 80, account_main_rect.y + 50, poppinsFont_Head, 225, 225, 225);
+                        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                        
+                        renderText(renderer, "Enter Your Username", account_username.x, account_username.y - 60, poppinsFont_Normal, 255,255,255);
+                        SDL_RenderFillRect(renderer, &account_username);
+                        if(strlen(username) > 0){
+                            renderText(renderer, username, account_username.x+10, account_username.y+4, poppinsFont_Normal, 0,0,0);
+                        }
+
+                        renderText(renderer, "Enter Your Password", account_password.x, account_password.y - 60, poppinsFont_Normal, 255,255,255);
+                        SDL_RenderFillRect(renderer, &account_password);
+                        if(strlen(password) > 0){
+                            renderText(renderer, password, account_password.x+10, account_password.y+4, poppinsFont_Normal, 0,0,0);
+                        }
+                        SDL_RenderCopy(renderer, account_login_button, NULL, &account_login_button1_rect);
+                        if(account_problem){
+                            renderText(renderer, account_problem_str, account_main_rect.x+100, account_login_button1_rect.h + account_login_button1_rect.y+4, poppinsFont_Small, 255,0,0);
+                        }
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                        if(username_active){
+                            SDL_RenderFillRect(renderer, &account_username_typewriter);
+                        }
+                        if(password_active){
+                            SDL_RenderFillRect(renderer, &account_password_typewriter);
+                        }
+                    }
+                }
             }else if(towerGame_homemenu){
                 SDL_RenderCopy(renderer, continue_button, NULL, &continue_button_rect);
                 SDL_RenderCopy(renderer, level_button, NULL, &level_button_rect);

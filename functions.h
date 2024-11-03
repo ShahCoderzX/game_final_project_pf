@@ -41,7 +41,12 @@ bool checkCollisionTower(Arrow *arrow, int towerX, int towerY);
 // Check if tower bomb hits the archer
 bool checkCollisionArcher(Pointer *towerbomb, Pointer *archer);
 
-
+// Account Creation
+int createAccount(char* username, char* password);
+// UserName Exists or not
+int usernameExists(const char* username);
+// Login Account
+int login(char* username, char* password);
 //! Tower Game Function declaration --------------------->
 
 #endif
