@@ -622,8 +622,9 @@ int main(int argc, char* args[]){
                                 }
                                 Mix_HaltChannel(0);
                                 towerGame = false;
-                                selectedGame_page = true;
-                                mainBackground = main_backgroundTexture;
+                                running = false;
+                                // selectedGame_page = true;
+                                // mainBackground = main_backgroundTexture;
                             }
                         }else if(towerGame_levelmenu){
                             if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
