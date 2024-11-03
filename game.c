@@ -527,6 +527,8 @@ int main(int argc, char* args[]){
                                                     account_problem_str[0] = '\0';
                                                     username[0] = '\0';
                                                     password[0] = '\0';
+                                                    account_username_typewriter.x = account_username.x + 10;
+                                                    account_password_typewriter.x = account_password.x + 10;
                                                     account_true = true;
                                                     strcpy(account_true_str, "Your Account Created Successfully");
                                                 }else{
@@ -537,8 +539,6 @@ int main(int argc, char* args[]){
                                                     strcat(account_problem_str, "Error in Creating Account. Try Again!");
                                                 }
                                             }
-                                            account_username_typewriter.x = account_username.x + 10;
-                                            account_password_typewriter.x = account_password.x + 10;
                                         }else{
                                             account_problem = true;
                                             account_problem_str[0] = '\0';
@@ -571,6 +571,8 @@ int main(int argc, char* args[]){
                                                 account_true_str[0] = '\0';
                                                 username[0] = '\0';
                                                 password[0] = '\0'; 
+                                                account_username_typewriter.x = account_username.x + 10;
+                                                account_password_typewriter.x = account_password.x + 10;
 
                                                 username_active = false;
                                                 password_active = false;
@@ -585,8 +587,6 @@ int main(int argc, char* args[]){
                                                 Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
                                                 printf("\nYour left Money is: %d", result);
                                             }
-                                            account_username_typewriter.x = account_username.x + 10;
-                                            account_password_typewriter.x = account_password.x + 10;
                                         }else{
                                             account_problem = true;
                                             account_problem_str[0] = '\0';
