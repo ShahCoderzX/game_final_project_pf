@@ -10,10 +10,10 @@
 // Own Functions Created Library
 #include "functions.h"
 
-int Windows_Width, Windows_Height;
 
 int main(int argc, char* args[]){
 
+    int Windows_Width, Windows_Height;
 
     // SDL INIT CHECK
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
