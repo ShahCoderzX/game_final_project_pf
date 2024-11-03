@@ -1151,10 +1151,10 @@ int main(int argc, char* args[]){
 
 
                 SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, 40, 40};
-                SDL_SetRenderDrawColor(renderer, 150, 75, 0, 1);
+                SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
                 SDL_RenderFillRect(renderer, &tower_bomb_rect);
 
-                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 1);
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
                 SDL_RenderFillRect(renderer, &tower_attacker);
 
 
@@ -1165,20 +1165,20 @@ int main(int argc, char* args[]){
 
 
                 // Health
-                SDL_SetRenderDrawColor(renderer, 240, 236, 235,1);
+                SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
                 SDL_RenderFillRect(renderer, &archer_health_box_innerfill);
                 SDL_RenderFillRect(renderer, &tower_health_box_innerfill);
 
                 char towerHealth_val[50];
                 sprintf(towerHealth_val, "Tower Health: %d %%", tower_attacker_health);
                 renderText(renderer, towerHealth_val, tower_health_box.x, tower_health_box.y-40, font, 0, 0, 0);
-                SDL_SetRenderDrawColor(renderer, 182,33,45, 1);
+                SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
                 SDL_RenderFillRect(renderer, &tower_health_box);
 
                 char archerHealth_val[50];
                 sprintf(archerHealth_val, "Archer Health: %d %%", archer_health);
                 renderText(renderer, archerHealth_val, archer_health_box.x, archer_health_box.y-40, font, 0, 0, 0);
-                SDL_SetRenderDrawColor(renderer, 127,23,31, 1);
+                SDL_SetRenderDrawColor(renderer, 127,23,31, 255);
                 SDL_RenderFillRect(renderer, &archer_health_box);
 
                 
