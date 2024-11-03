@@ -9,6 +9,7 @@
 
 // Own Functions Created Library
 #include "functions.h"
+int width,height;
 
 int main(int argc, char* args[]){
 
@@ -19,7 +20,15 @@ int main(int argc, char* args[]){
         printf("SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
-
+    SDL_Rect displayBounds;
+ if (SDL_GetDisplayBounds(0, &displayBounds) != 0) {
+        printf("SDL_GetDisplayBounds Error: %s\n", SDL_GetError());
+    } else {
+        // Save width and height
+        width = displayBounds.w;
+        height = displayBounds.h;
+        printf("Display Resolution: %dx%d\n", width, height);
+    }
     // Initialize SDl Text --> TTF
     if (TTF_Init() != 0) {
         printf("TTF_Init Error: %s\n", TTF_GetError());
@@ -56,8 +65,8 @@ int main(int argc, char* args[]){
         //     Windows_Width = screenDisplay.w;
         //     Windows_Height = screenDisplay.h;
         // }
-        Windows_Width = screenDisplay.w;
-        Windows_Height = screenDisplay.h;
+        Windows_Width = width;
+        Windows_Height = height;
     }
 
     // Calculate scaling factors based on the original resolution
