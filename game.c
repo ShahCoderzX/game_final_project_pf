@@ -10,7 +10,6 @@
 // Own Functions Created Library
 #include "functions.h"
 
-
 int main(int argc, char* args[]){
 
     int Windows_Width, Windows_Height;
@@ -20,6 +19,7 @@ int main(int argc, char* args[]){
         printf("SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
+
     // Initialize SDl Text --> TTF
     if (TTF_Init() != 0) {
         printf("TTF_Init Error: %s\n", TTF_GetError());
@@ -27,14 +27,23 @@ int main(int argc, char* args[]){
         return 1;
     }
 
-     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    // Mix Audio Check
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
         return 1;
     }
 
+    // All Audios
     Mix_Chunk *button_sound = Mix_LoadWAV("./audio/button_sound.mp3");
     Mix_Chunk *towerGame_backgroundMusic = Mix_LoadWAV("./audio/deckofdominions/background.mp3");
     Mix_Chunk *typing_SoundEffect = Mix_LoadWAV("./audio/deckofdominions/typing.mp3");
+    
+    Mix_Chunk *archerDamage_sound = Mix_LoadWAV("./audio/deckofdominions/archer_damage.mp3");
+    Mix_Chunk *towerDamage_sound = Mix_LoadWAV("./audio/deckofdominions/tower_damage.mp3");
+    Mix_Chunk *towerShooting_sound = Mix_LoadWAV("./audio/deckofdominions/tower_shooting.mp3");
+    Mix_Chunk *archerShooting_sound = Mix_LoadWAV("./audio/deckofdominions/archer_shooting.mp3");
+
+    Mix_Chunk *level1Background_Sound = Mix_LoadWAV("./audio/deckofdominions/level1_Background.mp3");
 
 
     // Give The Values of Windows Resoltuion
@@ -104,6 +113,7 @@ int main(int argc, char* args[]){
     SDL_Rect select_menu_quit_button_rect = {(Windows_Width/2)-(select_button_Width)/2, select_menu_playDeck_button_rect.y + select_button_Height + (Windows_Height*30)/1080, select_button_Width, select_button_Height};
 
     // All Tower Game Button Textures
+
     // Menu Page
     SDL_Texture* start_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/start.png");
     SDL_Texture* continue_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/continue.png");
@@ -296,8 +306,12 @@ int main(int argc, char* args[]){
     SDL_Texture* towerGame_control_backgroundTexture = IMG_LoadTexture(renderer, "./image/tower_control_background.png");
     SDL_Texture* towerGame_mainPage_backgroundTexture = IMG_LoadTexture(renderer, "./image/main_tower_background.png");
     SDL_Texture* towerGame_level1_background = IMG_LoadTexture(renderer, "./image/towerGame_level1_background.jpg");
+
     SDL_Texture* arrow = IMG_LoadTexture(renderer, "./image/arrow.png");
-    SDL_Texture* archer_texture = IMG_LoadTexture(renderer, "./image/archer.png");
+    SDL_Texture* archer_standing_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_standing.png");
+    SDL_Texture* archer_walking_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_walking.png");
+    SDL_Texture* archer_shooting_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_shooting.png");
+
     // Main Background Texture
     SDL_Texture* mainBackground = main_backgroundTexture;
 
@@ -348,18 +362,22 @@ int main(int argc, char* args[]){
     
     // !
     int towerHeight = (Windows_Height * 300) / 1080;
+
     // Tower Characters
     SDL_Rect tower_attacker = {(Windows_Width*100)/1920, Windows_Height - (towerHeight+(int)(Windows_Height * 0.28)), (Windows_Width*100)/1920, towerHeight};
     Pointer tower_bomb = {(float)tower_attacker.x, (float)tower_attacker.y, 0, 0, false};
     
     // SDL_Rect archer_character = {Windows_Width-(archer_character.w + 100), Windows_Height - (archer_character.h + 300), 200, 160};
-    int archerWidth = (Windows_Width * 300) / 1920;
-    int archerHeight = (Windows_Height * 200) / 1080;
+    // Archer Width, Height, x & y axis for all the window resoltuion
+    int archer_basic_Width = (Windows_Width * ARCHER_BASIC_FRAME_WIDTH) / 1920;
+    int archer_basic_Height = (Windows_Height * ARCHER_BASIC_FRAME_HEIGHT) / 1080;
+    int archer_fire_Width = (Windows_Height * ARCHER_FIRE_FRAME_WIDTH) / 1080;
+    int archer_fire_Height = (Windows_Height * ARCHER_BASIC_FRAME_HEIGHT) / 1080;
     int archerX = Windows_Width - (int)((200 * ScaleX) + (100 * ScaleY));
-    int archerY = Windows_Height - (int)((160 * ScaleY) + (300 * ScaleY));
+    int archerY = Windows_Height - (int)((160 * ScaleY) + (330 * ScaleY));
+
     Pointer archer = {(float)archerX, (float)archerY, 0, 0, false};
     Arrow archer_arrow = {(float)archer.x, (float)archer.y, 0, 0, false, (float)0};
-
 
     // Health Bar
     SDL_Rect tower_health_box= {(Windows_Width*100)/1920, (Windows_Height * 100) / 1080, 400, 60};
@@ -370,14 +388,13 @@ int main(int argc, char* args[]){
     SDL_Rect archer_health_box_outline = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
     SDL_Rect archer_health_box_innerfill = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
 
-    // For Snake Game
 
     // Boolean
     bool running = true;
     bool gameStarted = false;
 
     // For Main Home/ First  Page
-    bool selectedGame_page = true;   //! True Karo
+    bool selectedGame_page = true; //! True Karo  
 
     // For Account 
     char username[20] = "";
@@ -395,7 +412,7 @@ int main(int argc, char* args[]){
     bool towerGame_account_choose = false;
     bool towerGame_account_create = false;
     bool towerGame_account_login = false;
-    bool towerGame = false; //! False Karo
+    bool towerGame = false; //! False Karo 
     bool towerGame_Started = false; //! False Karo
     bool towerGame_homemenu = false;
     bool towerGame_levelmenu = false;
@@ -406,7 +423,7 @@ int main(int argc, char* args[]){
     bool towerGame_option_controllerMenu = false;
 
     // Tower Game Levels
-    bool towerGame_Started_level1 = false; //! False Karo
+    bool towerGame_Started_level1 = false; //! False Karo 
     bool towerGame_Started_level2 = false;
     bool towerGame_Started_level3 = false;
     bool towerGame_Started_level4 = false;
@@ -419,9 +436,8 @@ int main(int argc, char* args[]){
     int tower_attacker_health = tower_health_box.w/4;
     int archer_health = archer_health_box.w/4;
 
-
     // ON / OFF
-    bool music = false;
+    bool music = true;
     bool sound = true;
 
     // !
@@ -434,6 +450,37 @@ int main(int argc, char* args[]){
 
     // Event
     SDL_Event event;
+
+    // Variables for animation
+    int currentFrame = 0;
+    SDL_Rect walkClips[TOTAL_WALK_FRAMES];
+    SDL_Rect fireClips[TOTAL_FIRE_FRAMES];
+
+    // Set up frames for walking sprite sheet
+    for (int i = 0; i < TOTAL_WALK_FRAMES; i++) {
+        walkClips[i].x = i * ARCHER_BASIC_FRAME_WIDTH;
+        walkClips[i].y = 0;
+        walkClips[i].w = ARCHER_BASIC_FRAME_WIDTH;
+        walkClips[i].h = ARCHER_BASIC_FRAME_HEIGHT;
+    }
+
+    // Set up frames for shooting sprite sheet
+    for (int i = 0; i < TOTAL_FIRE_FRAMES; i++) {
+        fireClips[i].x = i * ARCHER_FIRE_FRAME_WIDTH;
+        fireClips[i].y = 0;
+        fireClips[i].w = ARCHER_FIRE_FRAME_WIDTH;
+        fireClips[i].h = ARCHER_BASIC_FRAME_HEIGHT;
+    }
+
+    // For Archer
+    bool archer_moving_left = false;
+    bool archer_moving_right = false;
+    bool archer_aiming = false;
+    bool archer_shooting = false;
+
+    // For Handling & Changing Frames
+    Uint32 frameDelay = 100;  // Delay between frames (in milliseconds)
+    Uint32 lastFrameTime = 0;
 
     while (running) {
     while (SDL_PollEvent(&event)) {
@@ -465,9 +512,6 @@ int main(int argc, char* args[]){
                     if(!towerGame_Started){
                         if(towerGame_start_bt){
                             mainBackground = towerGame_mainPage_backgroundTexture;
-                            if(music){
-                                Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
-                            }
                             if(towerGame_account){
                                 if(towerGame_account_choose){
                                     if(checkButtonClick(mouseX, mouseY, &account_create_button_rect)){
@@ -620,6 +664,11 @@ int main(int argc, char* args[]){
                                 mainBackground = towerGame_level1_background;
                                 towerGame_levelmenu = false;
                                 towerGame_homemenu = true;
+
+                                Mix_HaltChannel(0);
+                                if(music){
+                                    Mix_PlayChannel(0, level1Background_Sound, 0);
+                                }
                             }else if(checkButtonClick(mouseX, mouseY, &level2_button_rect)){
                                 if(sound){
                                     Mix_PlayChannel(1, button_sound, 0); 
@@ -820,13 +869,15 @@ int main(int argc, char* args[]){
                         switch (event.key.keysym.sym)
                         {
                         case SDLK_LEFT:
-                            if(archer.x > (Windows_Width - 200)/2){
-                                archer.x -= 8*ScaleX;
+                            if(archer.x > (Windows_Width - ARCHER_FIRE_FRAME_WIDTH)/2){
+                                archer_moving_left = true;
+                                archer.x -= 16*ScaleX;
                             }
                             break;
                         case SDLK_RIGHT:
-                            if(archer.x < Windows_Width - (200)){
-                                archer.x += 8*ScaleX;
+                            if(archer.x < Windows_Width - (ARCHER_FIRE_FRAME_WIDTH)){
+                                archer_moving_right = true;
+                                archer.x += 16*ScaleX;
                             }
                             break;
                         case SDLK_UP: 
@@ -836,11 +887,17 @@ int main(int argc, char* args[]){
                             }
                             break;
                         case SDLK_f: 
-                            if(!archer_arrow.active){
-                                archer_arrow.vx = -18*ScaleX;
-                                archer_arrow.vy = -22*ScaleY;
-                                archer_arrow.active = true;
-                                archer_arrow.angle = 0;
+                             // Increase velocity while 'F' is held down
+                            if (!archer_arrow.active) {
+                                archer_aiming = true; 
+                                archer_arrow.vx -= 3 * ScaleX;  // Increase velocity each frame
+                                archer_arrow.vy -= 1.2 * ScaleY;  // Increase velocity each frame
+                                if (archer_arrow.vx < MAX_ARROW_SPEED*ScaleX) {
+                                    archer_arrow.vx = MAX_ARROW_SPEED*ScaleX;  // Cap velocity at a maximum value
+                                }
+                                if(archer_arrow.vy<-21.6*ScaleY){
+                                    archer_arrow.vy = -21.6*ScaleY;
+                                }
                             }
                             break;
                         default:
@@ -848,8 +905,37 @@ int main(int argc, char* args[]){
                         }
                     }
                 }
+            }else if(event.type == SDL_KEYUP){
+                if(towerGame_Started){
+                    switch(event.key.keysym.sym){
+                        case SDLK_LEFT:
+                                archer_moving_left = false;
+                                currentFrame = 0;
+                            break;
+                        case SDLK_RIGHT:
+                                archer_moving_right = false;
+                                currentFrame = 0;
+                            break;
+                        case SDLK_f: 
+                                if(sound){
+                                    Mix_PlayChannel(2, archerShooting_sound, 0); 
+                                }
+                                if(!archer_arrow.active){
+                                    archer_arrow.x = archer.x;
+                                    archer_arrow.y = archer.y;
+                                    // archer_arrow.vx = -18*ScaleX;
+                                    // archer_arrow.vy = -22*ScaleY;
+                                    archer_arrow.active = true;
+                                    archer_arrow.angle = 0;
+                                }   
+                                archer_shooting = true;
+                                archer_aiming = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
-          
         }
         else if(gameStarted){
             if (event.type == SDL_KEYDOWN) {
@@ -865,10 +951,33 @@ int main(int argc, char* args[]){
     }
     
     if(towerGame_Started){
+        
+        
         if(towerGame_Started_level1){
+            
+            // Handle frame updates for animation
+            Uint32 currentTime = SDL_GetTicks();
+            if ((archer_moving_left || archer_moving_right || archer_aiming || archer_shooting) && currentTime > lastFrameTime + frameDelay) {
+                if((archer_aiming && currentFrame <= TOTAL_FIRE_FRAMES - 4)||(archer_moving_left || archer_moving_right)||(archer_shooting && (currentFrame >= TOTAL_FIRE_FRAMES-4 && currentFrame<= TOTAL_FIRE_FRAMES))){
+                    currentFrame++;
+                }
+                if(archer_shooting){
+                    if (currentFrame >= TOTAL_FIRE_FRAMES-4 && currentFrame<=TOTAL_FIRE_FRAMES) {
+                        currentFrame = 0; 
+                        archer_shooting = false;
+                    }
+                }
+                else {
+                    // Handle walking animation frames
+                    if (currentFrame >= TOTAL_WALK_FRAMES) {
+                        currentFrame = 0;
+                    }
+                }
+                lastFrameTime = currentTime;
+            }
 
             if (archer.active) {
-                archer.y += archer.vy; 
+                archer.y +=  archer.vy; 
                 archer.vy += 0.5*ScaleY; 
                 
 
@@ -882,6 +991,9 @@ int main(int argc, char* args[]){
             
             if (tower_attack_timer >= tower_attack_delay) {
                 if(!tower_bomb.active){
+                    if(sound){
+                        Mix_PlayChannel(3, towerShooting_sound, 0); 
+                    }
                     tower_bomb.vx += 20 * ScaleX;
                     tower_bomb.vy += -18 * ScaleY;
                     tower_bomb.active = true;
@@ -894,6 +1006,9 @@ int main(int argc, char* args[]){
                 tower_bomb.vy += 0.5 * ScaleY;
                 if(tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &archer)){
                     if(checkCollisionArcher(&tower_bomb, &archer)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
                         if(archer_health >0){
                             archer_health_box.w -= 10;  
                             archer_health = archer_health_box.w/4;
@@ -943,14 +1058,15 @@ int main(int argc, char* args[]){
                 if(archer_arrow.x > Windows_Width || archer_arrow.y > Windows_Height || checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y)){
                     if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y)){
                         if(tower_attacker_health>0){
+                            if(sound){
+                                Mix_PlayChannel(4, towerDamage_sound, 0); 
+                            }
                             tower_health_box.w -= 10;
                             tower_attacker_health = tower_health_box.w/4;
                         }
                     }
                     archer_arrow.vx = 0;
                     archer_arrow.vy = 0;
-                    archer_arrow.x = archer.x;
-                    archer_arrow.y = archer.y;
                     archer_arrow.active = false;  
                     archer_arrow.angle = 0;  
                 }
@@ -1105,12 +1221,13 @@ int main(int argc, char* args[]){
                 SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
                 SDL_RenderFillRect(renderer, &tower_attacker);
 
-
-                SDL_Rect archer_rect = {(int)archer.x, (int)archer.y, archerWidth, archerHeight};
-                SDL_RenderCopy(renderer,archer_texture, NULL, &archer_rect);
-                // SDL_SetRenderDrawColor(renderer, 0, 0, 255, 1);
-                // SDL_RenderFillRect(renderer, &archer_rect);
-
+                SDL_Rect archerBasic_rect = { (int)archer.x, (int)archer.y, archer_basic_Width, archer_basic_Height };  // Position and size to render
+                SDL_Rect archerFire_rect = { (int)archer.x, (int)archer.y, archer_fire_Width, archer_fire_Height };  // Position and size to render
+                if (archer_aiming) {
+                    SDL_RenderCopy(renderer, archer_shooting_texture, &fireClips[currentFrame], &archerFire_rect);
+                } else {
+                    SDL_RenderCopy(renderer, archer_walking_texture, &walkClips[currentFrame], &archerBasic_rect);
+                }
 
                 // Health
                 SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
@@ -1129,7 +1246,7 @@ int main(int argc, char* args[]){
                 SDL_SetRenderDrawColor(renderer, 127,23,31, 255);
                 SDL_RenderFillRect(renderer, &archer_health_box);
 
-                
+
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
                 SDL_RenderDrawRect(renderer, &tower_health_box_outline); 
                 

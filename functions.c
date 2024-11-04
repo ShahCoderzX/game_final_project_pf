@@ -84,13 +84,6 @@ bool checkCollisionArcher(Pointer *towerbomb, Pointer *archer) {
     return SDL_HasIntersection(&arrowRect, &towerRect);
 }
 
-// Create Account Function
-typedef struct {
-    char username[20];
-    char password[20];
-    int money;
-} Account;
-
 // UserName Exist or not 
 int usernameExists(const char* username) {
     FILE *file = fopen("accounts.txt", "r");
@@ -156,6 +149,16 @@ int login(char* username, char* password) {
 
     fclose(file);
     return account_money;
+}
+
+// Set up sprite sheet frames
+void setupSpriteFrames(SDL_Rect* clips, int totalFrames, int frameWidth, int frameHeight) {
+    for (int i = 0; i < totalFrames; i++) {
+        clips[i].x = i * frameWidth;
+        clips[i].y = 0;
+        clips[i].w = frameWidth;
+        clips[i].h = frameHeight;
+    }
 }
 
 //! ---------------------x---------------------x

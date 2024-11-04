@@ -19,6 +19,13 @@ typedef struct
     float angle;
 }Arrow;
 
+// Create Account Function
+typedef struct {
+    char username[20];
+    char password[20];
+    int money;
+} Account;
+
 //! All Functions --------------------->
 // Clear Function
 void clear(SDL_Window* window, SDL_Renderer* renderer, TTF_Font* font, TTF_Font* fontHeading, SDL_Texture* backgroundTexture);
@@ -47,6 +54,10 @@ int createAccount(char* username, char* password);
 int usernameExists(const char* username);
 // Login Account
 int login(char* username, char* password);
+
+// Set Up Sprite Sheet frames
+void setupSpriteFrames(SDL_Rect* clips, int totalFrames, int frameWidth, int frameHeight);
+
 //! Tower Game Function declaration --------------------->
 
 #endif
