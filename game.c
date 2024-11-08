@@ -312,6 +312,13 @@ int main(int argc, char* args[]){
     SDL_Texture* archer_walking_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_walking.png");
     SDL_Texture* archer_shooting_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_shooting.png");
 
+    // RECT OF ARROW
+    const int velocity_bar_Width = (Windows_Width*20)/1920;
+    const int velocity_bar_Height = (Windows_Height*180)/1080;
+    SDL_Rect arrow_velocity_bar_outline = {Windows_Width-(Windows_Width*60)/1920, (Windows_Height/2)-(velocity_bar_Height/2), velocity_bar_Width, velocity_bar_Height};
+    SDL_Rect arrow_velocity_bar_innerfill = {Windows_Width-(Windows_Width*60)/1920, (Windows_Height/2)-(velocity_bar_Height/2), velocity_bar_Width, velocity_bar_Height};
+    SDL_Rect arrow_velocity_bar = {arrow_velocity_bar_innerfill.x, arrow_velocity_bar_outline.y, velocity_bar_Width, 0};
+
     // Main Background Texture
     SDL_Texture* mainBackground = main_backgroundTexture;
 
@@ -361,10 +368,11 @@ int main(int argc, char* args[]){
     // For Tower Game
     
     // !
-    int towerHeight = (Windows_Height * 300) / 1080;
+    const int towerWidth = (Windows_Width*100)/1920;
+    const int towerHeight = (Windows_Height*300)/1080;
 
     // Tower Characters
-    SDL_Rect tower_attacker = {(Windows_Width*100)/1920, Windows_Height - (towerHeight+(int)(Windows_Height * 0.28)), (Windows_Width*100)/1920, towerHeight};
+    SDL_Rect tower_attacker = {(Windows_Width*100)/1920, Windows_Height - (towerHeight+(int)(Windows_Height * 0.28)), towerWidth, towerHeight};
     Pointer tower_bomb = {(float)tower_attacker.x, (float)tower_attacker.y, 0, 0, false};
     
     // SDL_Rect archer_character = {Windows_Width-(archer_character.w + 100), Windows_Height - (archer_character.h + 300), 200, 160};
@@ -394,7 +402,7 @@ int main(int argc, char* args[]){
     bool gameStarted = false;
 
     // For Main Home/ First  Page
-    bool selectedGame_page = true; //! True Karo  
+    bool selectedGame_page = false; //! True Karo  
 
     // For Account 
     char username[20] = "";
@@ -412,8 +420,8 @@ int main(int argc, char* args[]){
     bool towerGame_account_choose = false;
     bool towerGame_account_create = false;
     bool towerGame_account_login = false;
-    bool towerGame = false; //! False Karo 
-    bool towerGame_Started = false; //! False Karo
+    bool towerGame = true; //! False Karo 
+    bool towerGame_Started = true; //! False Karo
     bool towerGame_homemenu = false;
     bool towerGame_levelmenu = false;
     bool towerGame_optionmenu = false;
@@ -423,7 +431,7 @@ int main(int argc, char* args[]){
     bool towerGame_option_controllerMenu = false;
 
     // Tower Game Levels
-    bool towerGame_Started_level1 = false; //! False Karo 
+    bool towerGame_Started_level1 = true; //! False Karo 
     bool towerGame_Started_level2 = false;
     bool towerGame_Started_level3 = false;
     bool towerGame_Started_level4 = false;
@@ -890,13 +898,21 @@ int main(int argc, char* args[]){
                              // Increase velocity while 'F' is held down
                             if (!archer_arrow.active) {
                                 archer_aiming = true; 
-                                archer_arrow.vx -= 3 * ScaleX;  // Increase velocity each frame
-                                archer_arrow.vy -= 1.2 * ScaleY;  // Increase velocity each frame
-                                if (archer_arrow.vx < MAX_ARROW_SPEED*ScaleX) {
-                                    archer_arrow.vx = MAX_ARROW_SPEED*ScaleX;  // Cap velocity at a maximum value
+                                if(arrow_velocity_bar.h >= velocity_bar_Height){
+                                    arrow_velocity_bar.h = velocity_bar_Height;
+                                }else if(arrow_velocity_bar.h <= velocity_bar_Height){
+                                    arrow_velocity_bar.h += (Windows_Height*30)/1080;
                                 }
-                                if(archer_arrow.vy<-21.6*ScaleY){
-                                    archer_arrow.vy = -21.6*ScaleY;
+                                
+                                if (archer_arrow.vx <= MAX_ARROW_SPEED_X*ScaleX) {
+                                    archer_arrow.vx = MAX_ARROW_SPEED_X*ScaleX;  
+                                }else if(archer_arrow.vx >= MAX_ARROW_SPEED_X*ScaleX){
+                                     archer_arrow.vx -= 3 * ScaleX;  // Increase velocity each frame
+                                }
+                                if(archer_arrow.vy <= MAX_ARROW_SPEED_Y*ScaleY){
+                                    archer_arrow.vy = MAX_ARROW_SPEED_Y*ScaleY;
+                                }else if(archer_arrow.vx >= MAX_ARROW_SPEED_Y*ScaleY){
+                                    archer_arrow.vy -= 3.6 * ScaleY;  // Increase velocity each frame
                                 }
                             }
                             break;
@@ -923,13 +939,12 @@ int main(int argc, char* args[]){
                                 if(!archer_arrow.active){
                                     archer_arrow.x = archer.x;
                                     archer_arrow.y = archer.y;
-                                    // archer_arrow.vx = -18*ScaleX;
-                                    // archer_arrow.vy = -22*ScaleY;
                                     archer_arrow.active = true;
                                     archer_arrow.angle = 0;
                                 }   
                                 archer_shooting = true;
                                 archer_aiming = false;
+                                arrow_velocity_bar.h = 0;
                             break;
                         default:
                             break;
@@ -1001,8 +1016,8 @@ int main(int argc, char* args[]){
             }
                 // tower_bomb.active = true;
             if(tower_bomb.active){
-                tower_bomb.x += tower_bomb.vx;
-                tower_bomb.y += tower_bomb.vy;
+                tower_bomb.x += tower_bomb.vx; 
+                tower_bomb.y += tower_bomb.vy; 
                 tower_bomb.vy += 0.5 * ScaleY;
                 if(tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &archer)){
                     if(checkCollisionArcher(&tower_bomb, &archer)){
@@ -1026,28 +1041,28 @@ int main(int argc, char* args[]){
             if(archer_arrow.active){
                 archer_arrow.x += archer_arrow.vx;
                 archer_arrow.y += archer_arrow.vy;
-                archer_arrow.vy += 0.5;      
+                archer_arrow.vy += 0.5*ScaleY;       
             
             // Adjust the angle of the arrow based on its vertical velocity (vy)
-                if (archer_arrow.vy < -25) {
+                if (archer_arrow.vy <= -25*ScaleY) {
                     archer_arrow.angle = 35;    // Very steep upwards
-                } else if (archer_arrow.vy < -20) {
+                } else if (archer_arrow.vy < -20*ScaleY) {
                     archer_arrow.angle = 30;    // Steep upwards
-                } else if (archer_arrow.vy < -15) {
+                } else if (archer_arrow.vy < -15*ScaleY) {
                     archer_arrow.angle = 25;    // Upwards
-                } else if (archer_arrow.vy < -10) {
+                } else if (archer_arrow.vy < -10*ScaleY) {
                     archer_arrow.angle = 20;    // Slightly upwards
-                } else if (archer_arrow.vy < -5) {
+                } else if (archer_arrow.vy < -5*ScaleY) {
                     archer_arrow.angle = 15;    // Almost horizontal upwards
-                } else if (archer_arrow.vy < 0) {
+                } else if (archer_arrow.vy < 0*ScaleY) {
                     archer_arrow.angle = 0;     // Horizontal
-                } else if (archer_arrow.vy < 5) {
+                } else if (archer_arrow.vy < 5*ScaleY) {
                     archer_arrow.angle = -5;    // Slightly downwards
-                } else if (archer_arrow.vy < 10) {
+                } else if (archer_arrow.vy < 10*ScaleY) {
                     archer_arrow.angle = -15;   // More downwards
-                } else if (archer_arrow.vy < 15) {
+                } else if (archer_arrow.vy < 15*ScaleY) {
                     archer_arrow.angle = -25;   // Further downwards
-                } else if (archer_arrow.vy < 20) {
+                } else if (archer_arrow.vy < 20*ScaleY) {
                     archer_arrow.angle = -35;   // Almost vertical downwards
                 } else {
                     archer_arrow.angle = -45;   // Steep downwards
@@ -1208,13 +1223,13 @@ int main(int argc, char* args[]){
             if(towerGame_Started_level1){
 
                 if(archer_arrow.active){
-                    SDL_Rect archer_arrow_rect = {(int)archer_arrow.x, (int)archer_arrow.y, 120, 50};
+                    SDL_Rect archer_arrow_rect = {(int)archer_arrow.x, (int)archer_arrow.y, (Windows_Width*120)/1920, (Windows_Height*50)/1080};
                     SDL_Point center = {archer_arrow_rect.w / 2, archer_arrow_rect.h / 2};  
                     SDL_RenderCopyEx(renderer, arrow, NULL, &archer_arrow_rect, archer_arrow.angle, &center, SDL_FLIP_NONE);
                 }
 
 
-                SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, 40, 40};
+                SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
                 SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
                 SDL_RenderFillRect(renderer, &tower_bomb_rect);
 
@@ -1225,6 +1240,12 @@ int main(int argc, char* args[]){
                 SDL_Rect archerFire_rect = { (int)archer.x, (int)archer.y, archer_fire_Width, archer_fire_Height };  // Position and size to render
                 if (archer_aiming) {
                     SDL_RenderCopy(renderer, archer_shooting_texture, &fireClips[currentFrame], &archerFire_rect);
+                    SDL_SetRenderDrawColor(renderer, 255, 255,255,255);
+                    SDL_RenderFillRect(renderer, &arrow_velocity_bar_innerfill);
+                    SDL_SetRenderDrawColor(renderer, 0,255,0, 255);
+                    SDL_RenderFillRect(renderer, &arrow_velocity_bar);
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderDrawRect(renderer, &arrow_velocity_bar_outline);
                 } else {
                     SDL_RenderCopy(renderer, archer_walking_texture, &walkClips[currentFrame], &archerBasic_rect);
                 }
