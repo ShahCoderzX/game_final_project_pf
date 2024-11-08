@@ -294,6 +294,16 @@ int main(int argc, char* args[]){
     SDL_Rect off_button_rect = {(Windows_Width*770)/1920 + tower_menu_button_width, starting_y_position, tower_menu_button_width, tower_menu_button_height};
 
     
+    // Buttons For Pause Section
+    SDL_Texture* resumeButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/resume.png");
+    SDL_Texture* restartButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/restart.png");
+    SDL_Texture* homeButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/home.png");
+    SDL_Texture* pauseButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/pause.png");
+    SDL_Texture* sound_on_pauseButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/sound_on_pause.png");
+    SDL_Texture* sound_off_pauseButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/sound_off_pause.png");
+    SDL_Texture* music_on_pauseButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/music_on_pause.png");
+    SDL_Texture* music_off_pauseButton = IMG_LoadTexture(renderer, "./image/towerGame/menu/music_off_pause.png");
+
 
     // Surface Texture
     SDL_Texture* main_backgroundTexture = IMG_LoadTexture(renderer, "./image/mainbackground.png");
@@ -311,6 +321,57 @@ int main(int argc, char* args[]){
     SDL_Texture* archer_standing_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_standing.png");
     SDL_Texture* archer_walking_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_walking.png");
     SDL_Texture* archer_shooting_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_shooting.png");
+
+    const int small_pause_button_Width = (Windows_Width*74)/1920;
+    const int small_pause_button_Height = (Windows_Height*74)/1080;
+    const int normal_pause_button_Width = (Windows_Width*200)/1920;
+    const int normal_pause_button_Height = (Windows_Height*74)/1080;
+    const int pause_screen_Width = (Windows_Width*500)/1920;
+    const int pause_screen_Height = (Windows_Height*600)/1080;
+    SDL_Rect pause_screen_background = {0, 0, Windows_Width, Windows_Height};
+    SDL_Rect pause_screen = { (Windows_Width - pause_screen_Width) / 2,
+    (Windows_Height - pause_screen_Height) / 2, pause_screen_Width, pause_screen_Height};
+    SDL_Rect pauseButton_rect = {Windows_Width-((Windows_Width*20)/1920)-(small_pause_button_Width), (Windows_Height*20)/1080, small_pause_button_Width,small_pause_button_Height};
+
+    SDL_Rect resumeButton_rect = {
+        pause_screen.x + (pause_screen.w - normal_pause_button_Width) / 2,  
+        pause_screen.y + (Windows_Height*140)/1080,  
+        normal_pause_button_Width,
+        normal_pause_button_Height
+    };
+
+    // Define spacing and button dimensions
+    const int buttonSpacing = (Windows_Height*20)/1080;  
+
+    SDL_Rect restartButton_rect = {
+        pause_screen.x + (pause_screen.w - normal_pause_button_Width) / 2,
+        resumeButton_rect.y + normal_pause_button_Height + buttonSpacing,
+        normal_pause_button_Width,
+        normal_pause_button_Height
+    };
+
+    SDL_Rect homeButton_rect = {
+        pause_screen.x + (pause_screen.w - normal_pause_button_Width) / 2,
+        restartButton_rect.y + normal_pause_button_Height + buttonSpacing,
+        normal_pause_button_Width,
+        normal_pause_button_Height
+    };
+
+    SDL_Rect music_pause_button_rect = {
+        pause_screen.x + (pause_screen.w - (small_pause_button_Width*2 + (Windows_Width*20)/1920)) / 2,
+        homeButton_rect.y + normal_pause_button_Height + buttonSpacing,
+        small_pause_button_Width,
+        small_pause_button_Height
+    };
+
+    SDL_Rect sound_pause_button_rect = {
+        music_pause_button_rect.x + (Windows_Width*20)/1920 + small_pause_button_Width,
+        homeButton_rect.y + normal_pause_button_Height + buttonSpacing,
+        small_pause_button_Width,
+        small_pause_button_Height
+    };
+
+
 
     // RECT OF ARROW
     const int velocity_bar_Width = (Windows_Width*20)/1920;
@@ -339,6 +400,7 @@ int main(int argc, char* args[]){
     TTF_Font* towerGame_fontHeading = TTF_OpenFont("./font/tower_font.ttf", 100);
     TTF_Font* poppinsFont_Head = TTF_OpenFont("./font/poppinsFont.ttf", 60);
     TTF_Font* poppinsFont_Normal = TTF_OpenFont("./font/poppinsFont.ttf", 30);
+    TTF_Font* pause_poppinsFont_Normal = TTF_OpenFont("./font/poppinsFont.ttf", (Windows_Width*40)/1920);
     TTF_Font* poppinsFont_Small = TTF_OpenFont("./font/poppinsFont.ttf", 20);
 
     // Check All The Fonts
@@ -353,16 +415,7 @@ int main(int argc, char* args[]){
 
     // For Main Home/ First Screen
     SDL_Rect selectedPage_back_Button = {20, 200, 80, 60};
-    // Home Page
-    SDL_Rect smallGames_play_Button = {(Windows_Width/2)-100, (Windows_Height/2)-160, 200, 80};
-    SDL_Rect largeGames_play_Button = {smallGames_play_Button.x, smallGames_play_Button.y + 100, 200, 80};
-    SDL_Rect quitGame_play_Button = {smallGames_play_Button.x, largeGames_play_Button.y + 100, 200, 80};
-    // Small Games Page
-    SDL_Rect snakeGame_play_Button = {(Windows_Width/2)-100, (Windows_Height/2)-160, 200, 80};
-    SDL_Rect tictactoeGame_play_Button = {snakeGame_play_Button.x, snakeGame_play_Button.y + 100, 200, 80};
-    SDL_Rect flappybirdGame_play_Button = {tictactoeGame_play_Button.x, tictactoeGame_play_Button.y + 100, 200, 80};
-    // Large Game Button
-    SDL_Rect towerGame_play_Button = {(Windows_Width/2)-100, (Windows_Height/2)-80, 200, 80};
+
     
 
     // For Tower Game
@@ -447,6 +500,10 @@ int main(int argc, char* args[]){
     // ON / OFF
     bool music = true;
     bool sound = true;
+
+    // Paused 
+    bool gamePause = false;
+    bool levelRestart = false;
 
     // !
     float tower_attack_timer = 0.0f;  // Timer for tracking attack delay
@@ -805,11 +862,48 @@ int main(int argc, char* args[]){
                     }else if(towerGame_Started){
                         if(towerGame_Started_level1){
                             mainBackground = towerGame_level1_background;
-
+                        }
+                        if(!gamePause){
+                            if(checkButtonClick(mouseX, mouseY, &pauseButton_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                                gamePause = true;
+                            }
+                        }else if(gamePause){
+                            if(checkButtonClick(mouseX, mouseY, &resumeButton_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                                gamePause = false;
+                            }else  if(checkButtonClick(mouseX, mouseY, &homeButton_rect)){
+                                towerGame_Started_level1 = false;
+                                towerGame_Started = false;
+                                towerGame_homemenu = true;
+                                gamePause = false;
+                                mainBackground = towerGame_homePage_backgroundTexture;
+                            }else  if(checkButtonClick(mouseX, mouseY, &homeButton_rect)){
+                                
+                                gamePause = false;
+                            }else if(checkButtonClick(mouseX, mouseY, &music_pause_button_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                                music = !music;
+                                if(music){
+                                    Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
+                                }else{
+                                    Mix_HaltChannel(0);
+                                }
+                            }else  if(checkButtonClick(mouseX, mouseY, &sound_pause_button_rect)){
+                                sound = !sound;
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
+                            }
                         }
                     }
                 }
-
             }else if (event.type == SDL_TEXTINPUT) {
                 if(username_active){
                     if (strlen(username) < sizeof(username) - 1) {
@@ -873,7 +967,7 @@ int main(int argc, char* args[]){
                         default:
                             break;
                         }
-                    }else if(towerGame_Started){
+                    }else if(towerGame_Started && !gamePause){
                         switch (event.key.keysym.sym)
                         {
                         case SDLK_LEFT:
@@ -922,7 +1016,7 @@ int main(int argc, char* args[]){
                     }
                 }
             }else if(event.type == SDL_KEYUP){
-                if(towerGame_Started){
+                if(towerGame_Started && !gamePause){
                     switch(event.key.keysym.sym){
                         case SDLK_LEFT:
                                 archer_moving_left = false;
@@ -953,19 +1047,19 @@ int main(int argc, char* args[]){
             }
         }
         else if(gameStarted){
-            if (event.type == SDL_KEYDOWN) {
-                switch (event.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        running = false;
-                        break;
-                    default:
-                        break;
-                }
+                if (event.type == SDL_KEYDOWN) {
+                    switch (event.key.keysym.sym) {
+                        case SDLK_ESCAPE:
+                            running = false;
+                            break;
+                        default:
+                            break;
+                    }
             }
         }
     }
     
-    if(towerGame_Started){
+    if(towerGame_Started && !gamePause){
         
         
         if(towerGame_Started_level1){
@@ -1221,7 +1315,6 @@ int main(int argc, char* args[]){
             }
         }else if(towerGame_Started){
             if(towerGame_Started_level1){
-
                 if(archer_arrow.active){
                     SDL_Rect archer_arrow_rect = {(int)archer_arrow.x, (int)archer_arrow.y, (Windows_Width*120)/1920, (Windows_Height*50)/1080};
                     SDL_Point center = {archer_arrow_rect.w / 2, archer_arrow_rect.h / 2};  
@@ -1273,7 +1366,31 @@ int main(int argc, char* args[]){
                 
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
                 SDL_RenderDrawRect(renderer, &archer_health_box_outline); 
+
+                // Pause Button
+                SDL_RenderCopy(renderer, pauseButton, NULL, &pauseButton_rect);
             }
+        }
+        if(gamePause){
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
+            SDL_RenderFillRect(renderer, &pause_screen_background);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 240);
+            SDL_RenderFillRect(renderer, &pause_screen);
+            SDL_RenderCopy(renderer, resumeButton, NULL, &resumeButton_rect);
+            SDL_RenderCopy(renderer, restartButton, NULL, &restartButton_rect);
+            SDL_RenderCopy(renderer, homeButton, NULL, &homeButton_rect);
+            if(music){
+                SDL_RenderCopy(renderer, music_on_pauseButton, NULL, &music_pause_button_rect);
+            }else{
+                SDL_RenderCopy(renderer, music_off_pauseButton, NULL, &music_pause_button_rect);
+            }
+            if(sound){
+                SDL_RenderCopy(renderer, sound_on_pauseButton, NULL, &sound_pause_button_rect);
+            }else{
+                SDL_RenderCopy(renderer, sound_off_pauseButton, NULL, &sound_pause_button_rect);
+            }
+            renderText(renderer, "GAME PAUSED", pause_screen.x + (Windows_Width*110)/1920, pause_screen.y + (Windows_Height*50)/1080, pause_poppinsFont_Normal, 255,255,255);
         }
     }
 
