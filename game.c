@@ -322,6 +322,18 @@ int main(int argc, char* args[]){
     SDL_Texture* archer_walking_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_walking.png");
     SDL_Texture* archer_shooting_texture = IMG_LoadTexture(renderer, "./image/towerGame/characters/archer/archer_shooting.png");
 
+    // Cards
+    SDL_Texture* card_archer_full_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/archer_full.png");
+    SDL_Texture* card_archer_notfull_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/archer_notfull.png");
+
+    const int cards_Width = (Windows_Width*114)/1920;
+    const int cards_Height = (Windows_Height*144)/1080;
+    SDL_Rect card_archer_rect= {(Windows_Width/2)-(cards_Width/2), (Windows_Height-cards_Height)-((Windows_Height*50)/1080), cards_Width, cards_Height};
+    // SDL_Rect card_archer_notfull_rect= {card_archer_full_rect.x + cards_Width + ((Windows_Width*20)/1920), card_archer_full_rect.y, cards_Width, cards_Height};
+    SDL_Rect cardsBackground_rect = {0, Windows_Height - ((Windows_Height*240)/1080), Windows_Width, (Windows_Height*240)/1080};
+    SDL_Rect cardsBackground_outline_rect = {0, cardsBackground_rect.y, Windows_Width, 0};
+    
+
     const int small_pause_button_Width = (Windows_Width*74)/1920;
     const int small_pause_button_Height = (Windows_Height*74)/1080;
     const int normal_pause_button_Width = (Windows_Width*200)/1920;
@@ -374,7 +386,7 @@ int main(int argc, char* args[]){
 
 
     // RECT OF ARROW
-    const int velocity_bar_Width = (Windows_Width*20)/1920;
+    const int velocity_bar_Width = (Windows_Width*10)/1920;
     const int velocity_bar_Height = (Windows_Height*180)/1080;
     SDL_Rect arrow_velocity_bar_outline = {Windows_Width-(Windows_Width*60)/1920, (Windows_Height/2)-(velocity_bar_Height/2), velocity_bar_Width, velocity_bar_Height};
     SDL_Rect arrow_velocity_bar_innerfill = {Windows_Width-(Windows_Width*60)/1920, (Windows_Height/2)-(velocity_bar_Height/2), velocity_bar_Width, velocity_bar_Height};
@@ -400,8 +412,10 @@ int main(int argc, char* args[]){
     TTF_Font* towerGame_fontHeading = TTF_OpenFont("./font/tower_font.ttf", 100);
     TTF_Font* poppinsFont_Head = TTF_OpenFont("./font/poppinsFont.ttf", 60);
     TTF_Font* poppinsFont_Normal = TTF_OpenFont("./font/poppinsFont.ttf", 30);
+    TTF_Font* poppinsFont_Normal_Customize = TTF_OpenFont("./font/poppinsFont.ttf", (Windows_Width*30)/1920);
     TTF_Font* pause_poppinsFont_Normal = TTF_OpenFont("./font/poppinsFont.ttf", (Windows_Width*40)/1920);
     TTF_Font* poppinsFont_Small = TTF_OpenFont("./font/poppinsFont.ttf", 20);
+    TTF_Font* poppinsFont_Cards = TTF_OpenFont("./font/poppinsFont.ttf", (Windows_Width*20)/1920);
 
     // Check All The Fonts
     if(!font || !mainfont || !fontHeading || !towerGame_font || !towerGame_fontHeading){
@@ -441,13 +455,15 @@ int main(int argc, char* args[]){
     Arrow archer_arrow = {(float)archer.x, (float)archer.y, 0, 0, false, (float)0};
 
     // Health Bar
-    SDL_Rect tower_health_box= {(Windows_Width*100)/1920, (Windows_Height * 100) / 1080, 400, 60};
+    const int tower_health_box_Width = (Windows_Width*1000)/1920;
+    const int tower_health_box_Height = (Windows_Height*30)/1080;
+    SDL_Rect tower_health_box= {(Windows_Width - tower_health_box_Width)/2, (Windows_Height * 100) / 1080, tower_health_box_Width, tower_health_box_Height};
     SDL_Rect tower_health_box_outline= {tower_health_box.x,tower_health_box.y,tower_health_box.w,tower_health_box.h};
     SDL_Rect tower_health_box_innerfill= {tower_health_box.x,tower_health_box.y,tower_health_box.w,tower_health_box.h};
     
-    SDL_Rect archer_health_box = {Windows_Width-archer_health_box.w - (Windows_Width*100)/1920, (Windows_Height * 100) / 1080, 400, 60};
-    SDL_Rect archer_health_box_outline = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
-    SDL_Rect archer_health_box_innerfill = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
+    // SDL_Rect archer_health_box = {Windows_Width-archer_health_box.w - (Windows_Width*100)/1920, (Windows_Height * 100) / 1080, 400, 60};
+    // SDL_Rect archer_health_box_outline = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
+    // SDL_Rect archer_health_box_innerfill = {archer_health_box.x, archer_health_box.y, archer_health_box.w, archer_health_box.h};
 
 
     // Boolean
@@ -494,8 +510,7 @@ int main(int argc, char* args[]){
     bool towerGame_Started_level8 = false;
 
     // Health For Tower Game
-    int tower_attacker_health = tower_health_box.w/4;
-    int archer_health = archer_health_box.w/4;
+    int tower_attacker_health = 100;
 
     // ON / OFF
     bool music = true;
@@ -542,6 +557,16 @@ int main(int argc, char* args[]){
     bool archer_moving_right = false;
     bool archer_aiming = false;
     bool archer_shooting = false;
+
+    // Money
+    int money = 0;
+    int archer_card_cool = 0;
+
+    // Timer
+    float money_Timer = 0.00f;
+    float money_Increase_Timer = 0.01f;
+    float archer_card_cool_Timer = 0.00f;
+    float archer_card_Increase_cool_Timer = 0.05f;
 
     // For Handling & Changing Frames
     Uint32 frameDelay = 100;  // Delay between frames (in milliseconds)
@@ -729,6 +754,8 @@ int main(int argc, char* args[]){
                                 mainBackground = towerGame_level1_background;
                                 towerGame_levelmenu = false;
                                 towerGame_homemenu = true;
+                                money = 5;
+                                archer_card_cool = 100;
 
                                 Mix_HaltChannel(0);
                                 if(music){
@@ -862,6 +889,17 @@ int main(int argc, char* args[]){
                     }else if(towerGame_Started){
                         if(towerGame_Started_level1){
                             mainBackground = towerGame_level1_background;
+                            if(checkButtonClick(mouseX, mouseY, &card_archer_rect)){
+                                if(archer_card_cool>=100 && money >= 5){
+                                    archer_card_cool = 0;
+                                    money -= 5;
+                                }
+                            }
+                            
+
+                            // if(money < 10){
+                            //     money +=
+                            // }
                         }
                         if(!gamePause){
                             if(checkButtonClick(mouseX, mouseY, &pauseButton_rect)){
@@ -877,13 +915,18 @@ int main(int argc, char* args[]){
                                 }
                                 gamePause = false;
                             }else  if(checkButtonClick(mouseX, mouseY, &homeButton_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 towerGame_Started_level1 = false;
                                 towerGame_Started = false;
                                 towerGame_homemenu = true;
                                 gamePause = false;
                                 mainBackground = towerGame_homePage_backgroundTexture;
-                            }else  if(checkButtonClick(mouseX, mouseY, &homeButton_rect)){
-                                
+                            }else  if(checkButtonClick(mouseX, mouseY, &restartButton_rect)){
+                                if(sound){
+                                    Mix_PlayChannel(1, button_sound, 0); 
+                                }
                                 gamePause = false;
                             }else if(checkButtonClick(mouseX, mouseY, &music_pause_button_rect)){
                                 if(sound){
@@ -1118,10 +1161,10 @@ int main(int argc, char* args[]){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
-                        if(archer_health >0){
-                            archer_health_box.w -= 10;  
-                            archer_health = archer_health_box.w/4;
-                        }
+                        // if(archer_health >0){
+                        //     archer_health_box.w -= 10;  
+                        //     archer_health = archer_health_box.w/4;
+                        // }
                     }
                     tower_bomb.vx = 0;
                     tower_bomb.vy = 0;
@@ -1170,8 +1213,8 @@ int main(int argc, char* args[]){
                             if(sound){
                                 Mix_PlayChannel(4, towerDamage_sound, 0); 
                             }
-                            tower_health_box.w -= 10;
-                            tower_attacker_health = tower_health_box.w/4;
+                            tower_health_box.w -= (Windows_Width*50)/1920;
+                            tower_attacker_health-=5;
                         }
                     }
                     archer_arrow.vx = 0;
@@ -1314,7 +1357,47 @@ int main(int argc, char* args[]){
                 SDL_RenderCopy(renderer, back_button, NULL, &back_button_rect);
             }
         }else if(towerGame_Started){
+            char levelMoney[50];
+            sprintf(levelMoney, "MONEY: %d$", money);
+            renderText(renderer, levelMoney, (Windows_Width*20)/1920, (Windows_Height*20)/1080, poppinsFont_Normal_Customize, 0, 0, 0);
             if(towerGame_Started_level1){
+                if(!gamePause){
+                    if(archer_card_cool >= 100){
+                        archer_card_cool = 100;
+
+                    }else{
+                        archer_card_cool_Timer += archer_card_Increase_cool_Timer;
+                        if(archer_card_cool_Timer >= 1.50f){
+                            archer_card_cool_Timer = 0.00f;
+                            archer_card_cool++;
+                        }
+                    }
+                    if(money >= 10){
+                        money = 10;
+                    }else{
+                        money_Timer += money_Increase_Timer;
+                        if(money_Timer >= 1.50f){
+                            money_Timer = 0.00f;
+                            money++;
+                        }
+                    }
+                }
+
+                char archer_card_cool_Text[4];
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(renderer, 255,255,255,255);
+                SDL_RenderDrawRect(renderer, &cardsBackground_outline_rect);
+                SDL_SetRenderDrawColor(renderer, 0,0,0,200);
+                SDL_RenderFillRect(renderer, &cardsBackground_rect);
+                if(archer_card_cool >= 100){
+                    SDL_RenderCopy(renderer, card_archer_full_texture, NULL, &card_archer_rect);
+                }else{
+                    SDL_RenderCopy(renderer, card_archer_notfull_texture, NULL, &card_archer_rect);
+                }
+                sprintf(archer_card_cool_Text, "%d%%", archer_card_cool);
+                renderText(renderer, "5$", card_archer_rect.x+(Windows_Width*12)/1920, card_archer_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+                renderText(renderer, archer_card_cool_Text, card_archer_rect.x + card_archer_rect.w - (Windows_Width*60)/1920, card_archer_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+
                 if(archer_arrow.active){
                     SDL_Rect archer_arrow_rect = {(int)archer_arrow.x, (int)archer_arrow.y, (Windows_Width*120)/1920, (Windows_Height*50)/1080};
                     SDL_Point center = {archer_arrow_rect.w / 2, archer_arrow_rect.h / 2};  
@@ -1345,27 +1428,22 @@ int main(int argc, char* args[]){
 
                 // Health
                 SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
-                SDL_RenderFillRect(renderer, &archer_health_box_innerfill);
                 SDL_RenderFillRect(renderer, &tower_health_box_innerfill);
 
                 char towerHealth_val[50];
                 sprintf(towerHealth_val, "Tower Health: %d %%", tower_attacker_health);
-                renderText(renderer, towerHealth_val, tower_health_box.x, tower_health_box.y-40, font, 0, 0, 0);
+                renderText(renderer, towerHealth_val, tower_health_box.x, tower_health_box.y-40, poppinsFont_Normal_Customize, 0, 0, 0);
                 SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
                 SDL_RenderFillRect(renderer, &tower_health_box);
 
                 char archerHealth_val[50];
-                sprintf(archerHealth_val, "Archer Health: %d %%", archer_health);
-                renderText(renderer, archerHealth_val, archer_health_box.x, archer_health_box.y-40, font, 0, 0, 0);
                 SDL_SetRenderDrawColor(renderer, 127,23,31, 255);
-                SDL_RenderFillRect(renderer, &archer_health_box);
-
 
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
                 SDL_RenderDrawRect(renderer, &tower_health_box_outline); 
                 
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
-                SDL_RenderDrawRect(renderer, &archer_health_box_outline); 
+                // SDL_RenderDrawRect(renderer, &archer_health_box_outline); 
 
                 // Pause Button
                 SDL_RenderCopy(renderer, pauseButton, NULL, &pauseButton_rect);
@@ -1375,7 +1453,7 @@ int main(int argc, char* args[]){
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
             SDL_RenderFillRect(renderer, &pause_screen_background);
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 240);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 220);
             SDL_RenderFillRect(renderer, &pause_screen);
             SDL_RenderCopy(renderer, resumeButton, NULL, &resumeButton_rect);
             SDL_RenderCopy(renderer, restartButton, NULL, &restartButton_rect);
