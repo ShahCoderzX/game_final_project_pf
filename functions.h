@@ -11,6 +11,15 @@ typedef struct
     float vx,vy;
     bool active;
 }Pointer;
+
+typedef struct 
+{
+    float x,y;
+    float vx,vy;
+    bool active;
+    bool spawn;
+    bool runactive;
+}Character;
 typedef struct 
 {
     float x,y;
@@ -46,7 +55,7 @@ void renderText_Heading(SDL_Renderer* renderer, const char* text, int x, int y, 
 //  Check if arrow hits the tower
 bool checkCollisionTower(Arrow *arrow, int towerX, int towerY);
 // Check if tower bomb hits the archer
-bool checkCollisionArcher(Pointer *towerbomb, Pointer *archer);
+bool checkCollisionArcher(Pointer *towerbomb, Character *archer);
 
 // Account Creation
 int createAccount(char* username, char* password);

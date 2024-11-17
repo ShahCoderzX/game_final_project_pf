@@ -77,7 +77,7 @@ bool checkCollisionTower(Arrow *arrow, int towerX, int towerY) {
     return SDL_HasIntersection(&arrowRect, &towerRect);
 }
 // Check if Tower Bomb hits the Archer
-bool checkCollisionArcher(Pointer *towerbomb, Pointer *archer) {
+bool checkCollisionArcher(Pointer *towerbomb, Character *archer) {
     SDL_Rect arrowRect = {(int)towerbomb->x, (int)towerbomb->y, 200, 50};
     SDL_Rect towerRect = {((int)archer->x), (int)archer->y, 100, 40};
 
