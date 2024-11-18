@@ -437,7 +437,6 @@ int main(int argc, char* args[]){
     SDL_Texture* level1_tower_fullhealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level1/fullhealth.png");
     SDL_Texture* level1_tower_halfhealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level1/halfhealth.png");
     SDL_Texture* level1_tower_zerohealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level1/zerohealth.png");
-    SDL_Texture* tower_soldier_texture =IMG_LoadTexture(renderer, "./image/towerGame/towers/attacker.png");
 
     // Cards
     SDL_Texture* card_archer_full_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/archer_full.png");
@@ -605,12 +604,9 @@ int main(int argc, char* args[]){
     // !
     const int towerWidth = (Windows_Width*161)/1920;
     const int towerHeight = (Windows_Height*300)/1080;
-    const int towerSoldierWidth = (Windows_Width*40)/1920;
-    const int towerSoldierHeight = (Windows_Width*24)/1080;
 
     // Tower Characters
     SDL_Rect tower_attacker = {(Windows_Width*100)/1920, Windows_Height - (towerHeight+(int)(Windows_Height * 0.26)), towerWidth, towerHeight};
-    SDL_Rect tower_soldier_rect = {(Windows_Width*120)/1920, Windows_Height - (towerHeight+(int)(Windows_Height * 0.4)), towerWidth, towerHeight};
     Pointer tower_bomb = {(float)tower_attacker.x, (float)tower_attacker.y, 0, 0, false};
     
     // SDL_Rect archer_character = {Windows_Width-(archer_character.w + 100), Windows_Height - (archer_character.h + 300), 200, 160};
@@ -654,7 +650,7 @@ int main(int argc, char* args[]){
     bool gameStarted = false;
 
     // For Main Home/ First  Page
-    bool selectedGame_page = true; //! True Karo  
+    bool selectedGame_page = false; //! True Karo  
 
     // For Account 
     char username[20] = "";
@@ -672,8 +668,8 @@ int main(int argc, char* args[]){
     bool towerGame_account_choose = false;
     bool towerGame_account_create = false;
     bool towerGame_account_login = false;
-    bool towerGame = false; //! False Karo 
-    bool towerGame_Started = false; //! False Karo
+    bool towerGame = true; //! False Karo 
+    bool towerGame_Started = true; //! False Karo
     bool towerGame_homemenu = false;
     bool towerGame_levelmenu = false;
     bool towerGame_optionmenu = false;
@@ -683,7 +679,7 @@ int main(int argc, char* args[]){
     bool towerGame_option_controllerMenu = false;
 
     // Tower Game Levels
-    bool towerGame_Started_level1 = false; //! False Karo 
+    bool towerGame_Started_level1 = true; //! False Karo 
     bool towerGame_Started_level2 = false;
     bool towerGame_Started_level3 = false;
     bool towerGame_Started_level4 = false;
@@ -693,10 +689,10 @@ int main(int argc, char* args[]){
     bool towerGame_Started_level8 = false;
 
     // For All Levels
-    bool all_levels_Started = false; //! False Karo
+    bool all_levels_Started = true; //! False Karo
 
-    bool midPause = false; //! False Karo
-    bool midPause_archer_moving = false; //! false karo
+    bool midPause = true; //! False Karo
+    bool midPause_archer_moving = true; //! false karo
     bool midPause_dialog_starting = false;//! False Karo 
     bool dialog1_start = false;
     bool dialog2_start = false;
@@ -712,12 +708,12 @@ int main(int argc, char* args[]){
 
     bool archer_showing_ending_scene = false;
 
-    bool frame_Video = false; //! false
-    bool level1_frame1 = false;//! false karo
-    bool level1_frame2 = false;//! false karo
+    bool frame_Video = true; //! false
+    bool level1_frame1 = true;//! false karo
+    bool level1_frame2 = true;//! false karo
     // archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
     // tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
-    bool introGame_frame = false;
+    bool introGame_frame = true;
 
     // Health For Tower Game
     int tower_attacker_health = 100;
@@ -884,6 +880,9 @@ int main(int argc, char* args[]){
                                     dialog1_start = false;
                                 }else if(dialog2_start){
                                     midPause = false;
+                                    if(music){
+                                        Mix_PlayChannel(0, level1Background_Sound, 0);
+                                    }
                                 }
                             }else{
                                 if(knight_level1_ending_dialog){
@@ -1078,9 +1077,7 @@ int main(int argc, char* args[]){
                                 level1_frame1 = true;
 
                                 Mix_HaltChannel(0);
-                                if(music){
-                                    Mix_PlayChannel(0, level1Background_Sound, 0);
-                                }
+                                
                             }else if(checkButtonClick(mouseX, mouseY, &level2_button_rect)){
                                 if(sound){
                                     Mix_PlayChannel(1, button_sound, 0); 
@@ -1601,7 +1598,7 @@ int main(int argc, char* args[]){
                         if (knight_running_attacking_ending_scene) {
                             currentFrame++;
                         if(sound){
-                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                            Mix_PlayChannel(4, towerDamage_sound, 0); 
                         }
                             // Loop walking animation
                             if (currentFrame >= KNIGHT_TOTAL_RUN_ATTACK_FRAME) {
@@ -1692,6 +1689,22 @@ int main(int argc, char* args[]){
                         }
                         if(archer_health<=10){
                             level1_ending_scene = true;
+                            knight_level1_ending_dialog = true;
+                            midPause = true;
+                            midPause_dialog_starting = true;
+                            archer_showing_ending_scene = true;
+                            // !
+                            tower_bomb.vx = 0;
+                            tower_bomb.vy = 0;
+                            tower_bomb.x = tower_attacker.x;
+                            tower_bomb.y = tower_attacker.y;
+                            tower_attack_timer = 0.0f;
+                            tower_bomb.active = false;
+                            // !
+                            archer_arrow.vx = 0;
+                            archer_arrow.vy = 0;
+                            archer_arrow.active = false;  
+                            archer_arrow.angle = 0;  
                         }else if(archer_health > 0){
                             archer_health_box.w -= (Windows_Width*5)/1920;  
                             archer_health -= 5;
@@ -2112,19 +2125,19 @@ int main(int argc, char* args[]){
                 }
 
 
-                SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
-                SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
-                SDL_RenderFillRect(renderer, &tower_bomb_rect);
+                if(!midPause || archer_showing_ending_scene){
+                    SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
+                    SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
+                    SDL_RenderFillRect(renderer, &tower_bomb_rect);
+                }
 
                 // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
                 // SDL_RenderFillRect(renderer, &tower_attacker);
                 if(tower_attacker_health>50){
                     SDL_RenderCopy(renderer, level1_tower_fullhealth_texture, NULL, &tower_attacker);
-                    SDL_RenderCopy(renderer, tower_soldier_texture, NULL, &tower_soldier_rect);
                 }else if(tower_attacker_health<=50 && tower_attacker_health>0){
                     SDL_RenderCopy(renderer, level1_tower_halfhealth_texture, NULL, &tower_attacker);
-                    SDL_RenderCopy(renderer, tower_soldier_texture, NULL, &tower_soldier_rect);
-                }else{
+                }else if(tower_attacker_health<=0){
                     SDL_RenderCopy(renderer, level1_tower_zerohealth_texture, NULL, &tower_attacker);
                 }
 
@@ -2181,7 +2194,7 @@ int main(int argc, char* args[]){
                     if(!level1_ending_scene){
 
                     SDL_Rect archerBasic_rect = { (int)archer.x, (int)archer.y, archer_basic_Width, archer_basic_Height };
-                    SDL_RenderCopy(renderer, archer_walking_texture, &walkClips[currentFrame], &archerBasic_rect);
+                    SDL_RenderCopy(renderer, archer_walking_texture, &walkClips[0], &archerBasic_rect);
                     if(midPause_dialog_starting){
                         SDL_Rect dialog_background_rect = {0, 0, Windows_Width, Windows_Height};
                         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -2202,6 +2215,7 @@ int main(int argc, char* args[]){
                             SDL_RenderCopy(renderer, knight_running_attacking_spritesheet, &KnightRunnig_AttackingClips[currentFrame], &knightBasic_rect);
                         }else if(knight_standing_ending_scene){
                             SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
+                            SDL_RenderCopy(renderer, level1_tower_zerohealth_texture, NULL, &tower_attacker);
                         }else{
                             SDL_RenderCopy(renderer, knight_running_spritesheet, &KnightRunnigClips[0], &knightBasic_rect);
                         }
@@ -2272,10 +2286,8 @@ int main(int argc, char* args[]){
                 // SDL_RenderFillRect(renderer, &tower_attacker);
                 if(tower_attacker_health>50){
                     SDL_RenderCopy(renderer, level1_tower_fullhealth_texture, NULL, &tower_attacker);
-                    SDL_RenderCopy(renderer, tower_soldier_texture, NULL, &tower_soldier_rect);
                 }else if(tower_attacker_health<=50 && tower_attacker_health>0){
                     SDL_RenderCopy(renderer, level1_tower_halfhealth_texture, NULL, &tower_attacker);
-                    SDL_RenderCopy(renderer, tower_soldier_texture, NULL, &tower_soldier_rect);
                 }else{
                     SDL_RenderCopy(renderer, level1_tower_zerohealth_texture, NULL, &tower_attacker);
                 }
