@@ -438,6 +438,10 @@ int main(int argc, char* args[]){
     SDL_Texture* level1_tower_halfhealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level1/halfhealth.png");
     SDL_Texture* level1_tower_zerohealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level1/zerohealth.png");
 
+    // Connon ball
+    SDL_Texture* cannon_ball_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/cannon_ball.png");
+
+
     // Cards
     SDL_Texture* card_archer_full_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/archer_full.png");
     SDL_Texture* card_archer_notfull_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/archer_notfull.png");
@@ -1265,7 +1269,7 @@ int main(int argc, char* args[]){
                                 }
                                 music = !music;
                                 if(music){
-                                    Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
+                                    Mix_PlayChannel(0, level1Background_Sound, -1);
                                 }else{
                                     Mix_HaltChannel(0);
                                 }
@@ -2118,8 +2122,7 @@ int main(int argc, char* args[]){
                 if((!midPause || archer_showing_ending_scene) && !knight_moving_level1_ending){
                     if(tower_bomb.active){
                         SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
-                        SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
-                        SDL_RenderFillRect(renderer, &tower_bomb_rect);
+                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_rect);
                     }else if(youWin){
                         SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
                         SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
@@ -2270,12 +2273,6 @@ int main(int argc, char* args[]){
                 }
 
 
-                SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
-                SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
-                SDL_RenderFillRect(renderer, &tower_bomb_rect);
-
-                // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-                // SDL_RenderFillRect(renderer, &tower_attacker);
                 if(tower_attacker_health>50){
                     SDL_RenderCopy(renderer, level1_tower_fullhealth_texture, NULL, &tower_attacker);
                 }else if(tower_attacker_health<=50 && tower_attacker_health>0){
