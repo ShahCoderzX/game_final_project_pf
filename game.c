@@ -102,6 +102,7 @@ int playVideo(SDL_Window* window, SDL_Renderer* renderer, const char* audioPath,
 
 int main(int argc, char* args[]){
 
+    // User Screen Windows Width adn Height
     int Windows_Width, Windows_Height;
 
     // SDL INIT CHECK
@@ -192,7 +193,9 @@ int main(int argc, char* args[]){
     const int tower_menu_button_width = (Windows_Width * 220) / 1920; 
     const int tower_menu_button_height = (Windows_Height * 74) / 1080; 
 
-    // ! Main Screen Play Deck Of Dominion
+    /* ==================================================
+            ! Main Screen Play Deck Of Dominion
+    =====================================================*/
 
     // Images Load
     SDL_Texture* select_menu_playDeck_button = IMG_LoadTexture(renderer, "./image/playdeck.png");
@@ -206,9 +209,13 @@ int main(int argc, char* args[]){
     SDL_Rect select_menu_playDeck_button_rect = {(Windows_Width/2)-(select_button_Width)/2, (Windows_Height/2)-(select_button_Height/2)-(Windows_Height*60)/1080, select_button_Width, select_button_Height};
     SDL_Rect select_menu_quit_button_rect = {(Windows_Width/2)-(select_button_Width)/2, select_menu_playDeck_button_rect.y + select_button_Height + (Windows_Height*30)/1080, select_button_Width, select_button_Height};
 
-    // ! x----------------x---------------x
+    /* ==================================================
+            ! x----------------x---------------x
+    =====================================================*/
 
-    // ! Game Account Section
+    /* ==================================================
+                ! Game Account Section
+    =====================================================*/
     // Account Buttons Image Load
     SDL_Texture* account_create_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/create.png");
     SDL_Texture* account_login_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/login.png");
@@ -844,6 +851,11 @@ int main(int argc, char* args[]){
     bool archer_aiming = false;
     bool archer_shooting = false;
     bool archer_standing = false;
+    // For Knight
+    bool knight_moving_left = false;
+    bool knight_moving_right = false;
+    bool knight_shooting = false;
+    bool knight_standing = false;
     // Money
     int money = 0;
     int archer_card_cool = 0;
@@ -1435,6 +1447,13 @@ int main(int argc, char* args[]){
                                 archer_standing = false;
                                 archer.x -= 16*ScaleX;
                             }
+                            if(knight.spawn){
+                                if(knight.x > (Windows_Width - KNIGHT_RUN_FRAME_WIDTH)/2){
+                                    knight_moving_left = true;
+                                    knight_standing = false;
+                                    knight.x -= 16*ScaleX;
+                                }
+                            }
                             break;
                         case SDLK_RIGHT:
                             if(archer.x < Windows_Width - (ARCHER_FIRE_FRAME_WIDTH)){
@@ -1442,12 +1461,24 @@ int main(int argc, char* args[]){
                                 archer_standing = false;
                                 archer.x += 16*ScaleX;
                             }
+                            if(knight.spawn){
+                                if(knight.x < Windows_Width - (KNIGHT_RUN_FRAME_WIDTH)){
+                                    knight_moving_right = true;
+                                    knight_standing = false;
+                                    knight.x += 16*ScaleX;
+                                }
+                            }
                             break;
                         case SDLK_UP: 
                             if (archer.y >= archerY) {  
                                 archer_standing = false;
                                 archer.vy = -10*ScaleY; 
                                 archer.active = true; 
+                            }
+                            if(knight.y >= archerY){
+                                knight_standing = false;
+                                knight.vy = -10*ScaleY; 
+                                knight.active = true; 
                             }
                             break;
                         case SDLK_f: 
@@ -1475,6 +1506,13 @@ int main(int argc, char* args[]){
                                     archer_arrow.vy -= 3.6 * ScaleY;  // Increase velocity each frame
                                 }
                             }
+                            if (knight.spawn) {
+                                knight_shooting = true; 
+                                if(archer_standing){
+                                    currentFrame = 0;
+                                    archer_standing = false;
+                                }
+                            }
                             break;
                         default:
                             break;
@@ -1488,11 +1526,19 @@ int main(int argc, char* args[]){
                                 archer_moving_left = false;
                                 // archer_standing = true;
                                 currentFrame = 0;
+                                if(knight.spawn){
+                                    knight_moving_left = false;
+                                    currentFrame = 0;
+                                }
                             break;
                         case SDLK_RIGHT:
                                 archer_moving_right = false;
                                 // archer_standing = true;
                                 currentFrame = 0;
+                                if(knight.spawn){
+                                    knight_moving_right = false;
+                                    currentFrame = 0;
+                                }
                             break;
                         case SDLK_f: 
                                 if(sound){
@@ -1507,6 +1553,10 @@ int main(int argc, char* args[]){
                                 archer_shooting = true;
                                 archer_aiming = false;
                                 arrow_velocity_bar.h = 0;
+                                if(knight.spawn){
+                                    knight_shooting = false;
+                                    currentFrame = 0;
+                                }
                             break;
                         default:
                             break;
@@ -1849,6 +1899,33 @@ int main(int argc, char* args[]){
                 lastFrameTime = currentTime;
             }
 
+            if(knight.spawn){
+                if ((knight_moving_left || knight_moving_right || knight_shooting || knight_standing) && currentTime > lastFrameTime + frameDelay) {
+                    if(knight_moving_left || knight_moving_right||knight_shooting || knight_standing){
+                        currentFrame++;
+                    }
+                    if(knight_shooting){
+                        if (currentFrame >=  KNIGHT_TOTAL_RUN_ATTACK_FRAME) {
+                            currentFrame = 0; 
+                            archer_shooting = false;
+                            // archer_standing = true;
+                        }
+                    }
+                    else if(knight_moving_left || knight_moving_right){
+                        // Handle walking animation frames
+                        if (currentFrame >= KNIGHT_TOTAL_RUN_FRAME) {
+                            currentFrame = 0;
+                        }
+                    }
+                    // else if(knight_standing){
+                    //     if(currentFrame >= TOTAL_STAND_FRAME){
+                    //         currentFrame = 0;
+                    //     }
+                    // }
+                    lastFrameTime = currentTime;
+                }
+            }
+
             if (archer.active) {
                 archer.y +=  archer.vy; 
                 archer.vy += 0.5*ScaleY; 
@@ -1858,6 +1935,18 @@ int main(int argc, char* args[]){
                     archer.y = archerY; 
                     archer.vy = 0; 
                     archer.active = false; 
+                }
+            }
+
+            if (knight.active) {
+                knight.y +=  knight.vy; 
+                knight.vy += 0.5*ScaleY; 
+                
+
+                if (knight.y >= archerY) {
+                    knight.y = archerY; 
+                    knight.vy = 0; 
+                    knight.active = false; 
                 }
             }
             tower_attack_timer += deltaTime;  // Update the timer
@@ -2367,8 +2456,16 @@ int main(int argc, char* args[]){
                 }
                 
                 if(knight.spawn){
-                    SDL_Rect knightBasic_rect = { (int)archerX, (int)archerY, knight_basic_Width, knight_basic_Height };
-                    SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
+                    if(knight_moving_left || knight_moving_right){
+                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
+                        SDL_RenderCopy(renderer, knight_running_spritesheet, &KnightRunnigClips[currentFrame], &knightBasic_rect);
+                    }else if(knight_shooting){
+                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
+                        SDL_RenderCopy(renderer, knight_running_attacking_spritesheet, &KnightRunnig_AttackingClips[currentFrame], &knightBasic_rect);
+                    }else{
+                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
+                        SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
+                    }
                 }
                 archer_health_box.x = (int)(archer.x+(Windows_Width*20)/1920);
                 archer_health_box.y = (int)(archer.y+((Windows_Height*-20)/1080));
