@@ -8,7 +8,8 @@
 #include "constant.h"
 // Own Functions Created Library
 #include "functions.h"
-
+int archerclicked =1,knightclicked=1;
+float archerlastvelX =0.00,archerlastvelY =0.00;
 // Function to play video (plays once and stops after the video ends)
 int playVideo(SDL_Window* window, SDL_Renderer* renderer, const char* audioPath, const char* framePath, int frameCount, int skipFrames, int targetFPS, int finalcut) {
     Mix_Chunk* framesound = Mix_LoadWAV(audioPath); 
@@ -1259,17 +1260,40 @@ int main(int argc, char* args[]){
                                 mainBackground = towerGame_level1_background;
                             }else if(towerGame_Started_level2){
                                 mainBackground = towerGame_level2_background;
-                            }
+                                 if( mouseX >= archer.x && mouseX <= archer.x + archer_basic_Width&&
+           mouseY >= archer.y && mouseY <= archer.y + archer_basic_Height)
+           {printf("click");
+           archerclicked =0;
+           knightclicked =1;
+           printf("%f %f\n",archerlastvelX,archerlastvelY);
+          
+                                }
+             if( mouseX >= knight.x && mouseX <= knight.x + knight_basic_Width&&
+           mouseY >= knight.y && mouseY <= knight.y + knight_basic_Height)
+           {printf("clicked");
+           archerclicked =1;
+           knightclicked =0;
+             printf("%f %f\n",archerlastvelX,archerlastvelY);}
+
+                            }if(!archerclicked){
+                                
+                              if (currentFrame >=  KNIGHT_TOTAL_RUN_ATTACK_FRAME) {
+                                currentFrame = 0; }
+                                 knight_shooting = true; }
+                                 if(!knightclicked)
+                                 {
+//code
+                                 }
                             if(checkButtonClick(mouseX, mouseY, &card_archer_rect)){
                                 if(archer_card_cool>=100 && money >= 5){
                                     archer_card_cool = 0;
                                     money -= 5;
                                 }
                             }else if(checkButtonClick(mouseX, mouseY, &card_knight_rect)){
-                                if(knight_card_cool>=100 && money >= 5){
+                                if(knight_card_cool>=5 && money >= 1){
                                     knight.spawn = true;
                                     knight_card_cool = 0;
-                                    money -= 5;
+                                    money -= 1;
                                 }
                             }
                             
@@ -1442,12 +1466,13 @@ int main(int argc, char* args[]){
                         switch (event.key.keysym.sym)
                         {
                         case SDLK_LEFT:
+                        if(knightclicked){
                             if(archer.x > (Windows_Width - ARCHER_FIRE_FRAME_WIDTH)/2){
                                 archer_moving_left = true;
                                 archer_standing = false;
                                 archer.x -= 16*ScaleX;
-                            }
-                            if(knight.spawn){
+                            }}
+                            if(knight.spawn&&archerclicked){
                                 if(knight.x > (Windows_Width - KNIGHT_RUN_FRAME_WIDTH)/2){
                                     knight_moving_left = true;
                                     knight_standing = false;
@@ -1456,12 +1481,13 @@ int main(int argc, char* args[]){
                             }
                             break;
                         case SDLK_RIGHT:
+                        if(knightclicked){
                             if(archer.x < Windows_Width - (ARCHER_FIRE_FRAME_WIDTH)){
                                 archer_moving_right = true;
                                 archer_standing = false;
                                 archer.x += 16*ScaleX;
-                            }
-                            if(knight.spawn){
+                            }}
+                            if(knight.spawn&&archerclicked){
                                 if(knight.x < Windows_Width - (KNIGHT_RUN_FRAME_WIDTH)){
                                     knight_moving_right = true;
                                     knight_standing = false;
@@ -1483,6 +1509,7 @@ int main(int argc, char* args[]){
                             break;
                         case SDLK_f: 
                              // Increase velocity while 'F' is held down
+                             if(knightclicked){
                             if (!archer_arrow.active) {
                                 archer_aiming = true; 
                                 if(archer_standing){
@@ -1504,9 +1531,9 @@ int main(int argc, char* args[]){
                                     archer_arrow.vy = MAX_ARROW_SPEED_Y*ScaleY;
                                 }else if(archer_arrow.vx >= MAX_ARROW_SPEED_Y*ScaleY){
                                     archer_arrow.vy -= 3.6 * ScaleY;  // Increase velocity each frame
-                                }
+                                }}
                             }
-                            if (knight.spawn) {
+                            if (knight.spawn&&archerclicked) {
                                 knight_shooting = true; 
                                 if(archer_standing){
                                     currentFrame = 0;
@@ -1522,20 +1549,21 @@ int main(int argc, char* args[]){
             }else if(event.type == SDL_KEYUP){
                 if(towerGame_Started && !gamePause && !gameOver && !youWin && !midPause){
                     switch(event.key.keysym.sym){
-                        case SDLK_LEFT:
+                        case SDLK_LEFT:if(knightclicked){
                                 archer_moving_left = false;
                                 // archer_standing = true;
-                                currentFrame = 0;
-                                if(knight.spawn){
+                                currentFrame = 0;}
+                                if(knight.spawn&&archerclicked){
                                     knight_moving_left = false;
                                     currentFrame = 0;
                                 }
                             break;
                         case SDLK_RIGHT:
+                                 if(knightclicked){
                                 archer_moving_right = false;
                                 // archer_standing = true;
-                                currentFrame = 0;
-                                if(knight.spawn){
+                                currentFrame = 0;}
+                                if(knight.spawn&&archerclicked){
                                     knight_moving_right = false;
                                     currentFrame = 0;
                                 }
@@ -1544,6 +1572,7 @@ int main(int argc, char* args[]){
                                 if(sound){
                                     Mix_PlayChannel(2, archerShooting_sound, 0); 
                                 }
+                                if(knightclicked){
                                 if(!archer_arrow.active){
                                     archer_arrow.x = archer.x;
                                     archer_arrow.y = archer.y;
@@ -1552,8 +1581,8 @@ int main(int argc, char* args[]){
                                 }   
                                 archer_shooting = true;
                                 archer_aiming = false;
-                                arrow_velocity_bar.h = 0;
-                                if(knight.spawn){
+                                arrow_velocity_bar.h = 0;}
+                                if(knight.spawn&&archerclicked){
                                     knight_shooting = false;
                                     currentFrame = 0;
                                 }
@@ -1875,6 +1904,7 @@ int main(int argc, char* args[]){
             
             // Handle frame updates for animation
             Uint32 currentTime = SDL_GetTicks();
+            if(knightclicked){
             if ((archer_moving_left || archer_moving_right || archer_aiming || archer_shooting || archer_standing) && currentTime > lastFrameTime + frameDelay) {
                 if((archer_aiming && currentFrame <= TOTAL_FIRE_FRAMES - 4)||(archer_moving_left || archer_moving_right)||(archer_shooting && (currentFrame >= TOTAL_FIRE_FRAMES-4 && currentFrame<= TOTAL_FIRE_FRAMES)) || (archer_standing)){
                     currentFrame++;
@@ -1898,8 +1928,8 @@ int main(int argc, char* args[]){
                 }
                 lastFrameTime = currentTime;
             }
-
-            if(knight.spawn){
+            }
+            if(knight.spawn&&archerclicked){
                 if ((knight_moving_left || knight_moving_right || knight_shooting || knight_standing) && currentTime > lastFrameTime + frameDelay) {
                     if(knight_moving_left || knight_moving_right||knight_shooting || knight_standing){
                         currentFrame++;
@@ -2014,7 +2044,9 @@ int main(int argc, char* args[]){
             if(archer_arrow.active){
                 archer_arrow.x += archer_arrow.vx;
                 archer_arrow.y += archer_arrow.vy;
-                archer_arrow.vy += 0.5*ScaleY;       
+                archer_arrow.vy += 0.5*ScaleY;      
+              archerlastvelX =  (archer_arrow.vx !=0)? archer_arrow.vx:archerlastvelX;
+archerlastvelY =  (archer_arrow.vy !=0)? archer_arrow.vy:archerlastvelY;
             
             // Adjust the angle of the arrow based on its vertical velocity (vy)
                 if (archer_arrow.vy <= -25*ScaleY) {
@@ -2356,6 +2388,9 @@ int main(int argc, char* args[]){
             }
             }else if(towerGame_Started_level2){
                 if(!gamePause && !gameOver && !youWin){
+                    
+                //printf("click");
+                   
                     if(archer_card_cool >= 100){
                         archer_card_cool = 100;
 
