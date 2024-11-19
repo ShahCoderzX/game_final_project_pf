@@ -192,9 +192,55 @@ int main(int argc, char* args[]){
     const int tower_menu_button_width = (Windows_Width * 220) / 1920; 
     const int tower_menu_button_height = (Windows_Height * 74) / 1080; 
 
-    // Select Section textures
+    // ! Main Screen Play Deck Of Dominion
+
+    // Images Load
     SDL_Texture* select_menu_playDeck_button = IMG_LoadTexture(renderer, "./image/playdeck.png");
     SDL_Texture* select_menu_quit_button = IMG_LoadTexture(renderer, "./image/quitselect.png");
+
+    // Define Button Width and Height
+    const int select_button_Width = (Windows_Width*300)/1920;
+    const int select_button_Height = (Windows_Width*80)/1080;
+
+    // SDL Rect of Buttons
+    SDL_Rect select_menu_playDeck_button_rect = {(Windows_Width/2)-(select_button_Width)/2, (Windows_Height/2)-(select_button_Height/2)-(Windows_Height*60)/1080, select_button_Width, select_button_Height};
+    SDL_Rect select_menu_quit_button_rect = {(Windows_Width/2)-(select_button_Width)/2, select_menu_playDeck_button_rect.y + select_button_Height + (Windows_Height*30)/1080, select_button_Width, select_button_Height};
+
+    // ! x----------------x---------------x
+
+    // ! Game Account Section
+    // Account Buttons Image Load
+    SDL_Texture* account_create_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/create.png");
+    SDL_Texture* account_login_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/login.png");
+
+    // Account Menu Width And Height
+    const int account_main_Width = 800;
+    const int account_main_Height = 600;
+    // Account Menu Rect
+    SDL_Rect account_main_rect = {(Windows_Width/2)-(account_main_Width/2), (Windows_Height/2)-(account_main_Height/2), account_main_Width, account_main_Height};
+
+    // Account Input Box Width And Height
+    const int account_input_Width = 600;
+    const int account_input_Height = 50;
+    // Account Input Box Rect
+    SDL_Rect account_username = {(account_main_rect.x)+100, account_main_rect.y+220, account_input_Width, account_input_Height};
+    SDL_Rect account_password = {(account_main_rect.x)+100, account_username.y+140, account_input_Width, account_input_Height};
+
+    // Account Buttons Rect
+    // Buttons For Create Account
+    SDL_Rect account_create_button1_rect = {account_main_rect.x + (account_main_rect.w/2 - tower_menu_button_width/
+    2), account_main_rect.y + (account_main_rect.h - 150), tower_menu_button_width, tower_menu_button_height};
+    SDL_Rect account_login_button1_rect = {account_main_rect.x + (account_main_rect.w/2 - tower_menu_button_width/
+    2), account_main_rect.y + (account_main_rect.h - 150), tower_menu_button_width, tower_menu_button_height};
+    // Buttons for lgoin Account
+    SDL_Rect account_create_button_rect = {account_main_rect.x+(account_main_rect.w/2 - (tower_menu_button_width*2+20)/2), account_main_rect.y + (account_main_rect.h/2 - tower_menu_button_height/2), tower_menu_button_width, tower_menu_button_height};
+    SDL_Rect account_login_button_rect = {account_create_button_rect.x+tower_menu_button_width+20 , account_main_rect.y + (account_main_rect.h/2 - tower_menu_button_height/2), tower_menu_button_width, tower_menu_button_height};
+
+    // Typwriter Blinker for Account Input
+    SDL_Rect account_username_typewriter = {account_username.x+10, account_username.y + 4, 4, 42};
+    SDL_Rect account_password_typewriter = {account_password.x+10, account_password.y + 4, 4, 42};
+
+    // ! x----------------x---------------x
 
     // Dialog
     SDL_Texture* level1_archer_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level1/archer_dialog1.png");
@@ -205,11 +251,9 @@ int main(int argc, char* args[]){
     SDL_Rect level1_archer_dialog1_rect = {((Windows_Width-dialog_Width)-((Windows_Width*100)/1920)), ((Windows_Height-dialog_Height)-((Windows_Height*500)/1920)), dialog_Width, dialog_Height};
     SDL_Rect level1_king_dialog1_rect = {(Windows_Width*100)/1920, ((Windows_Height-dialog_Height)-((Windows_Height*500)/1920)), dialog_Width, dialog_Height};
 
-    const int select_button_Width = (Windows_Width*300)/1920;
-    const int select_button_Height = (Windows_Width*80)/1080;
+   
 
-    SDL_Rect select_menu_playDeck_button_rect = {(Windows_Width/2)-(select_button_Width)/2, (Windows_Height/2)-(select_button_Height/2)-(Windows_Height*60)/1080, select_button_Width, select_button_Height};
-    SDL_Rect select_menu_quit_button_rect = {(Windows_Width/2)-(select_button_Width)/2, select_menu_playDeck_button_rect.y + select_button_Height + (Windows_Height*30)/1080, select_button_Width, select_button_Height};
+    
 
     // All Tower Game Button Textures
 
@@ -222,32 +266,7 @@ int main(int argc, char* args[]){
     SDL_Texture* quit_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/quit.png");
     SDL_Texture* back_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/back.png"); 
 
-    // Account Buttons
-    SDL_Texture* account_create_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/create.png");
-    SDL_Texture* account_login_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/login.png");
-
-    // Tower Game Account Menu
-    const int account_main_Width = 800;
-    const int account_main_Height = 600;
-    SDL_Rect account_main_rect = {(Windows_Width/2)-(account_main_Width/2), (Windows_Height/2)-(account_main_Height/2), account_main_Width, account_main_Height};
-
-    const int account_input_Width = 600;
-    const int account_input_Height = 50;
-    SDL_Rect account_username = {(account_main_rect.x)+100, account_main_rect.y+220, account_input_Width, account_input_Height};
-    SDL_Rect account_password = {(account_main_rect.x)+100, account_username.y+140, account_input_Width, account_input_Height};
-
-    // Account Buttons
-    SDL_Rect account_create_button1_rect = {account_main_rect.x + (account_main_rect.w/2 - tower_menu_button_width/
-    2), account_main_rect.y + (account_main_rect.h - 150), tower_menu_button_width, tower_menu_button_height};
-    SDL_Rect account_login_button1_rect = {account_main_rect.x + (account_main_rect.w/2 - tower_menu_button_width/
-    2), account_main_rect.y + (account_main_rect.h - 150), tower_menu_button_width, tower_menu_button_height};
-
-    SDL_Rect account_create_button_rect = {account_main_rect.x+(account_main_rect.w/2 - (tower_menu_button_width*2+20)/2), account_main_rect.y + (account_main_rect.h/2 - tower_menu_button_height/2), tower_menu_button_width, tower_menu_button_height};
-    SDL_Rect account_login_button_rect = {account_create_button_rect.x+tower_menu_button_width+20 , account_main_rect.y + (account_main_rect.h/2 - tower_menu_button_height/2), tower_menu_button_width, tower_menu_button_height};
-
-    // Typwriter Blinker for Account Input
-    SDL_Rect account_username_typewriter = {account_username.x+10, account_username.y + 4, 4, 42};
-    SDL_Rect account_password_typewriter = {account_password.x+10, account_password.y + 4, 4, 42};
+   
 
     // Calculate the total height of all buttons and spacing
     const int total_buttons_height = (tower_menu_button_height * 4) + (Windows_Height * 16 / 1080 * 3); // 4 buttons + 3 spacings
@@ -438,13 +457,22 @@ int main(int argc, char* args[]){
     SDL_Texture* level1_tower_halfhealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level1/halfhealth.png");
     SDL_Texture* level1_tower_zerohealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level1/zerohealth.png");
 
+    // Connon ball
+    SDL_Texture* cannon_ball_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/cannon_ball.png");
+
+
     // Cards
+    // Archer
     SDL_Texture* card_archer_full_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/archer_full.png");
     SDL_Texture* card_archer_notfull_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/archer_notfull.png");
+    // Knight
+    SDL_Texture* card_knight_full_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/knight_full.png");
+    SDL_Texture* card_knight_notfull_texture = IMG_LoadTexture(renderer, "./image/towerGame/cards/knight_notfull.png");
 
     const int cards_Width = (Windows_Width*114)/1920;
     const int cards_Height = (Windows_Height*144)/1080;
     SDL_Rect card_archer_rect= {(Windows_Width/2)-(cards_Width/2), (Windows_Height-cards_Height)-((Windows_Height*50)/1080), cards_Width, cards_Height};
+    SDL_Rect card_knight_rect= {(Windows_Width*700)/1920, (Windows_Height-cards_Height)-((Windows_Height*50)/1080), cards_Width, cards_Height};
     // SDL_Rect card_archer_notfull_rect= {card_archer_full_rect.x + cards_Width + ((Windows_Width*20)/1920), card_archer_full_rect.y, cards_Width, cards_Height};
     SDL_Rect cardsBackground_rect = {0, Windows_Height - ((Windows_Height*240)/1080), Windows_Width, (Windows_Height*240)/1080};
     SDL_Rect cardsBackground_outline_rect = {0, cardsBackground_rect.y, Windows_Width, 0};
@@ -650,7 +678,7 @@ int main(int argc, char* args[]){
     bool gameStarted = false;
 
     // For Main Home/ First  Page
-    bool selectedGame_page = true; //! True Karo  
+    bool selectedGame_page = false; //! True Karo  
 
     // For Account 
     char username[20] = "";
@@ -668,8 +696,8 @@ int main(int argc, char* args[]){
     bool towerGame_account_choose = false;
     bool towerGame_account_create = false;
     bool towerGame_account_login = false;
-    bool towerGame = false; //! False Karo 
-    bool towerGame_Started = false; //! False Karo
+    bool towerGame = true; //! False Karo 
+    bool towerGame_Started = true; //! False Karo
     bool towerGame_homemenu = false;
     bool towerGame_levelmenu = false;
     bool towerGame_optionmenu = false;
@@ -680,7 +708,7 @@ int main(int argc, char* args[]){
 
     // Tower Game Levels
     bool towerGame_Started_level1 = false; //! False Karo 
-    bool towerGame_Started_level2 = false;
+    bool towerGame_Started_level2 = true;
     bool towerGame_Started_level3 = false;
     bool towerGame_Started_level4 = false;
     bool towerGame_Started_level5 = false;
@@ -689,10 +717,10 @@ int main(int argc, char* args[]){
     bool towerGame_Started_level8 = false;
 
     // For All Levels
-    bool all_levels_Started = false; //! False Karo
+    bool all_levels_Started = true; //! False Karo
 
-    bool midPause = false; //! False Karo
-    bool midPause_archer_moving = false; //! false karo
+    bool midPause = true; //! False Karo
+    bool midPause_archer_moving = true; //! false karo
     bool midPause_dialog_starting = false;//! False Karo 
     bool dialog1_start = false;
     bool dialog2_start = false;
@@ -819,12 +847,15 @@ int main(int argc, char* args[]){
     // Money
     int money = 0;
     int archer_card_cool = 0;
+    int knight_card_cool = 0;
 
     // Timer
     float money_Timer = 0.00f;
     float money_Increase_Timer = 0.01f;
     float archer_card_cool_Timer = 0.00f;
     float archer_card_Increase_cool_Timer = 0.05f;
+    float knight_card_cool_Timer = 0.00f;
+    float knight_card_Increase_cool_Timer = 0.05f;
 
     // For Handling & Changing Frames
     Uint32 frameDelay = 100;  // Delay between frames (in milliseconds)
@@ -1082,6 +1113,7 @@ int main(int argc, char* args[]){
                                 towerGame_homemenu = true;
                                 money = 5;
                                 archer_card_cool = 100;
+                                knight_card_cool = 100;
                                 archer_standing = false;
                                 // archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
                                 // tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
@@ -1221,6 +1253,12 @@ int main(int argc, char* args[]){
                                     archer_card_cool = 0;
                                     money -= 5;
                                 }
+                            }else if(checkButtonClick(mouseX, mouseY, &card_knight_rect)){
+                                if(knight_card_cool>=100 && money >= 5){
+                                    knight.spawn = true;
+                                    knight_card_cool = 0;
+                                    money -= 5;
+                                }
                             }
                             
                         }
@@ -1265,7 +1303,7 @@ int main(int argc, char* args[]){
                                 }
                                 music = !music;
                                 if(music){
-                                    Mix_PlayChannel(0, towerGame_backgroundMusic, -1);
+                                    Mix_PlayChannel(0, level1Background_Sound, -1);
                                 }else{
                                     Mix_HaltChannel(0);
                                 }
@@ -1829,7 +1867,10 @@ int main(int argc, char* args[]){
                     if(sound){
                         Mix_PlayChannel(3, towerShooting_sound, 0); 
                     }
-                    tower_bomb.vx += 20 * ScaleX;
+                    // tower_bomb.vx += 20 * ScaleX;
+                    // tower_bomb.vy += -18 * ScaleY;
+                    // tower_bomb.active = true;
+                     tower_bomb.vx += archer.x/80;
                     tower_bomb.vy += -18 * ScaleY;
                     tower_bomb.active = true;
                 }
@@ -2118,8 +2159,7 @@ int main(int argc, char* args[]){
                 if((!midPause || archer_showing_ending_scene) && !knight_moving_level1_ending){
                     if(tower_bomb.active){
                         SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
-                        SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
-                        SDL_RenderFillRect(renderer, &tower_bomb_rect);
+                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_rect);
                     }else if(youWin){
                         SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
                         SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
@@ -2237,6 +2277,17 @@ int main(int argc, char* args[]){
                             archer_card_cool++;
                         }
                     }
+
+                    if(knight_card_cool >= 100){
+                        knight_card_cool = 100;
+
+                    }else{
+                        knight_card_cool_Timer += archer_card_Increase_cool_Timer;
+                        if(knight_card_cool_Timer >= 1.50f){
+                            knight_card_cool_Timer = 0.00f;
+                            knight_card_cool++;
+                        }
+                    }
                     if(money >= 10){
                         money = 10;
                     }else{
@@ -2249,6 +2300,7 @@ int main(int argc, char* args[]){
                 }
 
                 char archer_card_cool_Text[4];
+                char knight_card_cool_Text[4];
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
                 SDL_SetRenderDrawColor(renderer, 255,255,255,255);
                 SDL_RenderDrawRect(renderer, &cardsBackground_outline_rect);
@@ -2259,9 +2311,18 @@ int main(int argc, char* args[]){
                 }else{
                     SDL_RenderCopy(renderer, card_archer_notfull_texture, NULL, &card_archer_rect);
                 }
+                if(knight_card_cool >= 100){
+                    SDL_RenderCopy(renderer, card_knight_full_texture, NULL, &card_knight_rect);
+                }else{
+                    SDL_RenderCopy(renderer, card_knight_notfull_texture, NULL, &card_knight_rect);
+                }
                 sprintf(archer_card_cool_Text, "%d%%", archer_card_cool);
                 renderText(renderer, "5$", card_archer_rect.x+(Windows_Width*12)/1920, card_archer_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
                 renderText(renderer, archer_card_cool_Text, card_archer_rect.x + card_archer_rect.w - (Windows_Width*60)/1920, card_archer_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+
+                sprintf(knight_card_cool_Text, "%d%%", knight_card_cool);
+                renderText(renderer, "5$", card_knight_rect.x+(Windows_Width*12)/1920, card_knight_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+                renderText(renderer, knight_card_cool_Text, card_knight_rect.x + card_knight_rect.w - (Windows_Width*60)/1920, card_knight_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
 
                 if(archer_arrow.active){
                     SDL_Rect archer_arrow_rect = {(int)archer_arrow.x, (int)archer_arrow.y, (Windows_Width*120)/1920, (Windows_Height*50)/1080};
@@ -2269,13 +2330,17 @@ int main(int argc, char* args[]){
                     SDL_RenderCopyEx(renderer, arrow, NULL, &archer_arrow_rect, archer_arrow.angle, &center, SDL_FLIP_NONE);
                 }
 
+                if((!midPause || archer_showing_ending_scene) && !knight_moving_level1_ending){
+                    if(tower_bomb.active){
+                        SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
+                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_rect);
+                    }else if(youWin){
+                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
+                        SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
+                    }
+                }
 
-                SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
-                SDL_SetRenderDrawColor(renderer, 150, 75, 0, 255);
-                SDL_RenderFillRect(renderer, &tower_bomb_rect);
 
-                // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-                // SDL_RenderFillRect(renderer, &tower_attacker);
                 if(tower_attacker_health>50){
                     SDL_RenderCopy(renderer, level1_tower_fullhealth_texture, NULL, &tower_attacker);
                 }else if(tower_attacker_health<=50 && tower_attacker_health>0){
@@ -2301,7 +2366,10 @@ int main(int argc, char* args[]){
                     }
                 }
                 
-                
+                if(knight.spawn){
+                    SDL_Rect knightBasic_rect = { (int)archerX, (int)archerY, knight_basic_Width, knight_basic_Height };
+                    SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
+                }
                 archer_health_box.x = (int)(archer.x+(Windows_Width*20)/1920);
                 archer_health_box.y = (int)(archer.y+((Windows_Height*-20)/1080));
                 archer_health_box_innerfill.x = archer_health_box.x;
