@@ -1390,6 +1390,17 @@ int main(int argc, char* args[]){
                                     if(music){
                                         Mix_PlayChannel(0, level1Background_Sound, 0);
                                     }
+                                    archer_health = 100;
+                                    knight_health = 100;
+                                    tower_attacker_health = 100;
+                                    archer_health_box.w =100;
+                                    knight_health_box.w =100;
+                                    tower_health_box.w =100;
+                                    knight.spawn = false;
+                                    tower_bomb.active = false;
+                                    archer_arrow.active = false;
+                                    archer.x = (float)(Windows_Width+(archer_basic_Width));
+                                    knight.x = (float)(Windows_Width+(KNIGHT_RUN_FRAME_WIDTH));
                                 }else if(checkButtonClick(mouseX, mouseY, &level3_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
