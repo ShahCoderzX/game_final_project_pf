@@ -25,6 +25,7 @@ bool checkButtonClick(int mouseX, int mouseY, SDL_Rect* button) {
 }
 // ---------------------x---------------------
 
+
 // RenderText --------------------->
 void renderText(SDL_Renderer* renderer, const char* text, int x, int y, TTF_Font* font,Uint8 r_color,Uint8 g_color,Uint8 b_color) {
     SDL_Color color = { r_color, g_color, b_color, 255};
