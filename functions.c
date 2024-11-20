@@ -71,16 +71,16 @@ void renderText_Heading(SDL_Renderer* renderer, const char* text, int x, int y, 
 
 // ! Tower Game
 // Check if arrow hits the tower
-bool checkCollisionTower(Arrow *arrow, int towerX, int towerY) {
-    SDL_Rect arrowRect = {(int)arrow->x, (int)arrow->y, 120, 50};
-    SDL_Rect towerRect = {towerX, towerY, 100, 300};
+bool checkCollisionTower(Arrow *arrow, int towerX, int towerY, int arrowWidth, int arrowHeight, int towerWidth, int towerHeight) {
+    SDL_Rect arrowRect = {(int)arrow->x, (int)arrow->y, arrowWidth, arrowHeight};
+    SDL_Rect towerRect = {towerX, towerY, towerWidth, towerHeight};
 
     return SDL_HasIntersection(&arrowRect, &towerRect);
 }
 // Check if Tower Bomb hits the Archer
-bool checkCollisionArcher(Pointer *towerbomb, Character *archer) {
-    SDL_Rect arrowRect = {(int)towerbomb->x, (int)towerbomb->y, 200, 50};
-    SDL_Rect towerRect = {((int)archer->x), (int)archer->y, 100, 40};
+bool checkCollisionArcher(Pointer *towerbomb, Character *archer, int archerWidth, int archerHeight, int towerWidth, int towerHeight) {
+    SDL_Rect arrowRect = {(int)towerbomb->x, (int)towerbomb->y, archerWidth, archerHeight};
+    SDL_Rect towerRect = {((int)archer->x), (int)archer->y, towerWidth, towerHeight};
 
     return SDL_HasIntersection(&arrowRect, &towerRect);
 }
