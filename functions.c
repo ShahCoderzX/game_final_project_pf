@@ -84,6 +84,13 @@ bool checkCollisionArcher(Pointer *towerbomb, Character *archer, int archerWidth
 
     return SDL_HasIntersection(&arrowRect, &towerRect);
 }
+// Check if Enemy hits the Archer
+bool checkCollisionEnemy(Character *towerbomb, Character *archer, int archerWidth, int archerHeight, int towerWidth, int towerHeight) {
+    SDL_Rect arrowRect = {(int)towerbomb->x, (int)towerbomb->y, archerWidth, archerHeight};
+    SDL_Rect towerRect = {((int)archer->x), (int)archer->y, towerWidth, towerHeight};
+
+    return SDL_HasIntersection(&arrowRect, &towerRect);
+}
 
 // UserName Exist or not 
 int usernameExists(const char* username) {

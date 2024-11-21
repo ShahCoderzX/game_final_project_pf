@@ -56,6 +56,8 @@ void renderText_Heading(SDL_Renderer* renderer, const char* text, int x, int y, 
 bool checkCollisionTower(Arrow *arrow, int towerX, int towerY, int arrowWidth, int arrowHeight, int towerWidth, int towerHeight);
 // Check if tower bomb hits the archer
 bool checkCollisionArcher(Pointer *towerbomb, Character *archer, int archerWidth, int archerHeight, int towerWidth, int towerHeight) ;
+// Check if enemy hits the archer
+bool checkCollisionEnemy(Character *towerbomb, Character *archer, int archerWidth, int archerHeight, int towerWidth, int towerHeight) ;
 
 // Account Creation
 int createAccount(char* username, char* password);
