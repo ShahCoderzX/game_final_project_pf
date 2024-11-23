@@ -321,6 +321,11 @@ int main(int argc, char* args[]){
     SDL_Texture* level4_tower_halfhealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level4/halfhealth.png");
     SDL_Texture* level4_tower_zerohealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level4/zerohealth.png");
 
+    // ? Level 5
+    SDL_Texture* level5_tower_fullhealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level5/fullhealth.png");
+    SDL_Texture* level5_tower_halfhealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level5/halfhealth.png");
+    SDL_Texture* level5_tower_zerohealth_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/level5/zerohealth.png");
+
     // Connon ball Image
     SDL_Texture* cannon_ball_texture=IMG_LoadTexture(renderer, "./image/towerGame/towers/cannon_ball.png");
 
@@ -460,6 +465,8 @@ int main(int argc, char* args[]){
     const int level3_towerHeight = (Windows_Height*477)/1080;
     const int level4_towerWidth = (Windows_Width*360)/1920;
     const int level4_towerHeight = (Windows_Height*477)/1080;
+    const int level5_towerWidth = (Windows_Width*722)/1920;
+    const int level5_towerHeight = (Windows_Height*612)/1080;
 
     // Archer Width and height
     int archer_basic_Width = (Windows_Width * ARCHER_BASIC_FRAME_WIDTH) / 1920;
@@ -487,7 +494,7 @@ int main(int argc, char* args[]){
 
     // Soldier Width and Height
     int soldier_basic_Width = SOLDIER_BASIC_WIDTH;
-    int soldier_basic_HEIGHT = SOLDIER_BASIC_HEIGHT;
+    int soldier_basic_Height = soldier_basic_Height;
     // Soldier Bullet Width and Height
     int soldier_bullet_Width = 100;
     int soldier_bullet_Height = 14;
@@ -743,8 +750,10 @@ int main(int argc, char* args[]){
     // Tower Bomb
     Pointer tower_bomb = {(float)tower_attacker.x, (float)tower_attacker.y, 0, 0, false};
     // Tower Bomb 2
+    Pointer tower_bomb_1_5 = {(float)tower_attacker.x + (Windows_Width*50)/1920, (float) tower_attacker.y + (Windows_Height*350)/1080, 0, 0, false};
     Pointer tower_bomb_2 = {(float)tower_attacker.x + (Windows_Width*50)/1920, (float) tower_attacker.y + (Windows_Height*350)/1080, 0, 0, false};
     Pointer tower_bomb_3 = {(float)tower_attacker.x + (Windows_Width*50)/1920, (float) tower_attacker.y + (Windows_Height*350)/1080, 0, 0, false};
+    Pointer tower_bomb_4 = {(float)tower_attacker.x + (Windows_Width*50)/1920, (float) tower_attacker.y + (Windows_Height*350)/1080, 0, 0, false};
 
     // Mille Character
     SDL_Rect mille_level2_rect = {(Windows_Width*20)/1920, Windows_Height - (towerHeight+(int)(Windows_Height * 0.06)), mille_basic_Width, mille_basic_Height};
@@ -839,7 +848,7 @@ int main(int argc, char* args[]){
     /* ==================================================
                 ! Check All the Textures
     =====================================================*/
-    if (!towerGame_level1_background || !towerGame_level2_background || !towerGame_level3_background || !towerGame_level4_background ||!main_backgroundTexture || !towerGame_mainPage_backgroundTexture || !towerGame_homePage_backgroundTexture || !towerGame_level1_background) {
+    if (!towerGame_level1_background || !towerGame_level2_background || !towerGame_level3_background || !towerGame_level4_background ||!main_backgroundTexture || !towerGame_mainPage_backgroundTexture || !towerGame_homePage_backgroundTexture || !towerGame_level1_background ) {
         printf("Texture Error: %s", SDL_GetError());
     }
     /* ==================================================
@@ -1190,14 +1199,14 @@ int main(int argc, char* args[]){
         SoldierRunningClips[i].x = i * SOLDIER_BASIC_WIDTH;
         SoldierRunningClips[i].y = 0;
         SoldierRunningClips[i].w = SOLDIER_BASIC_WIDTH;
-        SoldierRunningClips[i].h = SOLDIER_BASIC_HEIGHT;
+        SoldierRunningClips[i].h = soldier_basic_Height;
     }
     // ? SOLDIER ATTACKING FRAME
     for (int i = 0; i < SOLDIER_ATTACKING_TOTAL_FRAME; i++) {
         SoldierAttackingClips[i].x = i * SOLDIER_BASIC_WIDTH;
         SoldierAttackingClips[i].y = 0;
         SoldierAttackingClips[i].w = SOLDIER_BASIC_WIDTH;
-        SoldierAttackingClips[i].h = SOLDIER_BASIC_HEIGHT;
+        SoldierAttackingClips[i].h = soldier_basic_Height;
     }
 
 
@@ -1257,9 +1266,18 @@ int main(int argc, char* args[]){
     float tower_bomb_2_Timer = 0.00f;
     float tower_bomb_2_attack_delay = 5.00f;
 
+     // Timer For Cannon Ball 1 for 5 levek
+    float tower_bomb_1_5_Timer = 0.00f;
+    float tower_bomb_1_5_attack_delay = 1.00f;
+
+
     // Timer For Cannon Ball 3
     float tower_bomb_3_Timer = 0.00f;
     float tower_bomb_3_attack_delay = 8.00f;
+
+    // Timer For Cannon Ball 4
+    float tower_bomb_4_Timer = 0.00f;
+    float tower_bomb_4_attack_delay = 10.00f;
 
     // Timer For Card Cool
     float archer_card_cool_Timer = 0.00f;
@@ -1412,6 +1430,28 @@ int main(int argc, char* args[]){
                                     }
                                 }
                             }else if(towerGame_Started_level4){
+                                // For Level 2
+
+                                    // Dialog
+                                if(midPause_dialog_starting){
+                                    if(dialog1_start){
+                                        dialog2_start = true;
+                                        dialog1_start = false;
+                                    }else if(dialog2_start){
+                                        dialog3_start = true;
+                                        dialog2_start = false;
+                                    }else if(dialog3_start){
+                                        dialog4_start = true;
+                                        dialog3_start = false;
+                                    }else if(dialog4_start){
+                                        dialog5_start = true;
+                                        dialog4_start = false;
+                                    }else if(dialog5_start){
+                                        dialog5_start = false;
+                                        midPause = false;
+                                    }
+                                }
+                            }else if(towerGame_Started_level5){
                                 // For Level 2
 
                                     // Dialog
@@ -1644,6 +1684,10 @@ int main(int argc, char* args[]){
                                     archer_health = 100;
                                     knight_health = 100;
                                     tower_attacker_health = 100;
+                                    hot_air_balloon_health = 100;
+                                    hot_air_balloon_rect.w = (Windows_Width*300)/1920;
+                                    hot_air_balloon_rect.h = (Windows_Height*400)/1080;
+                                    hot_air_ballon_health_box.w =(Windows_Width*100)/1920;
                                     archer_health_box.w =(Windows_Width*100)/1920;
                                     knight_health_box.w =(Windows_Width*100)/1920;
                                     tower_health_box.w =(Windows_Width*1000)/1920;
@@ -1694,9 +1738,9 @@ int main(int argc, char* args[]){
                                     tower_attacker.w = level3_towerWidth;
                                     tower_attacker.h = level3_towerHeight;
                                     tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.39));
-                                    tower_bomb.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                                     tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
-                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
                                     tower_bomb_2.active = false;
                                     knight.spawn = false;
@@ -1757,11 +1801,11 @@ int main(int argc, char* args[]){
                                     tower_attacker.w = level4_towerWidth;
                                     tower_attacker.h = level4_towerHeight;
                                     tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.39));
-                                    tower_bomb.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                                     tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
-                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Height*80)/1920; 
+                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
                                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
-                                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Height*80)/1920; 
+                                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
                                     tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*270)/1080; 
                                     tower_bomb_2.active = false;
                                     tower_bomb_3.active = false;
@@ -1775,7 +1819,78 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    printf("Level");
+                                    towerGame_Started_level5 = true;
+                                    all_levels_Started = true;
+                                    towerGame_Started = true;
+                                    midPause = true;
+                                    midPause_dialog_starting = false;
+                                    midPause_archer_moving = true;
+                                    mainBackground = towerGame_level5_background;
+                                    towerGame_levelmenu = false;
+                                    towerGame_homemenu = true;
+                                    money = 5;
+                                    archer_card_cool = 100;
+                                    knight_card_cool = 100;
+                                    mille_card_cool = 100;
+                                    soldier_card_cool = 100;
+                                    archer_standing = false;
+                                    archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+                                    archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+                                    knight.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+                                    knight.x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
+                                    mille.y = Windows_Height - (int)((110 * ScaleY) + (280 * ScaleY));
+                                    milleY = mille.y;
+                                    soldier.x = Windows_Width - (soldier_basic_Width + (Windows_Width*100)/1920);
+                                    soldier.y = Windows_Height - (int)((150 * ScaleY) + (280 * ScaleY));
+                                    mille.x = Windows_Width - (mille_basic_Width + (Windows_Width*100)/1920);
+                                    mille_rect.w = (Windows_Width * (MILLE_BASIC_WIDTH/1.5))/1920;
+                                    mille_rect.h = (Windows_Height *(MILLE_BASIC_HEIGHT/1.5))/1080;
+                                    Mix_HaltChannel(0);
+                                    if(music){
+                                        Mix_PlayChannel(0, level1Background_Sound, 0);
+                                    }
+                                    hot_air_balloon_health = 100;
+                                    hot_air_balloon_rect.w = (Windows_Width*300)/1920;
+                                    hot_air_balloon_rect.h = (Windows_Height*400)/1080;
+                                    hot_air_ballon_health_box.w =(Windows_Width*100)/1920;
+                                    hot_air_balloon_bomb.active = false;
+                                    wolf.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.08));
+                                    wolf.x = (float) (- (WOLF_RUN_WIDTH + (Windows_Width*40)/1920));
+                                    wolf.spawn = false;
+                                    wolf_running = false;
+                                    wolf_attacking = false;
+                                    archer_health = 100;
+                                    knight_health = 100;
+                                    mille_health = 100;
+                                    soldier_health = 100;
+                                    tower_attacker_health = 100;
+                                    archer_health_box.w =(Windows_Width*100)/1920;
+                                    knight_health_box.w =(Windows_Width*100)/1920;
+                                    mille_health_box.w = (Windows_Width*100)/1920;
+                                    soldier_health_box.w = (Windows_Width*100)/1920;
+                                    tower_health_box.w =(Windows_Width*1000)/1920;
+                                    tower_attacker.w = level5_towerWidth;
+                                    tower_attacker.h = level5_towerHeight;
+                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.52));
+                                    tower_attacker.x = 0;
+                                    tower_bomb_1_5.x = (float)tower_attacker.x + (Windows_Width*600)/1920; 
+                                    tower_bomb_1_5.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
+                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
+                                    tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
+                                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
+                                    tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
+                                    tower_bomb_4.x = (float)tower_attacker.x + (Windows_Width*300)/1920; 
+                                    tower_bomb_4.y = (float)tower_attacker.y + (Windows_Height*300)/1080; 
+                                    tower_bomb_2.active = false;
+                                    tower_bomb_3.active = false;
+                                    tower_bomb_4.active = false;
+                                    tower_bomb_1_5.active = false;
+                                    knight.spawn = false;
+                                    soldier.spawn = false;
+                                    mille.spawn = false;
+                                    tower_bomb.active = false;
+                                    archer_arrow.active = false;
+                                    archer.x = (float)(Windows_Width+(archer_basic_Width));
                                 }else if(checkButtonClick(mouseX, mouseY, &level6_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
@@ -1947,6 +2062,47 @@ int main(int argc, char* args[]){
             //                         }
                                 }else if(towerGame_Started_level4){
                                     mainBackground = towerGame_level4_background;
+
+                                    // Card Controller
+                                    if( mouseX >= archer.x && mouseX <= archer.x + archer_basic_Width&& mouseY >= archer.y && mouseY <= archer.y + archer_basic_Height){
+                                        milleclicked = 0;
+                                        soldierclicked = 0;
+                                        knightclicked =0;
+                                        archerclicked =1;
+                                    }
+                                    if( mouseX >= knight.x && mouseX <= knight.x + knight_basic_Width&&mouseY >= knight.y && mouseY <= knight.y + knight_basic_Height){
+                                        knightclicked =1;
+                                        milleclicked = 0;
+                                        soldierclicked = 0;
+                                        archerclicked =0;
+                                    }
+                                    if(mouseX >= mille.x && mouseX <= mille.x + mille_rect.w&&mouseY >= mille.y && mouseY <= mille.y + mille_rect.h){
+                                        knightclicked =0;
+                                        archerclicked =0;
+                                        soldierclicked = 0;
+                                        milleclicked = 1;
+                                    }
+                                    if(mouseX >= soldier.x && mouseX <= soldier.x + soldier_rect.w&&mouseY >= soldier.y && mouseY <= soldier.y + soldier_rect.h){
+                                        knightclicked =0;
+                                        archerclicked =0;
+                                        milleclicked = 0;
+                                        soldierclicked = 1;
+                                    }
+
+                                    // Archer Is not Clicked
+                                    // if(!archerclicked){
+                                
+                                    //     if (currentFrame >=  KNIGHT_TOTAL_RUN_ATTACK_FRAME) {
+                                    //         currentFrame = 0; 
+                                    //     }
+                                    //         knight_shooting = true;
+                                    // }
+            //                         if(!knightclicked)
+            //                         {
+            // //code
+            //                         }
+                                }else if(towerGame_Started_level5){
+                                    mainBackground = towerGame_level5_background;
 
                                     // Card Controller
                                     if( mouseX >= archer.x && mouseX <= archer.x + archer_basic_Width&& mouseY >= archer.y && mouseY <= archer.y + archer_basic_Height){
@@ -3121,7 +3277,7 @@ int main(int argc, char* args[]){
             if(mille_laser.active){
                 mille_laser.x -= 18*ScaleX;
 
-                if(mille_laser.x > Windows_Width || mille_laser.y > Windows_Height || checkCollisionTower(&mille_laser, (int)tower_attacker.x, (int)tower_attacker.y, mille_laser_Width, mille_laser_Height,level3_towerWidth, level3_towerHeight) || checkCollisionTower(&mille_laser, (int)wolf.x, (int)wolf.y, mille_laser_Width, mille_laser_Height,wolf_basic_Width, wolf_basic_Height)){
+                if(mille_laser.x > Windows_Width || mille_laser.y > Windows_Height || checkCollisionTower(&mille_laser, (int)tower_attacker.x, (int)tower_attacker.y, mille_laser_Width, mille_laser_Height,level3_towerWidth, level3_towerHeight) || checkCollisionTower(&mille_laser, (int)wolf.x, (int)wolf.y, mille_laser_Width, mille_laser_Width,wolf_basic_Width, wolf_basic_Height)){
                     if(checkCollisionTower(&mille_laser, (int)tower_attacker.x, (int)tower_attacker.y, mille_laser_Width, mille_laser_Height,level3_towerWidth, level3_towerHeight)){
                         if(tower_attacker_health>0){
                             if(sound){
@@ -3135,7 +3291,7 @@ int main(int argc, char* args[]){
                             youWin = true;
                         }
                     }
-                    if(checkCollisionTower(&mille_laser, (int)wolf.x, (int)wolf.y, mille_laser_Width, mille_laser_Height,wolf_basic_Width, wolf_basic_Height)){
+                    if(checkCollisionTower(&mille_laser, (int)wolf.x, (int)wolf.y, mille_laser_Width, mille_laser_Width,wolf_basic_Width, wolf_basic_Height)){
                         if(wolf_health>0){
                             if(sound){
                                 Mix_PlayChannel(4, towerDamage_sound, 0); 
@@ -3240,7 +3396,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb_2.vx = 0;
                     tower_bomb_2.vy = 0;
-                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
                     tower_bomb_2_Timer = 0.0f;
                     tower_bomb_2.active = false;
@@ -3260,7 +3416,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb_2.vx = 0;
                     tower_bomb_2.vy = 0;
-                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*500)/1080; 
                     tower_bomb_2_Timer = 0.0f;
                     tower_bomb_2.active = false;
@@ -3287,7 +3443,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb.vx = 0;
                     tower_bomb.vy = 0;
-                    tower_bomb.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                     tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
                     tower_attack_timer = 0.0f;
                     tower_bomb.active = false;
@@ -3307,7 +3463,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb.vx = 0;
                     tower_bomb.vy = 0;
-                    tower_bomb.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                     tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
                     tower_attack_timer = 0.0f;
                     tower_bomb.active = false;
@@ -3475,7 +3631,7 @@ int main(int argc, char* args[]){
                 }
 
                 if(archer_arrow.x > Windows_Width || archer_arrow.y > Windows_Height || checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height,level3_towerWidth, level3_towerHeight) || checkCollisionTower(&archer_arrow, (int)wolf.x, (int)wolf.y, archer_arrow_basic_Width, archer_arrow_basic_Height,wolf_basic_Width, wolf_basic_Height)){
-                    if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height, towerWidth, towerHeight)){
+                    if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height,level3_towerWidth, level3_towerHeight)){
                         if(tower_attacker_health>0){
                             if(sound){
                                 Mix_PlayChannel(4, towerDamage_sound, 0); 
@@ -3792,7 +3948,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb_3.vx = 0;
                     tower_bomb_3.vy = 0;
-                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Height*80)/1920; 
+                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
                     tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*270)/1080; 
                     tower_bomb_3_Timer = 0.0f;
                     tower_bomb_3.active = false;
@@ -3812,7 +3968,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb_3.vx = 0;
                     tower_bomb_3.vy = 0;
-                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Height*80)/1920; 
+                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
                     tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*270)/1080; 
                     tower_bomb_3_Timer = 0.0f;
                     tower_bomb_3.active = false;
@@ -3838,7 +3994,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb_2.vx = 0;
                     tower_bomb_2.vy = 0;
-                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Height*80)/1920; 
+                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
                     tower_bomb_2_Timer = 0.0f;
                     tower_bomb_2.active = false;
@@ -3858,7 +4014,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb_2.vx = 0;
                     tower_bomb_2.vy = 0;
-                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Height*80)/1920; 
+                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
                     tower_bomb_2_Timer = 0.0f;
                     tower_bomb_2.active = false;
@@ -3885,7 +4041,7 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb.vx = 0;
                     tower_bomb.vy = 0;
-                    tower_bomb.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                     tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
                     tower_attack_timer = 0.0f;
                     tower_bomb.active = false;
@@ -3905,139 +4061,14 @@ int main(int argc, char* args[]){
                     }
                     tower_bomb.vx = 0;
                     tower_bomb.vy = 0;
-                    tower_bomb.x = (float)tower_attacker.x + (Windows_Height*50)/1920; 
+                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
                     tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
                     tower_attack_timer = 0.0f;
                     tower_bomb.active = false;
                 }
             }
 
-            if(!wolf.spawn){
-            //     // Tower Attacker Timer Update
-            //     wolf_spawn_timer += deltaTime;  // Update the timer
-            //     if (wolf_spawn_timer >= wolf_spawn_delay) {
-            //         wolf.spawn = true;
-            //         wolf_health = 100;
-            //         wolf_health_box.w =100;
-            //         wolf_running = true;
-            //         wolf_attacking = false;
-            //         wolf_spawn_timer = 0.0f;
-            //     }
-            }
-
-            if(wolf.spawn){
-            //     // Handle frame updates for animation
-            //     Uint32 currentTime = SDL_GetTicks();
-            //         if(checkCollisionEnemy(&wolf, &archer, archer_basic_Width, archer_basic_Height, wolf_basic_Width, wolf_basic_Height)){
-            //             wolf_running = false;
-            //             wolf_attacking = true;
-            //             if (wolf_attacking && currentTime > lastFrameTime_Enemy + frameDelay) {
-            //                 currentFrame_Enemy++;
-            //                 if (currentFrame_Enemy >=  WOLF_TOTAL_ATTACK_FRAMES) {
-            //                     currentFrame_Enemy = 0; 
-            //                 }
-            //                 lastFrameTime_Enemy = currentTime;
-            //             }
-            //             if(wolf_attack_timer>=wolf_attack_delay){
-            //                 if(sound){
-            //                     Mix_PlayChannel(4, archerDamage_sound, 0); 
-            //                 }
-            //                 if(archer_health > 0){
-            //                     archer_health_box.w -= (Windows_Width*5)/1920;  
-            //                     archer_health -= 5;
-            //                 }
-            //                 wolf_attack_timer = 0.0f;
-            //             }else{
-            //                 wolf_attack_timer += deltaTime;
-            //             }
-            //             if(archer_health<=0){
-            //                 archer_health_box.w = 0;
-            //                 gameOver = true;
-            //             }
-            //         }
-            //         else if(knight.spawn&&checkCollisionEnemy(&wolf, &knight, knight_basic_Width, knight_basic_Height, wolf_basic_Width, wolf_basic_Height)){
-            //                 wolf_running = false;
-            //                 wolf_attacking = true;
-            //                 if (wolf_attacking && currentTime > lastFrameTime_Enemy + frameDelay) {
-            //                     currentFrame_Enemy++;
-            //                     if (currentFrame_Enemy >=  WOLF_TOTAL_ATTACK_FRAMES) {
-            //                         currentFrame_Enemy = 0; 
-            //                     }
-            //                     lastFrameTime_Enemy = currentTime;
-            //                 }
-            //                 if(wolf_attack_timer>=wolf_attack_delay){
-            //                     if(sound){
-            //                         Mix_PlayChannel(4, archerDamage_sound, 0); 
-            //                     }
-            //                     if(knight_health > 0){
-            //                         knight_health_box.w -= (Windows_Width*5)/1920;  
-            //                         knight_health -= 5;
-            //                     }
-            //                     wolf_attack_timer = 0.0f;
-            //                 }else{
-            //                     wolf_attack_timer += deltaTime;
-            //                 }
-            //                 if(knight_health<=0){
-            //                     knight_health_box.w = 0;
-            //                     gameOver = true;
-            //                 }
-                        
-            //         }else if(mille.spawn && checkCollisionEnemy(&wolf, &mille, mille_basic_Width, mille_basic_Height, wolf_basic_Width, wolf_basic_Height)){
-            //                 wolf_running = false;
-            //                 wolf_attacking = true;
-            //                 if (wolf_attacking && currentTime > lastFrameTime_Enemy + frameDelay) {
-            //                     currentFrame_Enemy++;
-            //                     if (currentFrame_Enemy >=  WOLF_TOTAL_ATTACK_FRAMES) {
-            //                         currentFrame_Enemy = 0; 
-            //                     }
-            //                     lastFrameTime_Enemy = currentTime;
-            //                 }
-            //                 if(wolf_attack_timer>=wolf_attack_delay){
-            //                     if(sound){
-            //                         Mix_PlayChannel(4, archerDamage_sound, 0); 
-            //                     }
-            //                     if(mille_health > 0){
-            //                         mille_health_box.w -= (Windows_Width*5)/1920;  
-            //                         mille_health -= 5;
-            //                     }
-            //                     wolf_attack_timer = 0.0f;
-            //                 }else{
-            //                     wolf_attack_timer += deltaTime;
-            //                 }
-            //                 if(mille_health<=0){
-            //                     wolf_health_box.w = 100;
-            //                     wolf_health = 100;
-            //                     wolf.spawn = false;
-            //                     wolf_attacking = false;
-            //                     wolf_running = true;
-            //                     wolf.x = (float) (-WOLF_RUN_WIDTH + (Windows_Width*40)/1920);
-            //                     currentFrame_Enemy = 0;
-            //                 }
-                        
-            //         }
-            //         else{
-            //             if (wolf_running && currentTime > lastFrameTime_Enemy + frameDelay) {
-            //                 currentFrame_Enemy++;
-            //                 if (currentFrame_Enemy >=  WOLF_TOTAL_RUN_FRAMES) {
-            //                     currentFrame_Enemy = 0; 
-            //                 }
-
-            //                 lastFrameTime_Enemy = currentTime;
-            //             }
-            //             wolf.x += 8*ScaleX; 
-            //             wolf_attacking = false;
-            //             wolf_running = true;
-                        
-                    
-            //         if(wolf.x >= wolf_basic_Width+Windows_Width){
-            //             wolf.spawn = false;
-            //             wolf_attacking = false;
-            //             wolf_running = true;
-            //             wolf.x = (float) (-WOLF_RUN_WIDTH + (Windows_Width*40)/1920);
-            //             currentFrame_Enemy = 0;
-            //         }
-            //     }
-            }
+            
             
 
             if(archer_arrow.active){
@@ -4073,7 +4104,688 @@ int main(int argc, char* args[]){
                 }
 
                 if(archer_arrow.x > Windows_Width || archer_arrow.y > Windows_Height || checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height,level4_towerWidth, level4_towerHeight)){
-                    if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height, towerWidth, towerHeight)){
+                    if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height,level4_towerWidth, level4_towerHeight)){
+                        if(tower_attacker_health>0){
+                            if(sound){
+                                Mix_PlayChannel(4, towerDamage_sound, 0); 
+                            }
+                            tower_health_box.w -= (Windows_Width*50)/1920;
+                            tower_attacker_health-=5;
+                        }
+                        if(tower_attacker_health<=0){
+                            tower_health_box.w = 0;
+                            youWin = true;
+                        }
+                    }
+                    archer_arrow.vx = 0;
+                    archer_arrow.vy = 0;
+                    archer_arrow.active = false;  
+                    archer_arrow.angle = 0;  
+                }
+            }
+        
+        }else if(towerGame_Started_level5 && !midPause && !frame_Video){
+           // Handle frame updates for animation
+            Uint32 currentTime = SDL_GetTicks();
+            if ((archer_moving_left || archer_moving_right || archer_aiming || archer_shooting || archer_standing) && currentTime > lastFrameTime + frameDelay) {
+                if((archer_aiming && currentFrame <= TOTAL_FIRE_FRAMES - 4)||(archer_moving_left || archer_moving_right)||(archer_shooting && (currentFrame >= TOTAL_FIRE_FRAMES-4 && currentFrame<= TOTAL_FIRE_FRAMES)) || (archer_standing)){
+                    currentFrame++;
+                }
+                if(archer_shooting){
+                    if (currentFrame >= TOTAL_FIRE_FRAMES-4 && currentFrame<=TOTAL_FIRE_FRAMES) {
+                        currentFrame = 0; 
+                        archer_shooting = false;
+                        // archer_standing = true;
+                    }
+                }
+                else if(archer_moving_left || archer_moving_right){
+                    // Handle walking animation frames
+                    if (currentFrame >= TOTAL_WALK_FRAMES) {
+                        currentFrame = 0;
+                    }
+                }else if(archer_standing){
+                    if(currentFrame >= TOTAL_STAND_FRAME){
+                        currentFrame = 0;
+                    }
+                }
+                lastFrameTime = currentTime;
+            }
+
+            if(knight.spawn&&knightclicked){
+                if ((knight_moving_left || knight_moving_right || knight_shooting || knight_standing) && currentTime > lastFrameTime + frameDelay) {
+                    if(knight_moving_left || knight_moving_right||knight_shooting || knight_standing){
+                        currentFrame++;
+                    }
+                    if(knight_shooting){
+                        if (currentFrame >=  KNIGHT_TOTAL_RUN_ATTACK_FRAME) {
+                            currentFrame = 0; 
+                            archer_shooting = false;
+                            // archer_standing = true;
+                        }
+                    }
+                    else if(knight_moving_left || knight_moving_right){
+                        // Handle walking animation frames
+                        if (currentFrame >= KNIGHT_TOTAL_RUN_FRAME) {
+                            currentFrame = 0;
+                        }
+                    }
+                    // else if(knight_standing){
+                    //     if(currentFrame >= TOTAL_STAND_FRAME){
+                    //         currentFrame = 0;
+                    //     }
+                    // }
+                    lastFrameTime = currentTime;
+                }
+            }
+
+            if(mille.spawn&&milleclicked){
+             Uint32 currentTime = SDL_GetTicks();
+                if ((mille_moving_left || mille_moving_right || mille_shooting || mille_standing) && currentTime > lastFrameTime_Mille + frameDelay) {
+                    if(mille_moving_left || mille_moving_right||(mille_shooting) || mille_standing){
+                        currentFrame_Mille++;
+                    }
+
+                    if(mille_shooting){
+                        if (currentFrame_Mille >=  MILLE_ATTACKING_TOTAL_FRAME) {
+                            currentFrame_Mille = 0; 
+                            mille_shooting = false;
+                        }
+                    }
+                    else if(mille_moving_left || mille_moving_right){
+                        // Handle walking animation frames
+                        if (currentFrame_Mille >= MILLE_RUNNING_TOTAL_FRAME) {
+                            currentFrame_Mille = 0;
+                        }
+                    }
+                    lastFrameTime_Mille = currentTime;
+                }
+                if(mille.active) {
+                mille.y +=  mille.vy; 
+                mille.vy += 0.5*ScaleY; 
+                
+
+                if (mille.y >= milleY) {
+                    mille.y = milleY; 
+                    mille.vy = 0; 
+                    mille.active = false; 
+                }
+                }
+            }
+
+            if(mille_laser.active){
+                mille_laser.x -= 18*ScaleX;
+
+                if(mille_laser.x > Windows_Width || mille_laser.y > Windows_Height || checkCollisionTower(&mille_laser, (int)tower_attacker.x, (int)tower_attacker.y, mille_laser_Width, mille_laser_Height,level5_towerWidth, level5_towerHeight) || checkCollisionTower(&mille_laser, (int)wolf.x, (int)wolf.y, mille_laser_Width, mille_laser_Width,wolf_basic_Width, wolf_basic_Height)){
+                    if(checkCollisionTower(&mille_laser, (int)tower_attacker.x, (int)tower_attacker.y, mille_laser_Width, mille_laser_Height,level5_towerWidth, level5_towerHeight)){
+                        if(tower_attacker_health>0){
+                            if(sound){
+                                Mix_PlayChannel(4, towerDamage_sound, 0); 
+                            }
+                            tower_health_box.w -= (Windows_Width*50)/1920;
+                            tower_attacker_health-=5;
+                        }
+                        if(tower_attacker_health<=0){
+                            tower_health_box.w = 0;
+                            youWin = true;
+                        }
+                    }
+                    if(checkCollisionTower(&mille_laser, (int)wolf.x, (int)wolf.y, mille_laser_Width, mille_laser_Width,wolf_basic_Width, wolf_basic_Height)){
+                        if(wolf_health>0){
+                            if(sound){
+                                Mix_PlayChannel(4, towerDamage_sound, 0); 
+                            }
+                            wolf_health_box.w -= 20;
+                            wolf_health-=20;
+                        }
+                        if(wolf_health<=0){
+                            wolf_health_box.w = 100;
+                            wolf_health = 100;
+                            wolf.spawn = false;
+                            wolf_attacking = false;
+                            wolf_running = true;
+                            wolf.x = (float) (-WOLF_RUN_WIDTH + (Windows_Width*40)/1920);
+                            currentFrame_Enemy = 0;
+                        }
+                    }
+                    mille_laser.vx = 0;
+                    mille_laser.x = mille.x;
+                    mille_laser.active = false;
+                }
+            }
+
+             if(soldier.spawn&&soldierclicked){
+             Uint32 currentTime = SDL_GetTicks();
+                if ((soldier_moving_left || soldier_moving_right || soldier_shooting || soldier_standing) && currentTime > lastFrameTime_Soldier + frameDelay) {
+                    if(soldier_moving_left || soldier_moving_right||soldier_shooting || soldier_standing){
+                        currentFrame_Soldier++;
+                    }
+
+                    if(soldier_shooting){
+                        if (currentFrame_Soldier >= SOLDIER_ATTACKING_TOTAL_FRAME) {
+                            currentFrame_Soldier = 0; 
+                            soldier_shooting = false;
+                        }
+                    }
+                    else if(soldier_moving_left || soldier_moving_right){
+                        // Handle walking animation frames
+                        if (currentFrame_Soldier >= SOLDIER_RUNNING_TOTAL_FRAME) {
+                            currentFrame_Soldier = 0;
+                        }
+                    }
+                    lastFrameTime_Soldier = currentTime;
+                }
+                if(soldier.active) {
+                soldier.y +=  soldier.vy; 
+                soldier.vy += 0.5*ScaleY; 
+                
+
+                if (soldier.y >= Windows_Height - (int)((150 * ScaleY) + (280 * ScaleY))) {
+                    soldier.y = Windows_Height - (int)((150 * ScaleY) + (280 * ScaleY)); 
+                    soldier.vy = 0; 
+                    soldier.active = false; 
+                }
+                }
+            }
+
+                if(soldier_bullet.active){
+                    soldier_bullet.x -= 18*ScaleX;
+
+                    if(soldier_bullet.x > Windows_Width || soldier_bullet.y > Windows_Height || checkCollisionTower(&soldier_bullet, (int)tower_attacker.x, (int)tower_attacker.y, soldier_bullet_Width, soldier_bullet_Height,level5_towerWidth, level5_towerHeight)){
+                        if(checkCollisionTower(&soldier_bullet, (int)tower_attacker.x, (int)tower_attacker.y, soldier_basic_Width, soldier_bullet_Height,level5_towerWidth, level5_towerHeight)){
+                            if(tower_attacker_health>0){
+                                if(sound){
+                                    Mix_PlayChannel(4, towerDamage_sound, 0); 
+                                }
+                                tower_health_box.w -= (Windows_Width*50)/1920;
+                                tower_attacker_health-=5;
+                            }
+                            if(tower_attacker_health<=0){
+                                tower_health_box.w = 0;
+                                youWin = true;
+                            }
+                        }
+                        soldier_bullet.vx = 0;
+                        soldier_bullet.x = soldier.x;
+                        soldier_bullet.active = false;
+                    }
+                }
+
+            if (archer.active) {
+                archer.y +=  archer.vy; 
+                archer.vy += 0.5*ScaleY; 
+                
+
+                if (archer.y >= archerY) {
+                    archer.y = archerY; 
+                    archer.vy = 0; 
+                    archer.active = false; 
+                }
+            }
+
+            if (knight.active) {
+                knight.y +=  knight.vy; 
+                knight.vy += 0.5*ScaleY; 
+                
+
+                if (knight.y >= archerY) {
+                    knight.y = archerY; 
+                    knight.vy = 0; 
+                    knight.active = false; 
+                }
+            }
+
+            // Tower Attacker Timer Update
+            tower_bomb_1_5_Timer += deltaTime;  // Update the timer
+
+            // Tower Attacker 2
+            tower_bomb_2_Timer += deltaTime;
+
+            // Tower Attacker 3
+            tower_bomb_3_Timer += deltaTime;
+
+            // Tower Attacker 4
+            tower_bomb_4_Timer += deltaTime;
+            
+            if (tower_bomb_1_5_Timer >= tower_bomb_1_5_attack_delay) {
+                if(!tower_bomb_1_5.active){
+                    if(sound){
+                        Mix_PlayChannel(3, towerShooting_sound, 0); 
+                    }
+                    if(knight.spawn){
+                        tower_bomb_1_5.vx += knight.x/120;
+                    }else{
+                        tower_bomb_1_5.vx += archer.x/120;
+                    }
+                    tower_bomb_1_5.vy += -16 * ScaleY;
+                    tower_bomb_1_5.active = true;
+                }
+            }
+
+            if (tower_bomb_2_Timer >= tower_bomb_2_attack_delay) {
+                if(!tower_bomb_2.active){
+                    if(sound){
+                        Mix_PlayChannel(3, towerShooting_sound, 0); 
+                    }
+                    if(knight.spawn){
+                        tower_bomb_2.vx += knight.x/100;
+                    }else{
+                        tower_bomb_2.vx += archer.x/100;
+                    }
+                    tower_bomb_2.vy += -16 * ScaleY;
+                    tower_bomb_2.active = true;
+                }
+            }
+
+            if (tower_bomb_3_Timer >= tower_bomb_3_attack_delay) {
+                if(!tower_bomb_3.active){
+                    if(sound){
+                        Mix_PlayChannel(3, towerShooting_sound, 0); 
+                    }
+                    if(knight.spawn){
+                        tower_bomb_3.vx += knight.x/100;
+                    }else{
+                        tower_bomb_3.vx += archer.x/100;
+                    }
+                    tower_bomb_3.vy += -16 * ScaleY;
+                    tower_bomb_3.active = true;
+                }
+            }
+            if (tower_bomb_4_Timer >= tower_bomb_4_attack_delay) {
+                if(!tower_bomb_4.active){
+                    if(sound){
+                        Mix_PlayChannel(3, towerShooting_sound, 0); 
+                    }
+                    if(knight.spawn){
+                        tower_bomb_4.vx += knight.x/90;
+                    }else{
+                        tower_bomb_4.vx += archer.x/90;
+                    }
+                    tower_bomb_4.vy += -16 * ScaleY;
+                    tower_bomb_4.active = true;
+                }
+            }
+
+            if(tower_bomb_3.active){
+                tower_bomb_3.x += tower_bomb_3.vx; 
+                tower_bomb_3.y += tower_bomb_3.vy; 
+                tower_bomb_3.vy += 0.5 * ScaleY;
+                if(tower_bomb_3.x > Windows_Width || tower_bomb_3.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                    if(checkCollisionArcher(&tower_bomb_3, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(archer_health > 0){
+                            archer_health_box.w -= (Windows_Width*5)/1920;  
+                            archer_health -= 5;
+                        }
+                        if(archer_health<=0){
+                            archer_health_box.w = 0;
+                            gameOver = true;
+                        }
+                    }
+                    tower_bomb_3.vx = 0;
+                    tower_bomb_3.vy = 0;
+                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
+                    tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
+                    tower_bomb_3_Timer = 0.0f;
+                    tower_bomb_3.active = false;
+                }else if(knight.spawn && (tower_bomb_3.x > Windows_Width || tower_bomb_3.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_3, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(knight_health > 0){
+                            knight_health_box.w -= (Windows_Width*5)/1920;  
+                            knight_health -= 5;
+                        }
+                        if(knight_health<=0){
+                            knight_health_box.w = 0;
+                            // gameOver = true;
+                        }
+                    }
+                    tower_bomb_3.vx = 0;
+                    tower_bomb_3.vy = 0;
+                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
+                    tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
+                    tower_bomb_3_Timer = 0.0f;
+                    tower_bomb_3.active = false;
+                }
+            }
+            if(tower_bomb_2.active){
+                tower_bomb_2.x += tower_bomb_2.vx; 
+                tower_bomb_2.y += tower_bomb_2.vy; 
+                tower_bomb_2.vy += 0.5 * ScaleY;
+                if(tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_2, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                    if(checkCollisionArcher(&tower_bomb_2, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(archer_health > 0){
+                            archer_health_box.w -= (Windows_Width*5)/1920;  
+                            archer_health -= 5;
+                        }
+                        if(archer_health<=0){
+                            archer_health_box.w = 0;
+                            gameOver = true;
+                        }
+                    }
+                    tower_bomb_2.vx = 0;
+                    tower_bomb_2.vy = 0;
+                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
+                    tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
+                    tower_bomb_2_Timer = 0.0f;
+                    tower_bomb_2.active = false;
+                }else if(knight.spawn && (tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_2, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(knight_health > 0){
+                            knight_health_box.w -= (Windows_Width*5)/1920;  
+                            knight_health -= 5;
+                        }
+                        if(knight_health<=0){
+                            knight_health_box.w = 0;
+                            // gameOver = true;
+                        }
+                    }
+                    tower_bomb_2.vx = 0;
+                    tower_bomb_2.vy = 0;
+                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
+                    tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
+                    tower_bomb_2_Timer = 0.0f;
+                    tower_bomb_2.active = false;
+                }
+            }
+
+            if(tower_bomb_4.active){
+                tower_bomb_4.x += tower_bomb_4.vx; 
+                tower_bomb_4.y += tower_bomb_4.vy; 
+                tower_bomb_4.vy += 0.5 * ScaleY;
+                if(tower_bomb_4.x > Windows_Width || tower_bomb_4.y > Windows_Height || checkCollisionArcher(&tower_bomb_4, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                    if(checkCollisionArcher(&tower_bomb_4, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(archer_health > 0){
+                            archer_health_box.w -= (Windows_Width*5)/1920;  
+                            archer_health -= 5;
+                        }
+                        if(archer_health<=0){
+                            archer_health_box.w = 0;
+                            gameOver = true;
+                        }
+                    }
+                    tower_bomb_4.vx = 0;
+                    tower_bomb_4.vy = 0;
+                    tower_bomb_4.x = (float)tower_attacker.x + (Windows_Width*300)/1920; 
+                    tower_bomb_4.y = (float)tower_attacker.y + (Windows_Height*300)/1080; 
+                    tower_bomb_4_Timer = 0.0f;
+                    tower_bomb_4.active = false;
+                }else if(knight.spawn && (tower_bomb_4.x > Windows_Width || tower_bomb_4.y > Windows_Height || checkCollisionArcher(&tower_bomb_4, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_4, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(knight_health > 0){
+                            knight_health_box.w -= (Windows_Width*5)/1920;  
+                            knight_health -= 5;
+                        }
+                        if(knight_health<=0){
+                            knight_health_box.w = 0;
+                            // gameOver = true;
+                        }
+                    }
+                    tower_bomb_4.vx = 0;
+                    tower_bomb_4.vy = 0;
+                    tower_bomb_4.x = (float)tower_attacker.x + (Windows_Width*300)/1920; 
+                    tower_bomb_4.y = (float)tower_attacker.y + (Windows_Height*300)/1080; 
+                    tower_bomb_4_Timer = 0.0f;
+                    tower_bomb_4.active = false;
+                }
+            }
+            
+            if(tower_bomb_1_5.active){
+                tower_bomb_1_5.x += tower_bomb_1_5.vx; 
+                tower_bomb_1_5.y += tower_bomb_1_5.vy; 
+                tower_bomb_1_5.vy += 0.5 * ScaleY;
+                if(tower_bomb_1_5.x > Windows_Width || tower_bomb_1_5.y > Windows_Height || checkCollisionArcher(&tower_bomb_1_5, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                    if(checkCollisionArcher(&tower_bomb_1_5, &archer, archer_basic_Width, archer_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(archer_health > 0){
+                            archer_health_box.w -= (Windows_Width*5)/1920;  
+                            archer_health -= 5;
+                        }
+                        if(archer_health<=0){
+                            archer_health_box.w = 0;
+                            gameOver = true;
+                        }
+                    }
+                    tower_bomb_1_5.vx = 0;
+                    tower_bomb_1_5.vy = 0;
+                    tower_bomb_1_5.x = (float)tower_attacker.x + (Windows_Width*600)/1920; 
+                    tower_bomb_1_5.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
+                    tower_bomb_1_5_Timer = 0.0f;
+                    tower_bomb_1_5.active = false;
+                }else if(knight.spawn && (tower_bomb_1_5.x > Windows_Width || tower_bomb_1_5.y > Windows_Height || checkCollisionArcher(&tower_bomb_1_5, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_1_5, &knight, knight_basic_Width, knight_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                        if(sound){
+                            Mix_PlayChannel(4, archerDamage_sound, 0); 
+                        }
+                        if(knight_health > 0){
+                            knight_health_box.w -= (Windows_Width*5)/1920;  
+                            knight_health -= 5;
+                        }
+                        if(knight_health<=0){
+                            knight_health_box.w = 0;
+                            // gameOver = true;
+                        }
+                    }
+                    tower_bomb_1_5.vx = 0;
+                    tower_bomb_1_5.vy = 0;
+                    tower_bomb_1_5.x = (float)tower_attacker.x + (Windows_Width*600)/1920; 
+                    tower_bomb_1_5.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
+                    tower_bomb_1_5_Timer = 0.0f;
+                    tower_bomb_1_5.active = false;
+                }
+            }
+
+            if(!wolf.spawn){
+                // Tower Attacker Timer Update
+                wolf_spawn_timer += deltaTime;  // Update the timer
+                if (wolf_spawn_timer >= wolf_spawn_delay) {
+                    wolf.spawn = true;
+                    wolf_health = 100;
+                    wolf_health_box.w =100;
+                    wolf_running = true;
+                    wolf_attacking = false;
+                    wolf_spawn_timer = 0.0f;
+                }
+            }
+
+            if(wolf.spawn){
+                // Handle frame updates for animation
+                Uint32 currentTime = SDL_GetTicks();
+                    if(checkCollisionEnemy(&wolf, &archer, archer_basic_Width, archer_basic_Height, wolf_basic_Width, wolf_basic_Height)){
+                        wolf_running = false;
+                        wolf_attacking = true;
+                        if (wolf_attacking && currentTime > lastFrameTime_Enemy + frameDelay) {
+                            currentFrame_Enemy++;
+                            if (currentFrame_Enemy >=  WOLF_TOTAL_ATTACK_FRAMES) {
+                                currentFrame_Enemy = 0; 
+                            }
+                            lastFrameTime_Enemy = currentTime;
+                        }
+                        if(wolf_attack_timer>=wolf_attack_delay){
+                            if(sound){
+                                Mix_PlayChannel(4, archerDamage_sound, 0); 
+                            }
+                            if(archer_health > 0){
+                                archer_health_box.w -= (Windows_Width*5)/1920;  
+                                archer_health -= 5;
+                            }
+                            wolf_attack_timer = 0.0f;
+                        }else{
+                            wolf_attack_timer += deltaTime;
+                        }
+                        if(archer_health<=0){
+                            archer_health_box.w = 0;
+                            gameOver = true;
+                        }
+                    }
+                    else if(knight.spawn&&checkCollisionEnemy(&wolf, &knight, knight_basic_Width, knight_basic_Height, wolf_basic_Width, wolf_basic_Height)){
+                            wolf_running = false;
+                            wolf_attacking = true;
+                            if (wolf_attacking && currentTime > lastFrameTime_Enemy + frameDelay) {
+                                currentFrame_Enemy++;
+                                if (currentFrame_Enemy >=  WOLF_TOTAL_ATTACK_FRAMES) {
+                                    currentFrame_Enemy = 0; 
+                                }
+                                lastFrameTime_Enemy = currentTime;
+                            }
+                            if(wolf_attack_timer>=wolf_attack_delay){
+                                if(sound){
+                                    Mix_PlayChannel(4, archerDamage_sound, 0); 
+                                }
+                                if(knight_health > 0){
+                                    knight_health_box.w -= (Windows_Width*5)/1920;  
+                                    knight_health -= 5;
+                                }
+                                wolf_attack_timer = 0.0f;
+                            }else{
+                                wolf_attack_timer += deltaTime;
+                            }
+                            if(knight_health<=0){
+                                knight_health_box.w = 0;
+                                gameOver = true;
+                            }
+                        
+                    }else if(mille.spawn && checkCollisionEnemy(&wolf, &mille, mille_basic_Width, mille_basic_Height, wolf_basic_Width, wolf_basic_Height)){
+                            wolf_running = false;
+                            wolf_attacking = true;
+                            if (wolf_attacking && currentTime > lastFrameTime_Enemy + frameDelay) {
+                                currentFrame_Enemy++;
+                                if (currentFrame_Enemy >=  WOLF_TOTAL_ATTACK_FRAMES) {
+                                    currentFrame_Enemy = 0; 
+                                }
+                                lastFrameTime_Enemy = currentTime;
+                            }
+                            if(wolf_attack_timer>=wolf_attack_delay){
+                                if(sound){
+                                    Mix_PlayChannel(4, archerDamage_sound, 0); 
+                                }
+                                if(mille_health > 0){
+                                    mille_health_box.w -= (Windows_Width*5)/1920;  
+                                    mille_health -= 5;
+                                }
+                                wolf_attack_timer = 0.0f;
+                            }else{
+                                wolf_attack_timer += deltaTime;
+                            }
+                            if(mille_health<=0){
+                                wolf_health_box.w = 100;
+                                wolf_health = 100;
+                                wolf.spawn = false;
+                                wolf_attacking = false;
+                                wolf_running = true;
+                                wolf.x = (float) (-WOLF_RUN_WIDTH + (Windows_Width*40)/1920);
+                                currentFrame_Enemy = 0;
+                            }
+                        
+                    }else if(soldier.spawn && checkCollisionEnemy(&wolf, &soldier, soldier_basic_Width, soldier_basic_Height, wolf_basic_Width, wolf_basic_Height)){
+                            wolf_running = false;
+                            wolf_attacking = true;
+                            if (wolf_attacking && currentTime > lastFrameTime_Enemy + frameDelay) {
+                                currentFrame_Enemy++;
+                                if (currentFrame_Enemy >=  WOLF_TOTAL_ATTACK_FRAMES) {
+                                    currentFrame_Enemy = 0; 
+                                }
+                                lastFrameTime_Enemy = currentTime;
+                            }
+                            if(wolf_attack_timer>=wolf_attack_delay){
+                                if(sound){
+                                    Mix_PlayChannel(4, archerDamage_sound, 0); 
+                                }
+                                if(soldier_health > 0){
+                                    soldier_health_box.w -= (Windows_Width*5)/1920;  
+                                    soldier_health -= 5;
+                                }
+                                wolf_attack_timer = 0.0f;
+                            }else{
+                                wolf_attack_timer += deltaTime;
+                            }
+                            if(soldier_health<=0){
+                                wolf_health_box.w = 100;
+                                wolf_health = 100;
+                                wolf.spawn = false;
+                                wolf_attacking = false;
+                                wolf_running = true;
+                                wolf.x = (float) (-WOLF_RUN_WIDTH + (Windows_Width*40)/1920);
+                                currentFrame_Enemy = 0;
+                            }
+                        
+                    }
+                    else{
+                        if (wolf_running && currentTime > lastFrameTime_Enemy + frameDelay) {
+                            currentFrame_Enemy++;
+                            if (currentFrame_Enemy >=  WOLF_TOTAL_RUN_FRAMES) {
+                                currentFrame_Enemy = 0; 
+                            }
+
+                            lastFrameTime_Enemy = currentTime;
+                        }
+                        wolf.x += 8*ScaleX; 
+                        wolf_attacking = false;
+                        wolf_running = true;
+                        
+                    
+                    if(wolf.x >= wolf_basic_Width+Windows_Width){
+                        wolf.spawn = false;
+                        wolf_attacking = false;
+                        wolf_running = true;
+                        wolf.x = (float) (-WOLF_RUN_WIDTH + (Windows_Width*40)/1920);
+                        currentFrame_Enemy = 0;
+                    }
+                }
+            }
+            
+
+            if(archer_arrow.active){
+                archer_arrow.x += archer_arrow.vx;
+                archer_arrow.y += archer_arrow.vy;
+                archer_arrow.vy += 0.5*ScaleY;     
+                archerlastvelX =  (archer_arrow.vx !=0)? archer_arrow.vx:archerlastvelX;
+                archerlastvelY =  (archer_arrow.vy !=0)? archer_arrow.vy:archerlastvelY;  
+            
+            // Adjust the angle of the arrow based on its vertical velocity (vy)
+                if (archer_arrow.vy <= -25*ScaleY) {
+                    archer_arrow.angle = 35;    // Very steep upwards
+                } else if (archer_arrow.vy < -20*ScaleY) {
+                    archer_arrow.angle = 30;    // Steep upwards
+                } else if (archer_arrow.vy < -15*ScaleY) {
+                    archer_arrow.angle = 25;    // Upwards
+                } else if (archer_arrow.vy < -10*ScaleY) {
+                    archer_arrow.angle = 20;    // Slightly upwards
+                } else if (archer_arrow.vy < -5*ScaleY) {
+                    archer_arrow.angle = 15;    // Almost horizontal upwards
+                } else if (archer_arrow.vy < 0*ScaleY) {
+                    archer_arrow.angle = 0;     // Horizontal
+                } else if (archer_arrow.vy < 5*ScaleY) {
+                    archer_arrow.angle = -5;    // Slightly downwards
+                } else if (archer_arrow.vy < 10*ScaleY) {
+                    archer_arrow.angle = -15;   // More downwards
+                } else if (archer_arrow.vy < 15*ScaleY) {
+                    archer_arrow.angle = -25;   // Further downwards
+                } else if (archer_arrow.vy < 20*ScaleY) {
+                    archer_arrow.angle = -35;   // Almost vertical downwards
+                } else {
+                    archer_arrow.angle = -45;   // Steep downwards
+                }
+
+                if(archer_arrow.x > Windows_Width || archer_arrow.y > Windows_Height || checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height,level5_towerWidth, level5_towerHeight)){
+                    if(checkCollisionTower(&archer_arrow, (int)tower_attacker.x, (int)tower_attacker.y, archer_arrow_basic_Width, archer_arrow_basic_Height, level5_towerWidth, level5_towerHeight)){
                         if(tower_attacker_health>0){
                             if(sound){
                                 Mix_PlayChannel(4, towerDamage_sound, 0); 
@@ -4452,9 +5164,6 @@ int main(int argc, char* args[]){
                     if(tower_bomb.active){
                         SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
                         SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_rect);
-                    }else if(youWin){
-                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
-                        SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
                     }
                 }
 
@@ -4748,11 +5457,7 @@ int main(int argc, char* args[]){
                     if(tower_bomb.active){
                         SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
                         SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_rect);
-                    }else if(youWin){
-                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
-                        SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
                     }
-
                     if(tower_bomb_2.active){
                         SDL_Rect tower_bomb_2_rect= {(int)tower_bomb_2.x, (int)tower_bomb_2.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
                         SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_2_rect);
@@ -4971,13 +5676,6 @@ int main(int argc, char* args[]){
                 soldier_health_box_innerfill.y = soldier_health_box.y;
                 soldier_health_box_outline.x = soldier_health_box.x;
                 soldier_health_box_outline.y = soldier_health_box.y;
-                 // Wolf All Health
-                wolf_health_box.x = (int)(wolf.x+(Windows_Width*20)/1920);
-                wolf_health_box.y = (int)(wolf.y+((Windows_Height*-20)/1080));
-                wolf_health_box_innerfill.x = wolf_health_box.x;
-                wolf_health_box_innerfill.y = wolf_health_box.y;
-                wolf_health_box_outline.x = wolf_health_box.x;
-                wolf_health_box_outline.y = wolf_health_box.y;
 
                 if(mille_laser.active){
                     mille_laser_rect.x = (int)mille_laser.x;
@@ -5091,14 +5789,6 @@ int main(int argc, char* args[]){
                         SDL_Rect tower_bomb_rect= {(int)tower_bomb.x, (int)tower_bomb.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
                         SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_rect);
                     }
-                    if(youWin){
-                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
-                        SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
-                    }
-                    if(tower_bomb_2.active){
-                        SDL_Rect tower_bomb_2_rect= {(int)tower_bomb_2.x, (int)tower_bomb_2.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
-                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_2_rect);
-                    }
                 }
 
 
@@ -5119,6 +5809,371 @@ int main(int argc, char* args[]){
                     if(tower_bomb_3.active){
                         SDL_Rect tower_bomb_3_rect= {(int)tower_bomb_3.x, (int)tower_bomb_3.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
                         SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_3_rect);
+                    }
+                }
+                
+                if(!midPause){
+                    SDL_Rect archerBasic_rect = { (int)archer.x, (int)archer.y, archer_basic_Width, archer_basic_Height };  // Position and size to render
+                    SDL_Rect archerFire_rect = { (int)archer.x, (int)archer.y, archer_fire_Width, archer_fire_Height };  // Position and size to render
+                    if (archer_aiming) {
+                        SDL_RenderCopy(renderer, archer_shooting_texture, &ArcherfireClips[currentFrame], &archerFire_rect);
+                        SDL_SetRenderDrawColor(renderer, 255, 255,255,255);
+                        SDL_RenderFillRect(renderer, &arrow_velocity_bar_innerfill);
+                        SDL_SetRenderDrawColor(renderer, 0,255,0, 255);
+                        SDL_RenderFillRect(renderer, &arrow_velocity_bar);
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                        SDL_RenderDrawRect(renderer, &arrow_velocity_bar_outline);
+                    } else {
+                        SDL_RenderCopy(renderer, archer_walking_texture, &ArcherwalkClips[currentFrame], &archerBasic_rect);
+                    }
+                }
+                
+                if(knight.spawn){
+                    // Knight Health
+                    knight_health_box.x = (int)(knight.x+(Windows_Width*20)/1920);
+                    knight_health_box.y = (int)(knight.y+((Windows_Height*-20)/1080));
+                    knight_health_box_innerfill.x = knight_health_box.x;
+                    knight_health_box_innerfill.y = knight_health_box.y;
+                    knight_health_box_outline.x = knight_health_box.x;
+                    knight_health_box_outline.y = knight_health_box.y;
+
+                    SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
+                    SDL_RenderFillRect(renderer, &knight_health_box_innerfill);
+                    SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
+                    SDL_RenderFillRect(renderer, &knight_health_box);
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
+                    SDL_RenderDrawRect(renderer, &knight_health_box_outline);
+
+                    if(knight_moving_left || knight_moving_right){
+                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
+                        SDL_RenderCopy(renderer, knight_running_spritesheet, &KnightRunnigClips[currentFrame], &knightBasic_rect);
+                    }else if(knight_shooting){
+                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
+                        SDL_RenderCopy(renderer, knight_running_attacking_spritesheet, &KnightRunnig_AttackingClips[currentFrame], &knightBasic_rect);
+                    }else{
+                        SDL_Rect knightBasic_rect = { (int)knight.x, (int)knight.y, knight_basic_Width, knight_basic_Height };
+                        SDL_RenderCopy(renderer, knight_standing_spritesheet,NULL, &knightBasic_rect);
+                    }
+                }
+
+                // Archer All Health
+                archer_health_box.x = (int)(archer.x+(Windows_Width*20)/1920);
+                archer_health_box.y = (int)(archer.y+((Windows_Height*-20)/1080));
+                archer_health_box_innerfill.x = archer_health_box.x;
+                archer_health_box_innerfill.y = archer_health_box.y;
+                archer_health_box_outline.x = archer_health_box.x;
+                archer_health_box_outline.y = archer_health_box.y;
+                
+                // Health
+                SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
+                SDL_RenderFillRect(renderer, &tower_health_box_innerfill);
+                SDL_RenderFillRect(renderer, &archer_health_box_innerfill);
+
+                char towerHealth_val[50];
+                sprintf(towerHealth_val, "Tower Health: %d %%", tower_attacker_health);
+                renderText(renderer, towerHealth_val, tower_health_box.x, tower_health_box.y-40, poppinsFont_Normal_Customize, 255, 255, 255);
+                SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
+                SDL_RenderFillRect(renderer, &tower_health_box);
+                SDL_RenderFillRect(renderer, &archer_health_box);
+
+                char archerHealth_val[50];
+                SDL_SetRenderDrawColor(renderer, 127,23,31, 255);
+
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
+                SDL_RenderDrawRect(renderer, &tower_health_box_outline); 
+                SDL_RenderDrawRect(renderer, &archer_health_box_outline); 
+                
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
+                // SDL_RenderDrawRect(renderer, &archer_health_box_outline); 
+
+                // Pause Button
+                SDL_RenderCopy(renderer, pauseButton, NULL, &pauseButton_rect);
+                if(midPause){
+                    SDL_Rect archerBasic_rect = { (int)archer.x, (int)archer.y, archer_basic_Width, archer_basic_Height };
+                    SDL_RenderCopy(renderer, archer_walking_texture, &ArcherwalkClips[currentFrame], &archerBasic_rect);
+                    if(midPause_dialog_starting){
+                        SDL_Rect dialog_background_rect = {0, 0, Windows_Width, Windows_Height};
+                        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
+                        SDL_RenderFillRect(renderer, &dialog_background_rect);
+                        if(!level2_ending_scene){
+                            if(dialog1_start){
+                                SDL_RenderCopy(renderer, level2_king_dialog1_texture, NULL, &level1_king_dialog1_rect);
+                            }else if(dialog2_start){
+                                SDL_RenderCopy(renderer, level2_archer_dialog1_texture, NULL, &level1_archer_dialog1_rect);
+                            }else if(dialog3_start){
+                                SDL_RenderCopy(renderer, level2_king_dialog2_texture, NULL, &level1_king_dialog1_rect);
+                            }else if(dialog4_start){
+                                SDL_RenderCopy(renderer, level2_mille_dialog1_texture, NULL, &level1_king_dialog1_rect);
+                            }else if(dialog5_start){
+                                SDL_RenderCopy(renderer, level2_archer_dialog2_texture, NULL, &level1_archer_dialog1_rect);
+                            }
+                        }else{
+                            if(dialog1_start){
+                                SDL_RenderCopy(renderer, level1_archer_dialog1_texture, NULL, &level1_archer_dialog1_rect);
+                            }
+                        }
+                            
+                    }
+                }
+            }else if(towerGame_Started_level5){
+                 if(!gamePause && !gameOver && !youWin){
+                    if(archer_card_cool >= 100){
+                        archer_card_cool = 100;
+
+                    }else{
+                        archer_card_cool_Timer += archer_card_Increase_cool_Timer;
+                        if(archer_card_cool_Timer >= 1.50f){
+                            archer_card_cool_Timer = 0.00f;
+                            archer_card_cool++;
+                        }
+                    }
+
+                    if(knight_card_cool >= 100){
+                        knight_card_cool = 100;
+
+                    }else{
+                        knight_card_cool_Timer += archer_card_Increase_cool_Timer;
+                        if(knight_card_cool_Timer >= 1.50f){
+                            knight_card_cool_Timer = 0.00f;
+                            knight_card_cool++;
+                        }
+                    }
+                    if(mille_card_cool >= 100){
+                        mille_card_cool = 100;
+
+                    }else{
+                        mille_card_cool_Timer += mille_card_Increase_cool_Timer;
+                        if(mille_card_cool_Timer >= 1.50f){
+                            mille_card_cool_Timer = 0.00f;
+                            mille_card_cool++;
+                        }
+                    }
+                    if(soldier_card_cool >= 100){
+                        soldier_card_cool = 100;
+
+                    }else{
+                        soldier_card_cool_Timer += soldier_card_Increase_cool_Timer;
+                        if(soldier_card_cool_Timer >= 1.50f){
+                            soldier_card_cool_Timer = 0.00f;
+                            soldier_card_cool++;
+                        }
+                    }
+                    if(money >= 10){
+                        money = 10;
+                    }else{
+                        money_Timer += money_Increase_Timer;
+                        if(money_Timer >= 1.50f){
+                            money_Timer = 0.00f;
+                            money++;
+                        }
+                    }
+                }
+
+                char archer_card_cool_Text[4];
+                char knight_card_cool_Text[4];
+                char mille_card_cool_Text[4];
+                char soldier_card_cool_Text[4];
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(renderer, 255,255,255,255);
+                SDL_RenderDrawRect(renderer, &cardsBackground_outline_rect);
+                SDL_SetRenderDrawColor(renderer, 0,0,0,200);
+                SDL_RenderFillRect(renderer, &cardsBackground_rect);
+
+
+                 // Mille All Health
+                mille_health_box.x = (int)(mille.x+(Windows_Width*20)/1920);
+                mille_health_box.y = (int)(mille.y+((Windows_Height*-20)/1080));
+                mille_health_box_innerfill.x = mille_health_box.x;
+                mille_health_box_innerfill.y = mille_health_box.y;
+                mille_health_box_outline.x = mille_health_box.x;
+                mille_health_box_outline.y = mille_health_box.y;
+                 // Soldier All Health
+                soldier_health_box.x = (int)(soldier.x+(Windows_Width*20)/1920);
+                soldier_health_box.y = (int)(soldier.y+((Windows_Height*-20)/1080));
+                soldier_health_box_innerfill.x = soldier_health_box.x;
+                soldier_health_box_innerfill.y = soldier_health_box.y;
+                soldier_health_box_outline.x = soldier_health_box.x;
+                soldier_health_box_outline.y = soldier_health_box.y;
+                 // Wolf All Health
+                wolf_health_box.x = (int)(wolf.x+(Windows_Width*20)/1920);
+                wolf_health_box.y = (int)(wolf.y+((Windows_Height*-20)/1080));
+                wolf_health_box_innerfill.x = wolf_health_box.x;
+                wolf_health_box_innerfill.y = wolf_health_box.y;
+                wolf_health_box_outline.x = wolf_health_box.x;
+                wolf_health_box_outline.y = wolf_health_box.y;
+
+                if(mille_laser.active){
+                    mille_laser_rect.x = (int)mille_laser.x;
+                    mille_laser_rect.y = (int)mille_laser.y;
+                    SDL_RenderCopy(renderer, mille_laser_texture, NULL, &mille_laser_rect);
+                }
+
+                if(soldier_bullet.active){
+                    SDL_Rect soldier_bullet_rect = {(int)soldier_bullet.x,(int)soldier_bullet.y + (Windows_Width*120)/1920,soldier_bullet_Width, soldier_bullet_Height};
+                    SDL_RenderCopy(renderer, soldier_bullet_texture, NULL, &soldier_bullet_rect);
+                }
+
+                if(mille.spawn){
+                     // Health
+                    SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
+                    SDL_RenderFillRect(renderer, &mille_health_box_innerfill);
+
+                    SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
+                    SDL_RenderFillRect(renderer, &mille_health_box);
+
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
+                    SDL_RenderDrawRect(renderer, &mille_health_box_outline); 
+                    mille_rect.x = (int)mille.x; 
+                    mille_rect.y = (int)mille.y; 
+                    if(!milleclicked){
+                        SDL_RenderCopy(renderer, mille_standing_spritesheet_texture, &MilleStandingClips[0], &mille_rect);
+                    }else if(milleclicked){
+                        if(mille_shooting){
+                            SDL_RenderCopy(renderer, mille_attacking_spritesheet_texture, &MilleAttackingClips[currentFrame_Mille], &mille_rect);
+                        }else if(mille_moving_left || mille_moving_right){
+                            SDL_RenderCopy(renderer, mille_walking_spritesheet_texture, &MilleRunningClips[1], &mille_rect);
+                        }else{
+                            SDL_RenderCopy(renderer, mille_standing_spritesheet_texture, &MilleStandingClips[0], &mille_rect);
+                        }
+                    
+                    }
+                }
+
+                if(soldier.spawn){
+                     // Health
+                    SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
+                    SDL_RenderFillRect(renderer, &soldier_health_box_innerfill);
+
+                    SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
+                    SDL_RenderFillRect(renderer, &soldier_health_box);
+
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
+                    SDL_RenderDrawRect(renderer, &soldier_health_box_outline); 
+
+                    soldier_rect.x = (int)soldier.x; 
+                    soldier_rect.y = (int)soldier.y; 
+
+                    if(!soldierclicked){
+                            SDL_RenderCopy(renderer, soldier_walking_spritesheet_texture, &SoldierRunningClips[3], &soldier_rect);
+                    }else if(soldierclicked){
+                        if(soldier_shooting){
+                            SDL_RenderCopy(renderer, soldier_attacking_spritesheet_texture, &SoldierAttackingClips[1], &soldier_rect);
+                        }else if(soldier_moving_left || soldier_moving_right){
+                            SDL_RenderCopy(renderer, soldier_walking_spritesheet_texture, &SoldierRunningClips[currentFrame_Soldier], &soldier_rect);
+                        }else{
+                            SDL_RenderCopy(renderer, soldier_walking_spritesheet_texture, &SoldierRunningClips[3], &soldier_rect);
+                        }
+                    
+                    }
+                }
+                        
+
+                if(archer_card_cool >= 100){
+                    SDL_RenderCopy(renderer, card_archer_full_texture, NULL, &card_archer_rect);
+                }else{
+                    SDL_RenderCopy(renderer, card_archer_notfull_texture, NULL, &card_archer_rect);
+                }
+                if(knight_card_cool >= 100){
+                    SDL_RenderCopy(renderer, card_knight_full_texture, NULL, &card_knight_rect);
+                }else{
+                    SDL_RenderCopy(renderer, card_knight_notfull_texture, NULL, &card_knight_rect);
+                }
+                if(mille_card_cool >= 100){
+                    SDL_RenderCopy(renderer, card_mille_full_texture, NULL, &card_mille_rect);
+                }else{
+                    SDL_RenderCopy(renderer, card_mille_notfull_texture, NULL, &card_mille_rect);
+                }
+                if(soldier_card_cool >= 100){
+                    SDL_RenderCopy(renderer, card_soldier_full_texture, NULL, &card_soldier_rect);
+                }else{
+                    SDL_RenderCopy(renderer, card_soldier_notfull_texture, NULL, &card_soldier_rect);
+                }
+                sprintf(archer_card_cool_Text, "%d%%", archer_card_cool);
+                renderText(renderer, "5$", card_archer_rect.x+(Windows_Width*12)/1920, card_archer_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+                renderText(renderer, archer_card_cool_Text, card_archer_rect.x + card_archer_rect.w - (Windows_Width*60)/1920, card_archer_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+
+                sprintf(knight_card_cool_Text, "%d%%", knight_card_cool);
+                renderText(renderer, "5$", card_knight_rect.x+(Windows_Width*12)/1920, card_knight_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+                renderText(renderer, knight_card_cool_Text, card_knight_rect.x + card_knight_rect.w - (Windows_Width*60)/1920, card_knight_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+
+                sprintf(mille_card_cool_Text, "%d%%", mille_card_cool);
+                renderText(renderer, "5$", card_mille_rect.x+(Windows_Width*12)/1920, card_mille_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+                renderText(renderer, mille_card_cool_Text, card_mille_rect.x + card_mille_rect.w - (Windows_Width*60)/1920, card_mille_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+                
+                sprintf(soldier_card_cool_Text, "%d%%", soldier_card_cool);
+                renderText(renderer, "5$", card_soldier_rect.x+(Windows_Width*12)/1920, card_soldier_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+                renderText(renderer, soldier_card_cool_Text, card_soldier_rect.x + card_soldier_rect.w - (Windows_Width*60)/1920, card_soldier_rect.y+(Windows_Height*8)/1080, poppinsFont_Cards, 255, 255, 255);
+
+                if(archer_arrow.active){
+                    SDL_Rect archer_arrow_rect = {(int)archer_arrow.x, (int)archer_arrow.y, archer_arrow_basic_Width, archer_arrow_basic_Height};
+                    SDL_Point center = {archer_arrow_rect.w / 2, archer_arrow_rect.h / 2};  
+                        SDL_RenderCopyEx(renderer, arrow, NULL, &archer_arrow_rect, archer_arrow.angle, &center, SDL_FLIP_NONE);
+                    }
+                // Hot Air Balloon Health
+                hot_air_ballon_health_box.x = (int)(hot_air_balloon_rect.x+(Windows_Width*50)/1920);
+                hot_air_ballon_health_box.y = (int)(hot_air_balloon_rect.y+((Windows_Height*-20)/1080));
+                hot_air_ballon_health_box_innerfill.x = hot_air_ballon_health_box.x;
+                hot_air_ballon_health_box_innerfill.y = hot_air_ballon_health_box.y;
+                hot_air_ballon_health_box_outline.x = hot_air_ballon_health_box.x;
+                hot_air_ballon_health_box_outline.y = hot_air_ballon_health_box.y;
+                
+                if(hot_air_balloon_health>0 && hot_air_ballon_health_box.w > 0){
+                    if(hot_air_balloon_throw_bomb){
+                        SDL_RenderCopy(renderer, hot_air_bombing_balloon_texture, NULL, &hot_air_balloon_rect);
+                    }else{
+                        SDL_RenderCopy(renderer, hot_air_balloon_texture, NULL, &hot_air_balloon_rect);
+                    }
+                    SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
+                    SDL_RenderFillRect(renderer, &hot_air_ballon_health_box_innerfill);
+
+                    SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
+                    SDL_RenderFillRect(renderer, &hot_air_ballon_health_box);
+
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
+                    SDL_RenderDrawRect(renderer, &hot_air_ballon_health_box_outline);
+                }
+
+
+                // Hot Air Balloon
+                if(hot_air_balloon_health>0 && hot_air_ballon_health_box.w > 0){
+                    if(hot_air_balloon_bomb.active){
+                        SDL_Rect hot_air_balloon_bomb_rect= {(int)hot_air_balloon_bomb.x, (int)hot_air_balloon_bomb.y, (Windows_Width*88)/1920, (Windows_Height*80)/1080};
+                        if(!hot_air_balloon_bomb_exploide){
+                            SDL_RenderCopy(renderer, hot_air_balloon_bomb_texture, NULL, &hot_air_balloon_bomb_rect);
+                        }else{
+                            SDL_RenderCopy(renderer, hot_air_balloon_bomb_spritesheet, &Hot_Air_Balloon_Bomb_Exploiding[2], &hot_air_balloon_bomb_rect);
+                        }
+                    }
+                }
+                
+
+
+                if(tower_attacker_health>50){
+                    SDL_RenderCopy(renderer, level5_tower_fullhealth_texture, NULL, &tower_attacker);
+                }else if(tower_attacker_health<=50 && tower_attacker_health>0){
+                    SDL_RenderCopy(renderer, level5_tower_halfhealth_texture, NULL, &tower_attacker);
+                }else{
+                    SDL_RenderCopy(renderer, level5_tower_zerohealth_texture, NULL, &tower_attacker);
+                }
+
+                 if((!midPause || archer_showing_ending_scene) && !knight_moving_level1_ending){
+                    if(tower_bomb_1_5.active){
+                        SDL_Rect tower_bomb_1_5_rect= {(int)tower_bomb_1_5.x, (int)tower_bomb_1_5.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
+                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_1_5_rect);
+                    }
+                    if(tower_bomb_2.active){
+                        SDL_Rect tower_bomb_2_rect= {(int)tower_bomb_2.x, (int)tower_bomb_2.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
+                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_2_rect);
+                    }
+
+                    if(tower_bomb_3.active){
+                        SDL_Rect tower_bomb_3_rect= {(int)tower_bomb_3.x, (int)tower_bomb_3.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
+                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_3_rect);
+                    }
+                    if(tower_bomb_4.active){
+                        SDL_Rect tower_bomb_4_rect= {(int)tower_bomb_4.x, (int)tower_bomb_4.y, (Windows_Width*40)/1920, (Windows_Height*40)/1080};
+                        SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_4_rect);
                     }
                 }
 
