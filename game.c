@@ -263,9 +263,6 @@ int main(int argc, char* args[]){
     SDL_Texture* level3_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level3.png");
     SDL_Texture* level4_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level4.png");
     SDL_Texture* level5_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level5.png");
-    SDL_Texture* level6_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level6.png");
-    SDL_Texture* level7_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level7.png");
-    SDL_Texture* level8_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/level8.png");
 
     // TowerGame Option Page Button Images
     SDL_Texture* shop_button = IMG_LoadTexture(renderer, "./image/towerGame/menu/shop.png");
@@ -385,6 +382,24 @@ int main(int argc, char* args[]){
     // ? For Level2 Ending
     SDL_Texture* level2_ending_archer_dialog3_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level2/archer_dialog3.png");
     SDL_Texture* level2_ending_mille_dialog2_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level2/mille_dialog2.png");
+
+    // ? For Level3 Starting
+    SDL_Texture* level3_knight_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level3/knight_dialog1.png");
+    SDL_Texture* level3_archer_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level3/archer_dialog1.png");
+    SDL_Texture* level3_mille_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level3/mille_dialog1.png");
+    SDL_Texture* level3_archer_dialog2_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level3/archer_dialog2.png");
+
+    // ? For Level4 Starting
+    SDL_Texture* level4_archer_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level4/archer_dialog1.png");
+    SDL_Texture* level4_soldier_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level4/soldier_dialog1.png");
+    SDL_Texture* level4_knight_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level4/knight_dialog1.png");
+    SDL_Texture* level4_mille_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level4/mille_dialog1.png");
+
+    // ? For Level5 Starting
+    SDL_Texture* level5_king_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level5/knig_dialog1.png");
+    SDL_Texture* level5_archer_dialog1_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level5/archer_dialog1.png");
+    SDL_Texture* level5_king_dialog2_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level5/king_dialog2.png");
+    SDL_Texture* level5_archer_dialog2_texture = IMG_LoadTexture(renderer, "./image/towerGame/dialog/level5/archer_dialog2.png");
 
     /* ==================================================
             ! x-----------------x--------------x
@@ -594,9 +609,6 @@ int main(int argc, char* args[]){
     SDL_Rect level3_button_rect = {level2_button_rect.x + (Windows_Width*130)/1920, starting_y_position, tower_menu_level_button_Width, tower_menu_level_button_Height};
     SDL_Rect level4_button_rect = {level3_button_rect.x + (Windows_Width*130)/1920, starting_y_position, tower_menu_level_button_Width, tower_menu_level_button_Height};
     SDL_Rect level5_button_rect = {(Windows_Width*720)/1920, starting_y_position + (Windows_Height*100)/1080, tower_menu_level_button_Width, tower_menu_level_button_Height};
-    SDL_Rect level6_button_rect = {level5_button_rect.x + (Windows_Width*130)/1920, starting_y_position + (Windows_Height*100)/1080, tower_menu_level_button_Width, tower_menu_level_button_Height};
-    SDL_Rect level7_button_rect = {level6_button_rect.x + (Windows_Width*130)/1920, starting_y_position + (Windows_Height*100)/1080, tower_menu_level_button_Width, tower_menu_level_button_Height};
-    SDL_Rect level8_button_rect = {level7_button_rect.x + (Windows_Width*130)/1920, starting_y_position + (Windows_Height*100)/1080, tower_menu_level_button_Width, tower_menu_level_button_Height};
 
     /* ==================================================
             ? x----------------x---------------x
@@ -911,7 +923,7 @@ int main(int argc, char* args[]){
     bool gameStarted = false;
 
     // For Main Home/ First Page
-    bool selectedGame_page = false; //! True Karo  
+    bool selectedGame_page = true; //! True Karo  
 
     // For Account 
     char username[20] = "";
@@ -929,9 +941,9 @@ int main(int argc, char* args[]){
     bool towerGame_account_choose = false;
     bool towerGame_account_create = false;
     bool towerGame_account_login = false;
-    bool towerGame = true; //! False Karo 
+    bool towerGame = false; //! False Karo 
     bool towerGame_Started = false; //! False Karo
-    bool towerGame_homemenu = true;
+    bool towerGame_homemenu = false;
     bool towerGame_levelmenu = false;
     bool towerGame_optionmenu = false;
     bool towerGame_option_shopMenu = false;
@@ -945,9 +957,6 @@ int main(int argc, char* args[]){
     bool towerGame_Started_level3 = false;
     bool towerGame_Started_level4 = false;
     bool towerGame_Started_level5 = false;
-    bool towerGame_Started_level6 = false;
-    bool towerGame_Started_level7 = false;
-    bool towerGame_Started_level8 = false;
 
     // For All Levels
     bool all_levels_Started = false; //! False Karo
@@ -1407,7 +1416,7 @@ int main(int argc, char* args[]){
                                     }
                                 }
                             }else if(towerGame_Started_level3){
-                                // For Level 2
+                                // For Level 3
 
                                     // Dialog
                                 if(midPause_dialog_starting){
@@ -1421,15 +1430,12 @@ int main(int argc, char* args[]){
                                         dialog4_start = true;
                                         dialog3_start = false;
                                     }else if(dialog4_start){
-                                        dialog5_start = true;
                                         dialog4_start = false;
-                                    }else if(dialog5_start){
-                                        dialog5_start = false;
                                         midPause = false;
                                     }
                                 }
                             }else if(towerGame_Started_level4){
-                                // For Level 2
+                                // For Level 4
 
                                     // Dialog
                                 if(midPause_dialog_starting){
@@ -1443,15 +1449,12 @@ int main(int argc, char* args[]){
                                         dialog4_start = true;
                                         dialog3_start = false;
                                     }else if(dialog4_start){
-                                        dialog5_start = true;
                                         dialog4_start = false;
-                                    }else if(dialog5_start){
-                                        dialog5_start = false;
                                         midPause = false;
                                     }
                                 }
                             }else if(towerGame_Started_level5){
-                                // For Level 2
+                                // For Level 5
 
                                     // Dialog
                                 if(midPause_dialog_starting){
@@ -1465,10 +1468,7 @@ int main(int argc, char* args[]){
                                         dialog4_start = true;
                                         dialog3_start = false;
                                     }else if(dialog4_start){
-                                        dialog5_start = true;
                                         dialog4_start = false;
-                                    }else if(dialog5_start){
-                                        dialog5_start = false;
                                         midPause = false;
                                     }
                                 }
@@ -1636,6 +1636,10 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    tower_attacker.x = (Windows_Width*100)/1920;
+                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
+                                    tower_attacker.w = towerWidth;
+                                    tower_attacker.h = towerHeight;
                                     towerGame_Started_level2 = false;
                                     towerGame_Started_level3 = false;
                                     towerGame_Started_level4 = false;
@@ -1649,6 +1653,7 @@ int main(int argc, char* args[]){
                                     money = 5;
                                     archer_card_cool = 100;
                                     midPause = true;
+                                    midPause_dialog_starting = false;
                                     midPause_archer_moving = true;
                                     archer_standing = false;
                                     frame_Video = true;
@@ -1656,11 +1661,18 @@ int main(int argc, char* args[]){
                                     loading_screen = true;
 
                                     Mix_HaltChannel(0);
+                                    if(music){
+                                        Mix_PlayChannel(0, level1Background_Sound, 0);
+                                    }
                                     
                                 }else if(checkButtonClick(mouseX, mouseY, &level2_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    tower_attacker.x = (Windows_Width*100)/1920;
+                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
+                                    tower_attacker.w = towerWidth;
+                                    tower_attacker.h = towerHeight;
                                     frame_Video = true;
                                     loading_screen = true;
                                     towerGame_Started_level1 = false;
@@ -1709,6 +1721,10 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    tower_attacker.x = (Windows_Width*100)/1920;
+                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
+                                    tower_attacker.w = towerWidth;
+                                    tower_attacker.h = towerHeight;
                                     frame_Video = true;
                                     loading_screen = true;
                                     towerGame_Started_level1 = false;
@@ -1919,21 +1935,6 @@ int main(int argc, char* args[]){
                                     tower_bomb.active = false;
                                     archer_arrow.active = false;
                                     archer.x = (float)(Windows_Width+(archer_basic_Width));
-                                }else if(checkButtonClick(mouseX, mouseY, &level6_button_rect)){
-                                    if(sound){
-                                        Mix_PlayChannel(1, button_sound, 0); 
-                                    }
-                                    printf("Level");
-                                }else if(checkButtonClick(mouseX, mouseY, &level7_button_rect)){
-                                    if(sound){
-                                        Mix_PlayChannel(1, button_sound, 0); 
-                                    }
-                                    printf("Level");
-                                }else if(checkButtonClick(mouseX, mouseY, &level8_button_rect)){
-                                    if(sound){
-                                        Mix_PlayChannel(1, button_sound, 0); 
-                                    }
-                                    printf("Level");
                                 }
                             }else if(towerGame_optionmenu){
                                 if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
@@ -2026,9 +2027,12 @@ int main(int argc, char* args[]){
                             }
                         }else if(towerGame_Started && !midPause){
 
+                            // function(SDL_Rect* tower_attacker, SDL_Rect* hot_air_balloon_rect, Pointer* tower_bomb, Pointer* hot_air_balloon_bomb, Arrow* archer_arrow, bool* towerGame_Started_level1, bool* towerGame_Started_level2, bool* towerGame_Started_level3, bool* towerGame_Started_level4, bool* towerGame_Started_level5, bool* towerGame_Started_level6,bool* all_levels_Started, bool* towerGame_Started, SDL_Texture* mainBackground,bool* towerGame_levelmenu, bool*  towerGame_homemenu, int* money, int* archer_health, int* knight_health, int* mille_health, int* soldier_health, int* tower_attacker_health, int* hot_air_balloon_health, int* archer_card_cool, int* knight_card_cool.  int* mille_card_cool,  int* soldier_card_cool, bool* midPause, bool* midPause_dialog_starting, bool* midPause_archer_moving, bool* archer_standing, bool* frame_Video, bool* loading_screen, bool* archer_standing, int* archerY, Character* archer, Character* knight, SDL_Rect* archer_health_box, SDL_Rect* knight_health_box, SDL_Rect* soldier_health_box, SDL_Rect* mille_health_box, SDL_Rect* tower_health_box, SDL_Rect* hot_air_ballon_health_box, SDL_Rect* wolf_health_box)
+                                    
+
                             // ! Check click on Card or not
 
-                            if((towerGame_Started_level1 || towerGame_Started_level2 || towerGame_Started_level3 || towerGame_Started_level4 || towerGame_Started_level5 || towerGame_Started_level6 || towerGame_Started_level7 || towerGame_Started_level8) && !gamePause){
+                            if((towerGame_Started_level1 || towerGame_Started_level2 || towerGame_Started_level3 || towerGame_Started_level4 || towerGame_Started_level5 && !gamePause)){
                                 if(towerGame_Started_level1){
                                     mainBackground = towerGame_level1_background;
                                 }else if(towerGame_Started_level2){
@@ -2036,12 +2040,16 @@ int main(int argc, char* args[]){
 
                                     // Card Controller
                                     if( mouseX >= archer.x && mouseX <= archer.x + archer_basic_Width&& mouseY >= archer.y && mouseY <= archer.y + archer_basic_Height){
-                                        archerclicked =0;
-                                        knightclicked =1;
-                                    }
-                                    if( mouseX >= knight.x && mouseX <= knight.x + knight_basic_Width&&mouseY >= knight.y && mouseY <= knight.y + knight_basic_Height){
                                         archerclicked =1;
                                         knightclicked =0;
+                                        soldierclicked = 0;
+                                        milleclicked = 0;
+                                    }
+                                    if( mouseX >= knight.x && mouseX <= knight.x + knight_basic_Width&&mouseY >= knight.y && mouseY <= knight.y + knight_basic_Height){
+                                        archerclicked =0;
+                                        knightclicked =1;
+                                        soldierclicked = 0;
+                                        milleclicked = 0;
                                     }
 
                                     // Archer Is not Clicked
@@ -2063,16 +2071,19 @@ int main(int argc, char* args[]){
                                     if( mouseX >= archer.x && mouseX <= archer.x + archer_basic_Width&& mouseY >= archer.y && mouseY <= archer.y + archer_basic_Height){
                                         archerclicked =1;
                                         milleclicked = 0;
+                                        soldierclicked = 0;
                                         knightclicked =0;
                                     }
                                     if( mouseX >= knight.x && mouseX <= knight.x + knight_basic_Width&&mouseY >= knight.y && mouseY <= knight.y + knight_basic_Height){
                                         knightclicked =1;
                                         milleclicked = 0;
+                                        soldierclicked = 0;
                                         archerclicked =0;
                                     }
                                     if(mouseX >= mille.x && mouseX <= mille.x + mille_rect.w&&mouseY >= mille.y && mouseY <= mille.y + mille_rect.h){
                                         knightclicked =0;
                                         archerclicked =0;
+                                        soldierclicked = 0;
                                         milleclicked = 1;
                                     }
 
@@ -2222,9 +2233,6 @@ int main(int argc, char* args[]){
                                     towerGame_Started_level3 = !towerGame_Started_level3;
                                     towerGame_Started_level4 = !towerGame_Started_level4;
                                     towerGame_Started_level5 = !towerGame_Started_level5;
-                                    towerGame_Started_level6 = !towerGame_Started_level6;
-                                    towerGame_Started_level7 = !towerGame_Started_level7;
-                                    towerGame_Started_level8 = !towerGame_Started_level8;
                                     towerGame_Started = false;
                                     towerGame_homemenu = true;
                                     gamePause = false;
@@ -2266,9 +2274,6 @@ int main(int argc, char* args[]){
                                     towerGame_Started_level3 = !towerGame_Started_level3;
                                     towerGame_Started_level4 = !towerGame_Started_level4;
                                     towerGame_Started_level5 = !towerGame_Started_level5;
-                                    towerGame_Started_level6 = !towerGame_Started_level6;
-                                    towerGame_Started_level7 = !towerGame_Started_level7;
-                                    towerGame_Started_level8 = !towerGame_Started_level8;
                                     towerGame_Started = false;
                                     towerGame_homemenu = true;
                                     gameOver = false;
@@ -2289,9 +2294,6 @@ int main(int argc, char* args[]){
                                     towerGame_Started_level3 = !towerGame_Started_level3;
                                     towerGame_Started_level4 = !towerGame_Started_level4;
                                     towerGame_Started_level5 = !towerGame_Started_level5;
-                                    towerGame_Started_level6 = !towerGame_Started_level6;
-                                    towerGame_Started_level7 = !towerGame_Started_level7;
-                                    towerGame_Started_level8 = !towerGame_Started_level8;
                                     towerGame_Started = false;
                                     towerGame_homemenu = true;
                                     youWin = false;
@@ -2689,7 +2691,11 @@ int main(int argc, char* args[]){
                     if (!playVideo(window, renderer, "none", "image/frames/loading_frame/frame_%04d.png", 0300, 1, 30, 2)) {
                             printf("Video playback ended or failed.\n");
                         }
-                        loading_screen = false;
+                    loading_screen = false;
+                    Mix_HaltChannel(0);
+                    if(music){
+                        Mix_PlayChannel(0, level1Background_Sound, 0);
+                    }
                 }
                 frame_Video = false;
 
@@ -4992,9 +4998,6 @@ int main(int argc, char* args[]){
                 SDL_RenderCopy(renderer, level3_button, NULL, &level3_button_rect);
                 SDL_RenderCopy(renderer, level4_button, NULL, &level4_button_rect);
                 SDL_RenderCopy(renderer, level5_button, NULL, &level5_button_rect);
-                SDL_RenderCopy(renderer, level6_button, NULL, &level6_button_rect);
-                SDL_RenderCopy(renderer, level7_button, NULL, &level7_button_rect);
-                SDL_RenderCopy(renderer, level8_button, NULL, &level8_button_rect);
             }else if(towerGame_optionmenu){
 
                 SDL_RenderCopy(renderer, shop_button, NULL, &shop_button_rect);
@@ -5670,15 +5673,13 @@ int main(int argc, char* args[]){
                         SDL_RenderFillRect(renderer, &dialog_background_rect);
                         if(!level2_ending_scene){
                             if(dialog1_start){
-                                SDL_RenderCopy(renderer, level2_king_dialog1_texture, NULL, &level1_king_dialog1_rect);
+                                SDL_RenderCopy(renderer, level3_knight_dialog1_texture, NULL, &level1_archer_dialog1_rect);
                             }else if(dialog2_start){
-                                SDL_RenderCopy(renderer, level2_archer_dialog1_texture, NULL, &level1_archer_dialog1_rect);
+                                SDL_RenderCopy(renderer, level3_archer_dialog1_texture, NULL, &level1_archer_dialog1_rect);
                             }else if(dialog3_start){
-                                SDL_RenderCopy(renderer, level2_king_dialog2_texture, NULL, &level1_king_dialog1_rect);
+                                SDL_RenderCopy(renderer, level3_mille_dialog1_texture, NULL, &level1_archer_dialog1_rect);
                             }else if(dialog4_start){
-                                SDL_RenderCopy(renderer, level2_mille_dialog1_texture, NULL, &level1_king_dialog1_rect);
-                            }else if(dialog5_start){
-                                SDL_RenderCopy(renderer, level2_archer_dialog2_texture, NULL, &level1_archer_dialog1_rect);
+                                SDL_RenderCopy(renderer, level3_archer_dialog2_texture, NULL, &level1_archer_dialog1_rect);
                             }
                         }else{
                             if(dialog1_start){
@@ -5989,15 +5990,14 @@ int main(int argc, char* args[]){
                         SDL_RenderFillRect(renderer, &dialog_background_rect);
                         if(!level2_ending_scene){
                             if(dialog1_start){
-                                SDL_RenderCopy(renderer, level2_king_dialog1_texture, NULL, &level1_king_dialog1_rect);
+                                SDL_RenderCopy(renderer, level4_archer_dialog1_texture, NULL, &
+                                level1_archer_dialog1_rect);
                             }else if(dialog2_start){
-                                SDL_RenderCopy(renderer, level2_archer_dialog1_texture, NULL, &level1_archer_dialog1_rect);
+                                SDL_RenderCopy(renderer, level4_soldier_dialog1_texture, NULL, &level1_archer_dialog1_rect);
                             }else if(dialog3_start){
-                                SDL_RenderCopy(renderer, level2_king_dialog2_texture, NULL, &level1_king_dialog1_rect);
+                                SDL_RenderCopy(renderer, level4_knight_dialog1_texture, NULL, &level1_archer_dialog1_rect);
                             }else if(dialog4_start){
-                                SDL_RenderCopy(renderer, level2_mille_dialog1_texture, NULL, &level1_king_dialog1_rect);
-                            }else if(dialog5_start){
-                                SDL_RenderCopy(renderer, level2_archer_dialog2_texture, NULL, &level1_archer_dialog1_rect);
+                                SDL_RenderCopy(renderer, level4_mille_dialog1_texture, NULL, &level1_archer_dialog1_rect);
                             }
                         }else{
                             if(dialog1_start){
@@ -6367,15 +6367,13 @@ int main(int argc, char* args[]){
                         SDL_RenderFillRect(renderer, &dialog_background_rect);
                         if(!level2_ending_scene){
                             if(dialog1_start){
-                                SDL_RenderCopy(renderer, level2_king_dialog1_texture, NULL, &level1_king_dialog1_rect);
+                                SDL_RenderCopy(renderer, level5_king_dialog1_texture, NULL, &level1_king_dialog1_rect);
                             }else if(dialog2_start){
-                                SDL_RenderCopy(renderer, level2_archer_dialog1_texture, NULL, &level1_archer_dialog1_rect);
+                                SDL_RenderCopy(renderer, level5_archer_dialog1_texture, NULL, &level1_archer_dialog1_rect);
                             }else if(dialog3_start){
-                                SDL_RenderCopy(renderer, level2_king_dialog2_texture, NULL, &level1_king_dialog1_rect);
+                                SDL_RenderCopy(renderer, level5_king_dialog2_texture, NULL, &level1_king_dialog1_rect);
                             }else if(dialog4_start){
-                                SDL_RenderCopy(renderer, level2_mille_dialog1_texture, NULL, &level1_king_dialog1_rect);
-                            }else if(dialog5_start){
-                                SDL_RenderCopy(renderer, level2_archer_dialog2_texture, NULL, &level1_archer_dialog1_rect);
+                                SDL_RenderCopy(renderer, level5_archer_dialog2_texture, NULL, &level1_archer_dialog1_rect);
                             }
                         }else{
                             if(dialog1_start){
