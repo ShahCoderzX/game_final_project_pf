@@ -12,9 +12,11 @@
 // Function to play video (plays once and stops after the video ends)
 int playVideo(SDL_Window* window, SDL_Renderer* renderer, const char* audioPath, const char* framePath, int frameCount, int skipFrames, int targetFPS, int finalcut) {
     Mix_Chunk* framesound = Mix_LoadWAV(audioPath); 
-    if (!framesound) return 0;  // Return false if music fails to load
-
+    if(!(strcmp(audioPath, "none") == 0)){
+        if (!framesound) return 0;  // Return false if music fails to load
+    }
     Mix_PlayChannel(0, framesound, 0);
+
 
     SDL_Texture* frameTexture = NULL;
     SDL_Event event;
@@ -32,12 +34,7 @@ int playVideo(SDL_Window* window, SDL_Renderer* renderer, const char* audioPath,
 
         // Event handling
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                Mix_HaltChannel(0);
-                Mix_FreeChunk(framesound);
-                SDL_DestroyTexture(frameTexture);
-                return 0;
-            } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN && !(strcmp(audioPath, "none") == 0)) {
                 Mix_HaltChannel(0);
                 Mix_FreeChunk(framesound);
                 SDL_DestroyTexture(frameTexture);
@@ -986,6 +983,8 @@ int main(int argc, char* args[]){
     bool frame_Video = false; //! false
     bool level1_frame1 = false;//! false karo
     bool level1_frame2 = false;//! false karo
+
+    bool loading_screen = false;
     // archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
     // tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
     bool introGame_frame = false;
@@ -1637,6 +1636,10 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    towerGame_Started_level2 = false;
+                                    towerGame_Started_level3 = false;
+                                    towerGame_Started_level4 = false;
+                                    towerGame_Started_level5 = false;
                                     towerGame_Started_level1 = true;
                                     all_levels_Started = true;
                                     towerGame_Started = true;
@@ -1649,7 +1652,8 @@ int main(int argc, char* args[]){
                                     midPause_archer_moving = true;
                                     archer_standing = false;
                                     frame_Video = true;
-                                    level1_frame1 = true;
+                                    // level1_frame1 = true;
+                                    loading_screen = true;
 
                                     Mix_HaltChannel(0);
                                     
@@ -1657,6 +1661,12 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    frame_Video = true;
+                                    loading_screen = true;
+                                    towerGame_Started_level1 = false;
+                                    towerGame_Started_level3 = false;
+                                    towerGame_Started_level4 = false;
+                                    towerGame_Started_level5 = false;
                                     towerGame_Started_level2 = true;
                                     all_levels_Started = true;
                                     towerGame_Started = true;
@@ -1685,8 +1695,8 @@ int main(int argc, char* args[]){
                                     knight_health = 100;
                                     tower_attacker_health = 100;
                                     hot_air_balloon_health = 100;
-                                    hot_air_balloon_rect.w = (Windows_Width*300)/1920;
-                                    hot_air_balloon_rect.h = (Windows_Height*400)/1080;
+                                    hot_air_balloon_rect.x = (Windows_Width*300)/1920;
+                                    hot_air_balloon_rect.y = (Windows_Height*400)/1080;
                                     hot_air_ballon_health_box.w =(Windows_Width*100)/1920;
                                     archer_health_box.w =(Windows_Width*100)/1920;
                                     knight_health_box.w =(Windows_Width*100)/1920;
@@ -1699,6 +1709,12 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    frame_Video = true;
+                                    loading_screen = true;
+                                    towerGame_Started_level1 = false;
+                                    towerGame_Started_level2 = false;
+                                    towerGame_Started_level4 = false;
+                                    towerGame_Started_level5 = false;
                                     towerGame_Started_level3 = true;
                                     all_levels_Started = true;
                                     towerGame_Started = true;
@@ -1757,6 +1773,12 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    frame_Video = true;
+                                    loading_screen = true;
+                                    towerGame_Started_level1 = false;
+                                    towerGame_Started_level2 = false;
+                                    towerGame_Started_level3 = false;
+                                    towerGame_Started_level5 = false;
                                     towerGame_Started_level4 = true;
                                     all_levels_Started = true;
                                     towerGame_Started = true;
@@ -1819,6 +1841,12 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    frame_Video = true;
+                                    loading_screen = true;
+                                    towerGame_Started_level1 = false;
+                                    towerGame_Started_level2 = false;
+                                    towerGame_Started_level3 = false;
+                                    towerGame_Started_level4 = false;
                                     towerGame_Started_level5 = true;
                                     all_levels_Started = true;
                                     towerGame_Started = true;
@@ -1850,8 +1878,8 @@ int main(int argc, char* args[]){
                                         Mix_PlayChannel(0, level1Background_Sound, 0);
                                     }
                                     hot_air_balloon_health = 100;
-                                    hot_air_balloon_rect.w = (Windows_Width*300)/1920;
-                                    hot_air_balloon_rect.h = (Windows_Height*400)/1080;
+                                    hot_air_balloon_rect.x = (Windows_Width*200)/1920;
+                                    hot_air_balloon_rect.y = (Windows_Height*100)/1080;
                                     hot_air_ballon_health_box.w =(Windows_Width*100)/1920;
                                     hot_air_balloon_bomb.active = false;
                                     wolf.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.08));
@@ -2635,6 +2663,13 @@ int main(int argc, char* args[]){
             // Frame Video Level1
             if(frame_Video){
                 if(towerGame_Started_level1){
+                    if(loading_screen){
+                        if (!playVideo(window, renderer, "none", "image/frames/loading_frame/frame_%04d.png", 0300, 1, 30, 2)) {
+                            printf("Video playback ended or failed.\n");
+                        }
+                        loading_screen = false;
+                        level1_frame1 = true;
+                    }
                     if(level1_frame1){
                         if (!playVideo(window, renderer, "audio/deckofdominions/frames/intro1.mp3", "image/frames/level1/starting/frame1/frame_%04d.jpeg", 1749, 1, 15, 1)) {
                             printf("Video playback ended or failed.\n");
@@ -2647,7 +2682,14 @@ int main(int argc, char* args[]){
                             printf("Video playback ended or failed.\n");
                         }
                         level1_frame2 = false;
+                        loading_screen = true;
                     }
+                }
+                if(loading_screen){
+                    if (!playVideo(window, renderer, "none", "image/frames/loading_frame/frame_%04d.png", 0300, 1, 30, 2)) {
+                            printf("Video playback ended or failed.\n");
+                        }
+                        loading_screen = false;
                 }
                 frame_Video = false;
 
@@ -4345,6 +4387,55 @@ int main(int argc, char* args[]){
 
             // Tower Attacker 4
             tower_bomb_4_Timer += deltaTime;
+            
+            // Hot Air Balloon Bomb
+            hot_air_balloon_bomb_attack_timer += deltaTime;
+
+            if(tower_attacker_health>0){
+
+                if (hot_air_balloon_bomb_attack_timer >= hot_air_balloon_bomb_attack_delay) {
+                    if(!hot_air_balloon_bomb.active){
+                        if(sound){
+                            Mix_PlayChannel(3, towerShooting_sound, 0); 
+                        }
+                        // tower_bomb.vx += 20 * ScaleX;
+                        hot_air_balloon_bomb.vx += archer.x/80;
+                        hot_air_balloon_bomb.vy += -12 * ScaleY;
+                        hot_air_balloon_bomb.active = true;
+                        hot_air_balloon_throw_bomb = true;
+                    }
+                }
+
+                if(hot_air_balloon_bomb.active){
+                    hot_air_balloon_bomb.x += hot_air_balloon_bomb.vx; 
+                    hot_air_balloon_bomb.y += hot_air_balloon_bomb.vy; 
+                    hot_air_balloon_bomb.vy += 0.5 * ScaleY;
+                    if(hot_air_balloon_bomb.x > Windows_Width || hot_air_balloon_bomb.y > Windows_Height || checkCollisionArcher(&hot_air_balloon_bomb, &archer, archer_basic_Width, archer_basic_Height, hot_air_ballon_Width, hot_air_ballon_Height)){
+                        if(checkCollisionArcher(&hot_air_balloon_bomb, &archer, archer_basic_Width, archer_basic_Height, hot_air_ballon_Width, hot_air_ballon_Height)){
+                            hot_air_balloon_bomb_exploide = true;
+                            if(sound){
+                                Mix_PlayChannel(4, archerDamage_sound, 0); 
+                            }
+                            if(archer_health > 0){
+                                archer_health_box.w -= (Windows_Width*5)/1920;  
+                                archer_health -= 5;
+                            }
+                            if(archer_health<=0){
+                                archer_health_box.w = 0;
+                                gameOver = true;
+                            }
+                        }
+                        hot_air_balloon_bomb.vx = 0;
+                        hot_air_balloon_bomb.vy = 0;
+                        hot_air_balloon_bomb.x = hot_air_balloon_rect.x;
+                        hot_air_balloon_bomb.y = hot_air_balloon_rect.y;
+                        hot_air_balloon_bomb_attack_timer = 0.0f;
+                        hot_air_balloon_bomb.active = false;
+                        hot_air_balloon_bomb_exploide = false;
+                        hot_air_balloon_throw_bomb = false;
+                    }
+                }
+            }
             
             if (tower_bomb_1_5_Timer >= tower_bomb_1_5_attack_delay) {
                 if(!tower_bomb_1_5.active){
@@ -6110,52 +6201,44 @@ int main(int argc, char* args[]){
                     SDL_Point center = {archer_arrow_rect.w / 2, archer_arrow_rect.h / 2};  
                         SDL_RenderCopyEx(renderer, arrow, NULL, &archer_arrow_rect, archer_arrow.angle, &center, SDL_FLIP_NONE);
                     }
-                // Hot Air Balloon Health
-                hot_air_ballon_health_box.x = (int)(hot_air_balloon_rect.x+(Windows_Width*50)/1920);
-                hot_air_ballon_health_box.y = (int)(hot_air_balloon_rect.y+((Windows_Height*-20)/1080));
-                hot_air_ballon_health_box_innerfill.x = hot_air_ballon_health_box.x;
-                hot_air_ballon_health_box_innerfill.y = hot_air_ballon_health_box.y;
-                hot_air_ballon_health_box_outline.x = hot_air_ballon_health_box.x;
-                hot_air_ballon_health_box_outline.y = hot_air_ballon_health_box.y;
                 
-                if(hot_air_balloon_health>0 && hot_air_ballon_health_box.w > 0){
+                
+
+
+                if(tower_attacker_health>50){
                     if(hot_air_balloon_throw_bomb){
                         SDL_RenderCopy(renderer, hot_air_bombing_balloon_texture, NULL, &hot_air_balloon_rect);
                     }else{
                         SDL_RenderCopy(renderer, hot_air_balloon_texture, NULL, &hot_air_balloon_rect);
                     }
-                    SDL_SetRenderDrawColor(renderer, 240, 236, 235,255);
-                    SDL_RenderFillRect(renderer, &hot_air_ballon_health_box_innerfill);
-
-                    SDL_SetRenderDrawColor(renderer, 182,33,45, 255);
-                    SDL_RenderFillRect(renderer, &hot_air_ballon_health_box);
-
-                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
-                    SDL_RenderDrawRect(renderer, &hot_air_ballon_health_box_outline);
-                }
-
-
-                // Hot Air Balloon
-                if(hot_air_balloon_health>0 && hot_air_ballon_health_box.w > 0){
                     if(hot_air_balloon_bomb.active){
-                        SDL_Rect hot_air_balloon_bomb_rect= {(int)hot_air_balloon_bomb.x, (int)hot_air_balloon_bomb.y, (Windows_Width*88)/1920, (Windows_Height*80)/1080};
-                        if(!hot_air_balloon_bomb_exploide){
-                            SDL_RenderCopy(renderer, hot_air_balloon_bomb_texture, NULL, &hot_air_balloon_bomb_rect);
-                        }else{
-                            SDL_RenderCopy(renderer, hot_air_balloon_bomb_spritesheet, &Hot_Air_Balloon_Bomb_Exploiding[2], &hot_air_balloon_bomb_rect);
-                        }
+                    SDL_Rect hot_air_balloon_bomb_rect= {(int)hot_air_balloon_bomb.x, (int)hot_air_balloon_bomb.y, (Windows_Width*88)/1920, (Windows_Height*80)/1080};
+                    if(!hot_air_balloon_bomb_exploide){
+                        SDL_RenderCopy(renderer, hot_air_balloon_bomb_texture, NULL, &hot_air_balloon_bomb_rect);
+                    }else{
+                        SDL_RenderCopy(renderer, hot_air_balloon_bomb_spritesheet, &Hot_Air_Balloon_Bomb_Exploiding[2], &hot_air_balloon_bomb_rect);
                     }
                 }
-                
-
-
-                if(tower_attacker_health>50){
                     SDL_RenderCopy(renderer, level5_tower_fullhealth_texture, NULL, &tower_attacker);
                 }else if(tower_attacker_health<=50 && tower_attacker_health>0){
+                    if(hot_air_balloon_throw_bomb){
+                        SDL_RenderCopy(renderer, hot_air_bombing_balloon_texture, NULL, &hot_air_balloon_rect);
+                    }else{
+                        SDL_RenderCopy(renderer, hot_air_balloon_texture, NULL, &hot_air_balloon_rect);
+                    }
+                    if(hot_air_balloon_bomb.active){
+                    SDL_Rect hot_air_balloon_bomb_rect= {(int)hot_air_balloon_bomb.x, (int)hot_air_balloon_bomb.y, (Windows_Width*88)/1920, (Windows_Height*80)/1080};
+                    if(!hot_air_balloon_bomb_exploide){
+                        SDL_RenderCopy(renderer, hot_air_balloon_bomb_texture, NULL, &hot_air_balloon_bomb_rect);
+                    }else{
+                        SDL_RenderCopy(renderer, hot_air_balloon_bomb_spritesheet, &Hot_Air_Balloon_Bomb_Exploiding[2], &hot_air_balloon_bomb_rect);
+                    }
+                }
                     SDL_RenderCopy(renderer, level5_tower_halfhealth_texture, NULL, &tower_attacker);
                 }else{
                     SDL_RenderCopy(renderer, level5_tower_zerohealth_texture, NULL, &tower_attacker);
                 }
+
 
                  if((!midPause || archer_showing_ending_scene) && !knight_moving_level1_ending){
                     if(tower_bomb_1_5.active){
@@ -6176,6 +6259,7 @@ int main(int argc, char* args[]){
                         SDL_RenderCopy(renderer, cannon_ball_texture ,NULL, &tower_bomb_4_rect);
                     }
                 }
+            
 
                 if(wolf.spawn){
                     // Health
