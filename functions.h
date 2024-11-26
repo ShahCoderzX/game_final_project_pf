@@ -54,6 +54,8 @@ void renderText_Heading(SDL_Renderer* renderer, const char* text, int x, int y, 
 // ! Tower Game Function
 //  Check if arrow hits the tower
 bool checkCollisionTower(Arrow *arrow, int towerX, int towerY, int arrowWidth, int arrowHeight, int towerWidth, int towerHeight);
+// For Knight
+bool checkCollisionCharacter(Character *arrow, int towerX, int towerY, int arrowWidth, int arrowHeight, int towerWidth, int towerHeight);
 // Check if tower bomb hits the archer
 bool checkCollisionArcher(Pointer *towerbomb, Character *archer, int archerWidth, int archerHeight, int towerWidth, int towerHeight) ;
 // Check if enemy hits the archer

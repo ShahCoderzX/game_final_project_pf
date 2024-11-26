@@ -78,6 +78,13 @@ bool checkCollisionTower(Arrow *arrow, int towerX, int towerY, int arrowWidth, i
 
     return SDL_HasIntersection(&arrowRect, &towerRect);
 }
+// For Knight
+bool checkCollisionCharacter(Character *arrow, int towerX, int towerY, int arrowWidth, int arrowHeight, int towerWidth, int towerHeight){
+    SDL_Rect arrowRect = {(int)arrow->x, (int)arrow->y, arrowWidth, arrowHeight};
+    SDL_Rect towerRect = {towerX, towerY, towerWidth, towerHeight};
+
+    return SDL_HasIntersection(&arrowRect, &towerRect);
+};
 // Check if Tower Bomb hits the Archer
 bool checkCollisionArcher(Pointer *towerbomb, Character *archer, int archerWidth, int archerHeight, int towerWidth, int towerHeight) {
     SDL_Rect arrowRect = {(int)towerbomb->x, (int)towerbomb->y, archerWidth, archerHeight};
@@ -174,10 +181,10 @@ void setupSpriteFrames(SDL_Rect* clips, int totalFrames, int frameWidth, int fra
 // Function to change the variable to default
  void default_game(SDL_Rect* tower_attacker, SDL_Rect* hot_air_balloon_rect, Pointer* tower_bomb, Pointer* tower_bomb_2,Pointer* tower_bomb_3, Pointer* tower_bomb_1_5, Pointer* tower_bomb_4, Pointer* hot_air_balloon_bomb, Arrow* archer_arrow, bool* towerGame_Started_level1, bool* towerGame_Started_level2, bool* towerGame_Started_level3, bool* towerGame_Started_level4, bool* towerGame_Started_level5, bool* all_levels_Started, bool* towerGame_Started, SDL_Texture* mainBackground,bool* towerGame_levelmenu, bool*  towerGame_homemenu, int* money, int* archer_health, int* knight_health, int* mille_health, int* soldier_health, int* tower_attacker_health, int* hot_air_balloon_health, int* wolf_health, int* archer_card_cool, int* knight_card_cool, int* mille_card_cool,  int* soldier_card_cool, bool* midPause, bool* midPause_dialog_starting, bool* midPause_archer_moving, bool* frame_Video, bool* loading_screen, bool* archer_standing, int* archerY, Character* archer, Character* knight, Character* mille, Character* soldier, Character* wolf, SDL_Rect* archer_health_box, SDL_Rect* knight_health_box, SDL_Rect* soldier_health_box, SDL_Rect* mille_health_box, SDL_Rect* tower_health_box, SDL_Rect* hot_air_ballon_health_box, SDL_Rect* wolf_health_box, bool* wolf_running, bool* wolf_attacking, SDL_Rect* mille_rect, SDL_Rect* soldier_rect, SDL_Texture* towerGame_level1_background, SDL_Texture* towerGame_level2_background, SDL_Texture* towerGame_level3_background, SDL_Texture* towerGame_level4_background, SDL_Texture* towerGame_level5_background, int level3_towerWidth, int level3_towerHeight, int level4_towerWidth, int level4_towerHeight, int level5_towerWidth, int level5_towerHeight, int knight_basic_Width, int knight_basic_Height, int archer_basic_Width, int mille_basic_Width, int mille_basic_Height, int soldier_basic_Width, int soldier_basic_Height, int* milleY,float ScaleX, float ScaleY, int Windows_Width, int Windows_Height, int towerWidth, int towerHeight, int level , bool* level1_ending_scene, int* archerclicked, int* knightclicked, int* milleclicked, int* soldierclicked){
     *level1_ending_scene = false;
-    *archerclicked = true;
-    *knightclicked = false;
-    *milleclicked = false;
-    *soldierclicked = false;
+    *archerclicked = 1;
+    *knightclicked = 0;
+    *milleclicked = 0;
+    *soldierclicked = 0;
     *frame_Video = true;
     *loading_screen = true;
     *towerGame_Started_level1 = false;
