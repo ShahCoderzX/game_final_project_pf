@@ -2,6 +2,7 @@
 #include "main.h"
 #include "sdl.h"
 #include "functions.h"
+#include "constant.h"
 
 //! All Common Fucntions --------------------->
 
@@ -169,4 +170,175 @@ void setupSpriteFrames(SDL_Rect* clips, int totalFrames, int frameWidth, int fra
     }
 }
 
+
+// Function to change the variable to default
+ void default_game(SDL_Rect* tower_attacker, SDL_Rect* hot_air_balloon_rect, Pointer* tower_bomb, Pointer* tower_bomb_2,Pointer* tower_bomb_3, Pointer* tower_bomb_1_5, Pointer* tower_bomb_4, Pointer* hot_air_balloon_bomb, Arrow* archer_arrow, bool* towerGame_Started_level1, bool* towerGame_Started_level2, bool* towerGame_Started_level3, bool* towerGame_Started_level4, bool* towerGame_Started_level5, bool* all_levels_Started, bool* towerGame_Started, SDL_Texture* mainBackground,bool* towerGame_levelmenu, bool*  towerGame_homemenu, int* money, int* archer_health, int* knight_health, int* mille_health, int* soldier_health, int* tower_attacker_health, int* hot_air_balloon_health, int* wolf_health, int* archer_card_cool, int* knight_card_cool, int* mille_card_cool,  int* soldier_card_cool, bool* midPause, bool* midPause_dialog_starting, bool* midPause_archer_moving, bool* frame_Video, bool* loading_screen, bool* archer_standing, int* archerY, Character* archer, Character* knight, Character* mille, Character* soldier, Character* wolf, SDL_Rect* archer_health_box, SDL_Rect* knight_health_box, SDL_Rect* soldier_health_box, SDL_Rect* mille_health_box, SDL_Rect* tower_health_box, SDL_Rect* hot_air_ballon_health_box, SDL_Rect* wolf_health_box, bool* wolf_running, bool* wolf_attacking, SDL_Rect* mille_rect, SDL_Rect* soldier_rect, SDL_Texture* towerGame_level1_background, SDL_Texture* towerGame_level2_background, SDL_Texture* towerGame_level3_background, SDL_Texture* towerGame_level4_background, SDL_Texture* towerGame_level5_background, int level3_towerWidth, int level3_towerHeight, int level4_towerWidth, int level4_towerHeight, int level5_towerWidth, int level5_towerHeight, int knight_basic_Width, int knight_basic_Height, int archer_basic_Width, int mille_basic_Width, int mille_basic_Height, int soldier_basic_Width, int soldier_basic_Height, int* milleY,float ScaleX, float ScaleY, int Windows_Width, int Windows_Height, int towerWidth, int towerHeight, int level , bool* level1_ending_scene, int* archerclicked, int* knightclicked, int* milleclicked, int* soldierclicked){
+    *level1_ending_scene = false;
+    *archerclicked = true;
+    *knightclicked = false;
+    *milleclicked = false;
+    *soldierclicked = false;
+    *frame_Video = true;
+    *loading_screen = true;
+    *towerGame_Started_level1 = false;
+    *towerGame_Started_level2 = false;
+    *towerGame_Started_level3 = false;
+    *towerGame_Started_level4 = false;
+    *towerGame_Started_level5 = false;
+    *all_levels_Started = true;
+    *towerGame_Started = true;
+    *midPause = true;
+    *midPause_dialog_starting = false;
+    *midPause_archer_moving = true;
+    *towerGame_levelmenu = false;
+    *towerGame_homemenu = true;
+    *money = 5;
+    *archer_card_cool = 100;
+    *knight_card_cool = 100;
+    *mille_card_cool = 100;
+    *soldier_card_cool = 100;
+    *archer_standing = false;
+    *wolf_running = false;
+    *wolf_attacking = false;
+    *hot_air_balloon_health = 100;
+    *archer_health = 100;
+    *knight_health = 100;
+    *mille_health = 100;
+    *soldier_health = 100;
+    *tower_attacker_health = 100;
+    archer_health_box->w =(Windows_Width*100)/1920;
+    knight_health_box->w =(Windows_Width*100)/1920;
+    mille_health_box->w = (Windows_Width*100)/1920;
+    soldier_health_box->w = (Windows_Width*100)/1920;
+    tower_health_box->w =(Windows_Width*1000)/1920;
+    tower_attacker->w = towerWidth;
+    tower_attacker->h = towerHeight;
+    tower_bomb_2->active = false;
+    tower_bomb->active = false;
+    tower_bomb_3->active = false;
+    tower_bomb_4->active = false;
+    tower_bomb_1_5->active = false;
+    knight->spawn = false;
+    soldier->spawn = false;
+    mille->spawn = false;
+    wolf->spawn = false;
+    tower_bomb->active = false;
+    archer_arrow->active = false;
+    if(level == 1){
+        tower_attacker->x = (Windows_Width*100)/1920;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
+        tower_attacker->w = towerWidth;
+        tower_attacker->h = towerHeight;                 
+        *towerGame_Started_level1 = true;
+        *archerY = Windows_Height - (int)((160 * ScaleY) + (330 * ScaleY));
+    }else if(level == 2){
+        tower_attacker->x = (Windows_Width*100)/1920;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
+        tower_attacker->w = towerWidth;
+        tower_attacker->h = towerHeight;
+        *towerGame_Started_level2 = true;
+        *archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        archer->y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        knight->y = Windows_Height - (int)((180 * ScaleY) + (280 * ScaleY));
+        knight->x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
+        hot_air_balloon_rect->x = (Windows_Width*300)/1920;
+        hot_air_balloon_rect->y = (Windows_Height*400)/1080;
+        hot_air_ballon_health_box->w =(Windows_Width*100)/1920;
+        archer_health_box->w =(Windows_Width*100)/1920;
+        knight_health_box->w =(Windows_Width*100)/1920;
+        tower_health_box->w =(Windows_Width*1000)/1920;
+        knight->spawn = false;
+        tower_bomb->active = false;
+        archer_arrow->active = false;
+        archer->x = (float)(Windows_Width+(archer_basic_Width));
+ 
+
+    }else if(level == 3){
+        tower_attacker->x = (Windows_Width*100)/1920;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
+        tower_attacker->w = towerWidth;
+        tower_attacker->h = towerHeight;
+        *towerGame_Started_level3 = true;
+        *archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        archer->y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        knight->y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        knight->x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
+        mille->y = Windows_Height - (int)((110 * ScaleY) + (280 * ScaleY));
+        *milleY = mille->y;
+        mille->x = Windows_Width - (mille_basic_Width + (Windows_Width*100)/1920);
+        mille_rect->w = (Windows_Width * (MILLE_BASIC_WIDTH/1.5))/1920;
+        mille_rect->h = (Windows_Height *(MILLE_BASIC_HEIGHT/1.5))/1080;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
+        tower_attacker->w = level3_towerWidth;
+        tower_attacker->h = level3_towerHeight;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.39));
+        tower_bomb->x = (float)tower_attacker->x + (Windows_Width*50)/1920; 
+        tower_bomb->y = (float)tower_attacker->y + (Windows_Height*200)/1080; 
+        tower_bomb_2->x = (float)tower_attacker->x + (Windows_Width*50)/1920; 
+        tower_bomb_2->y = (float)tower_attacker->y + (Windows_Height*350)/1080; 
+        tower_bomb_2->active = false;
+        wolf->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.08));
+        wolf->x = (float) (- (WOLF_RUN_WIDTH + (Windows_Width*40)/1920));
+        archer->x = (float)(Windows_Width+(archer_basic_Width));
+    }else if(level == 4){
+        *towerGame_Started_level4 = true;                
+        *archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        archer->y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        knight->y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        knight->x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
+        mille->y = Windows_Height - (int)((110 * ScaleY) + (280 * ScaleY));
+        *milleY = mille->y;
+        soldier->x = Windows_Width - (soldier_basic_Width + (Windows_Width*100)/1920);
+        soldier->y = Windows_Height - (int)((150 * ScaleY) + (280 * ScaleY));
+        mille->x = Windows_Width - (mille_basic_Width + (Windows_Width*100)/1920);
+        mille_rect->w = (Windows_Width * (MILLE_BASIC_WIDTH/1.5))/1920;
+        mille_rect->h = (Windows_Height *(MILLE_BASIC_HEIGHT/1.5))/1080;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
+        tower_attacker->w = level4_towerWidth;
+        tower_attacker->h = level4_towerHeight;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.39));
+        tower_bomb->x = (float)tower_attacker->x + (Windows_Width*50)/1920; 
+        tower_bomb->y = (float)tower_attacker->y + (Windows_Height*200)/1080; 
+        tower_bomb_2->x = (float)tower_attacker->x + (Windows_Width*80)/1920; 
+        tower_bomb_2->y = (float)tower_attacker->y + (Windows_Height*150)/1080; 
+        tower_bomb_3->x = (float)tower_attacker->x + (Windows_Width*80)/1920; 
+        tower_bomb_3->y = (float)tower_attacker->y + (Windows_Height*270)/1080; 
+        tower_bomb_2->active = false;
+        tower_bomb_3->active = false;
+        archer->x = (float)(Windows_Width+(archer_basic_Width));
+    }else if(level == 5){
+        *towerGame_Started_level5 = true;
+        *archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        archer->y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        knight->y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
+        knight->x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
+        mille->y = Windows_Height - (int)((110 * ScaleY) + (280 * ScaleY));
+        *milleY = mille->y;
+        soldier->x = Windows_Width - (soldier_basic_Width + (Windows_Width*100)/1920);
+        soldier->y = Windows_Height - (int)((150 * ScaleY) + (280 * ScaleY));
+        mille->x = Windows_Width - (mille_basic_Width + (Windows_Width*100)/1920);
+        mille_rect->w = (Windows_Width * (MILLE_BASIC_WIDTH/1.5))/1920;
+        mille_rect->h = (Windows_Height *(MILLE_BASIC_HEIGHT/1.5))/1080;
+        hot_air_balloon_rect->x = (Windows_Width*200)/1920;
+        hot_air_balloon_rect->y = (Windows_Height*100)/1080;
+        hot_air_ballon_health_box->w =(Windows_Width*100)/1920;
+        hot_air_balloon_bomb->active = false;
+        wolf->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.08));
+        wolf->x = (float) (- (WOLF_RUN_WIDTH + (Windows_Width*40)/1920));
+        tower_attacker->w = level5_towerWidth;
+        tower_attacker->h = level5_towerHeight;
+        tower_attacker->y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.52));
+        tower_attacker->x = 0;
+        tower_bomb_1_5->x = (float)tower_attacker->x + (Windows_Width*600)/1920; 
+        tower_bomb_1_5->y = (float)tower_attacker->y + (Windows_Height*200)/1080; 
+        tower_bomb_2->x = (float)tower_attacker->x + (Windows_Width*500)/1920; 
+        tower_bomb_2->y = (float)tower_attacker->y + (Windows_Height*350)/1080; 
+        tower_bomb_3->x = (float)tower_attacker->x + (Windows_Width*500)/1920; 
+        tower_bomb_3->y = (float)tower_attacker->y + (Windows_Height*150)/1080; 
+        tower_bomb_4->x = (float)tower_attacker->x + (Windows_Width*300)/1920; 
+        tower_bomb_4->y = (float)tower_attacker->y + (Windows_Height*300)/1080; 
+        archer->x = (float)(Windows_Width+(archer_basic_Width));
+    }
+ }
 //! ---------------------x---------------------x

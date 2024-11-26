@@ -94,6 +94,8 @@ int playVideo(SDL_Window* window, SDL_Renderer* renderer, const char* audioPath,
 
 int main(int argc, char* args[]){
 
+    int level = 1;
+
     /* ==================================================
                 ! User Screen Width and Height
     =====================================================*/
@@ -923,7 +925,7 @@ int main(int argc, char* args[]){
     bool gameStarted = false;
 
     // For Main Home/ First Page
-    bool selectedGame_page = true; //! True Karo  
+    bool selectedGame_page = false; //! True Karo  
 
     // For Account 
     char username[20] = "";
@@ -941,9 +943,9 @@ int main(int argc, char* args[]){
     bool towerGame_account_choose = false;
     bool towerGame_account_create = false;
     bool towerGame_account_login = false;
-    bool towerGame = false; //! False Karo 
+    bool towerGame = true; //! False Karo 
     bool towerGame_Started = false; //! False Karo
-    bool towerGame_homemenu = false;
+    bool towerGame_homemenu = true;
     bool towerGame_levelmenu = false;
     bool towerGame_optionmenu = false;
     bool towerGame_option_shopMenu = false;
@@ -1008,8 +1010,8 @@ int main(int argc, char* args[]){
     int wolf_health = 100;
 
     // ON / OFF
-    bool music = false; //! True karo
-    bool sound = false;//! True karo
+    bool music = true; //! True karo
+    bool sound = true;//! True karo
 
     // Paused 
     bool gamePause = false;
@@ -1602,7 +1604,22 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    printf("Continue Game");
+                                    Mix_HaltChannel(0);
+                                    if(music){
+                                        Mix_PlayChannel(0, level1Background_Sound, 0);
+                                    }
+                                    if(level == 1){
+                                        mainBackground = towerGame_level1_background;
+                                    }else if(level ==2){
+                                        mainBackground = towerGame_level2_background;
+                                    }else if(level ==3){
+                                        mainBackground = towerGame_level3_background;
+                                    }else if(level ==4){
+                                        mainBackground = towerGame_level4_background;
+                                    }else if(level == 5){
+                                        mainBackground = towerGame_level5_background;
+                                    }
+                                    default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level, &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
                                 }else if(checkButtonClick(mouseX, mouseY, &level_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
@@ -1636,305 +1653,59 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    tower_attacker.x = (Windows_Width*100)/1920;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
-                                    tower_attacker.w = towerWidth;
-                                    tower_attacker.h = towerHeight;
-                                    towerGame_Started_level2 = false;
-                                    towerGame_Started_level3 = false;
-                                    towerGame_Started_level4 = false;
-                                    towerGame_Started_level5 = false;
-                                    towerGame_Started_level1 = true;
-                                    all_levels_Started = true;
-                                    towerGame_Started = true;
                                     mainBackground = towerGame_level1_background;
-                                    towerGame_levelmenu = false;
-                                    towerGame_homemenu = true;
-                                    money = 5;
-                                    archer_card_cool = 100;
-                                    midPause = true;
-                                    midPause_dialog_starting = false;
-                                    midPause_archer_moving = true;
-                                    archer_standing = false;
-                                    frame_Video = true;
-                                    // level1_frame1 = true;
-                                    loading_screen = true;
-
+                                    level = 1;
                                     Mix_HaltChannel(0);
                                     if(music){
                                         Mix_PlayChannel(0, level1Background_Sound, 0);
                                     }
                                     
+                                     default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level, &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
+                                    
                                 }else if(checkButtonClick(mouseX, mouseY, &level2_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    tower_attacker.x = (Windows_Width*100)/1920;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
-                                    tower_attacker.w = towerWidth;
-                                    tower_attacker.h = towerHeight;
-                                    frame_Video = true;
-                                    loading_screen = true;
-                                    towerGame_Started_level1 = false;
-                                    towerGame_Started_level3 = false;
-                                    towerGame_Started_level4 = false;
-                                    towerGame_Started_level5 = false;
-                                    towerGame_Started_level2 = true;
-                                    all_levels_Started = true;
-                                    towerGame_Started = true;
-                                    midPause = true;
-                                    midPause_dialog_starting = false;
-                                    midPause_archer_moving = true;
-                                    // frame_Video = true;
-                                    // level1_frame1 = true;
-                                    mainBackground = towerGame_level2_background;
-                                    towerGame_levelmenu = false;
-                                    towerGame_homemenu = true;
-                                    money = 5;
-                                    archer_card_cool = 100;
-                                    knight_card_cool = 100;
-                                    archer_standing = false;
-                                    archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    knight.y = Windows_Height - (int)((180 * ScaleY) + (280 * ScaleY));
-                                    knight.x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
                                     Mix_HaltChannel(0);
                                     if(music){
                                         Mix_PlayChannel(0, level1Background_Sound, 0);
                                     }
-                                    archer_health = 100;
-                                    knight_health = 100;
-                                    tower_attacker_health = 100;
-                                    hot_air_balloon_health = 100;
-                                    hot_air_balloon_rect.x = (Windows_Width*300)/1920;
-                                    hot_air_balloon_rect.y = (Windows_Height*400)/1080;
-                                    hot_air_ballon_health_box.w =(Windows_Width*100)/1920;
-                                    archer_health_box.w =(Windows_Width*100)/1920;
-                                    knight_health_box.w =(Windows_Width*100)/1920;
-                                    tower_health_box.w =(Windows_Width*1000)/1920;
-                                    knight.spawn = false;
-                                    tower_bomb.active = false;
-                                    archer_arrow.active = false;
-                                    archer.x = (float)(Windows_Width+(archer_basic_Width));
+                                    mainBackground = towerGame_level2_background;
+                                    level =2 ;
+                                     default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level,  &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
                                 }else if(checkButtonClick(mouseX, mouseY, &level3_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    tower_attacker.x = (Windows_Width*100)/1920;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.26));
-                                    tower_attacker.w = towerWidth;
-                                    tower_attacker.h = towerHeight;
-                                    frame_Video = true;
-                                    loading_screen = true;
-                                    towerGame_Started_level1 = false;
-                                    towerGame_Started_level2 = false;
-                                    towerGame_Started_level4 = false;
-                                    towerGame_Started_level5 = false;
-                                    towerGame_Started_level3 = true;
-                                    all_levels_Started = true;
-                                    towerGame_Started = true;
-                                    midPause = true;
-                                    midPause_dialog_starting = false;
-                                    midPause_archer_moving = true;
-                                    mainBackground = towerGame_level3_background;
-                                    towerGame_levelmenu = false;
-                                    towerGame_homemenu = true;
-                                    money = 5;
-                                    archer_card_cool = 100;
-                                    knight_card_cool = 100;
-                                    mille_card_cool = 100;
-                                    archer_standing = false;
-                                    archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    knight.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    knight.x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
-                                    mille.y = Windows_Height - (int)((110 * ScaleY) + (280 * ScaleY));
-                                    milleY = mille.y;
-                                    mille.x = Windows_Width - (mille_basic_Width + (Windows_Width*100)/1920);
-                                    mille_rect.w = (Windows_Width * (MILLE_BASIC_WIDTH/1.5))/1920;
-                                    mille_rect.h = (Windows_Height *(MILLE_BASIC_HEIGHT/1.5))/1080;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
                                     Mix_HaltChannel(0);
                                     if(music){
                                         Mix_PlayChannel(0, level1Background_Sound, 0);
                                     }
-                                    archer_health = 100;
-                                    knight_health = 100;
-                                    mille_health = 100;
-                                    tower_attacker_health = 100;
-                                    archer_health_box.w =(Windows_Width*100)/1920;
-                                    knight_health_box.w =(Windows_Width*100)/1920;
-                                    mille_health_box.w = (Windows_Width*100)/1920;
-                                    tower_health_box.w =(Windows_Width*1000)/1920;
-                                    tower_attacker.w = level3_towerWidth;
-                                    tower_attacker.h = level3_towerHeight;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.39));
-                                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
-                                    tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
-                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
-                                    tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
-                                    tower_bomb_2.active = false;
-                                    knight.spawn = false;
-                                    mille.spawn = false;
-                                    tower_bomb.active = false;
-                                    archer_arrow.active = false;
-                                    wolf.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.08));
-                                    wolf.x = (float) (- (WOLF_RUN_WIDTH + (Windows_Width*40)/1920));
-                                    wolf.spawn = false;
-                                    wolf_running = false;
-                                    wolf_attacking = false;
-                                    archer.x = (float)(Windows_Width+(archer_basic_Width));
+                                    mainBackground = towerGame_level3_background;
+                                    level = 3;
+                                    default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level,  &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
                                 }else if(checkButtonClick(mouseX, mouseY, &level4_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    frame_Video = true;
-                                    loading_screen = true;
-                                    towerGame_Started_level1 = false;
-                                    towerGame_Started_level2 = false;
-                                    towerGame_Started_level3 = false;
-                                    towerGame_Started_level5 = false;
-                                    towerGame_Started_level4 = true;
-                                    all_levels_Started = true;
-                                    towerGame_Started = true;
-                                    midPause = true;
-                                    midPause_dialog_starting = false;
-                                    midPause_archer_moving = true;
-                                    mainBackground = towerGame_level4_background;
-                                    towerGame_levelmenu = false;
-                                    towerGame_homemenu = true;
-                                    money = 5;
-                                    archer_card_cool = 100;
-                                    knight_card_cool = 100;
-                                    mille_card_cool = 100;
-                                    soldier_card_cool = 100;
-                                    archer_standing = false;
-                                    archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    knight.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    knight.x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
-                                    mille.y = Windows_Height - (int)((110 * ScaleY) + (280 * ScaleY));
-                                    milleY = mille.y;
-                                    soldier.x = Windows_Width - (soldier_basic_Width + (Windows_Width*100)/1920);
-                                    soldier.y = Windows_Height - (int)((150 * ScaleY) + (280 * ScaleY));
-                                    mille.x = Windows_Width - (mille_basic_Width + (Windows_Width*100)/1920);
-                                    mille_rect.w = (Windows_Width * (MILLE_BASIC_WIDTH/1.5))/1920;
-                                    mille_rect.h = (Windows_Height *(MILLE_BASIC_HEIGHT/1.5))/1080;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.23));
                                     Mix_HaltChannel(0);
                                     if(music){
                                         Mix_PlayChannel(0, level1Background_Sound, 0);
                                     }
-                                    archer_health = 100;
-                                    knight_health = 100;
-                                    mille_health = 100;
-                                    soldier_health = 100;
-                                    tower_attacker_health = 100;
-                                    archer_health_box.w =(Windows_Width*100)/1920;
-                                    knight_health_box.w =(Windows_Width*100)/1920;
-                                    mille_health_box.w = (Windows_Width*100)/1920;
-                                    soldier_health_box.w = (Windows_Width*100)/1920;
-                                    tower_health_box.w =(Windows_Width*1000)/1920;
-                                    tower_attacker.w = level4_towerWidth;
-                                    tower_attacker.h = level4_towerHeight;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.39));
-                                    tower_bomb.x = (float)tower_attacker.x + (Windows_Width*50)/1920; 
-                                    tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
-                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
-                                    tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
-                                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*80)/1920; 
-                                    tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*270)/1080; 
-                                    tower_bomb_2.active = false;
-                                    tower_bomb_3.active = false;
-                                    knight.spawn = false;
-                                    soldier.spawn = false;
-                                    mille.spawn = false;
-                                    tower_bomb.active = false;
-                                    archer_arrow.active = false;
-                                    archer.x = (float)(Windows_Width+(archer_basic_Width));
+                                    mainBackground = towerGame_level4_background;
+                                    level = 4;
+                                    default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level,  &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
                                 }else if(checkButtonClick(mouseX, mouseY, &level5_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    frame_Video = true;
-                                    loading_screen = true;
-                                    towerGame_Started_level1 = false;
-                                    towerGame_Started_level2 = false;
-                                    towerGame_Started_level3 = false;
-                                    towerGame_Started_level4 = false;
-                                    towerGame_Started_level5 = true;
-                                    all_levels_Started = true;
-                                    towerGame_Started = true;
-                                    midPause = true;
-                                    midPause_dialog_starting = false;
-                                    midPause_archer_moving = true;
-                                    mainBackground = towerGame_level5_background;
-                                    towerGame_levelmenu = false;
-                                    towerGame_homemenu = true;
-                                    money = 5;
-                                    archer_card_cool = 100;
-                                    knight_card_cool = 100;
-                                    mille_card_cool = 100;
-                                    soldier_card_cool = 100;
-                                    archer_standing = false;
-                                    archerY = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    archer.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    knight.y = Windows_Height - (int)((160 * ScaleY) + (280 * ScaleY));
-                                    knight.x = Windows_Width - (knight_basic_Width + (Windows_Width*100)/1920);
-                                    mille.y = Windows_Height - (int)((110 * ScaleY) + (280 * ScaleY));
-                                    milleY = mille.y;
-                                    soldier.x = Windows_Width - (soldier_basic_Width + (Windows_Width*100)/1920);
-                                    soldier.y = Windows_Height - (int)((150 * ScaleY) + (280 * ScaleY));
-                                    mille.x = Windows_Width - (mille_basic_Width + (Windows_Width*100)/1920);
-                                    mille_rect.w = (Windows_Width * (MILLE_BASIC_WIDTH/1.5))/1920;
-                                    mille_rect.h = (Windows_Height *(MILLE_BASIC_HEIGHT/1.5))/1080;
                                     Mix_HaltChannel(0);
                                     if(music){
                                         Mix_PlayChannel(0, level1Background_Sound, 0);
                                     }
-                                    hot_air_balloon_health = 100;
-                                    hot_air_balloon_rect.x = (Windows_Width*200)/1920;
-                                    hot_air_balloon_rect.y = (Windows_Height*100)/1080;
-                                    hot_air_ballon_health_box.w =(Windows_Width*100)/1920;
-                                    hot_air_balloon_bomb.active = false;
-                                    wolf.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.08));
-                                    wolf.x = (float) (- (WOLF_RUN_WIDTH + (Windows_Width*40)/1920));
-                                    wolf.spawn = false;
-                                    wolf_running = false;
-                                    wolf_attacking = false;
-                                    archer_health = 100;
-                                    knight_health = 100;
-                                    mille_health = 100;
-                                    soldier_health = 100;
-                                    tower_attacker_health = 100;
-                                    archer_health_box.w =(Windows_Width*100)/1920;
-                                    knight_health_box.w =(Windows_Width*100)/1920;
-                                    mille_health_box.w = (Windows_Width*100)/1920;
-                                    soldier_health_box.w = (Windows_Width*100)/1920;
-                                    tower_health_box.w =(Windows_Width*1000)/1920;
-                                    tower_attacker.w = level5_towerWidth;
-                                    tower_attacker.h = level5_towerHeight;
-                                    tower_attacker.y = Windows_Height - (towerHeight+(int)(Windows_Height * 0.52));
-                                    tower_attacker.x = 0;
-                                    tower_bomb_1_5.x = (float)tower_attacker.x + (Windows_Width*600)/1920; 
-                                    tower_bomb_1_5.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
-                                    tower_bomb_2.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
-                                    tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
-                                    tower_bomb_3.x = (float)tower_attacker.x + (Windows_Width*500)/1920; 
-                                    tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
-                                    tower_bomb_4.x = (float)tower_attacker.x + (Windows_Width*300)/1920; 
-                                    tower_bomb_4.y = (float)tower_attacker.y + (Windows_Height*300)/1080; 
-                                    tower_bomb_2.active = false;
-                                    tower_bomb_3.active = false;
-                                    tower_bomb_4.active = false;
-                                    tower_bomb_1_5.active = false;
-                                    knight.spawn = false;
-                                    soldier.spawn = false;
-                                    mille.spawn = false;
-                                    tower_bomb.active = false;
-                                    archer_arrow.active = false;
-                                    archer.x = (float)(Windows_Width+(archer_basic_Width));
+                                    mainBackground = towerGame_level5_background;
+                                    level = 5;
+                                    default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level,  &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
                                 }
                             }else if(towerGame_optionmenu){
                                 if(checkButtonClick(mouseX, mouseY, &back_button_rect)){
@@ -2027,9 +1798,10 @@ int main(int argc, char* args[]){
                             }
                         }else if(towerGame_Started && !midPause){
 
-                            // function(SDL_Rect* tower_attacker, SDL_Rect* hot_air_balloon_rect, Pointer* tower_bomb, Pointer* hot_air_balloon_bomb, Arrow* archer_arrow, bool* towerGame_Started_level1, bool* towerGame_Started_level2, bool* towerGame_Started_level3, bool* towerGame_Started_level4, bool* towerGame_Started_level5, bool* towerGame_Started_level6,bool* all_levels_Started, bool* towerGame_Started, SDL_Texture* mainBackground,bool* towerGame_levelmenu, bool*  towerGame_homemenu, int* money, int* archer_health, int* knight_health, int* mille_health, int* soldier_health, int* tower_attacker_health, int* hot_air_balloon_health, int* archer_card_cool, int* knight_card_cool.  int* mille_card_cool,  int* soldier_card_cool, bool* midPause, bool* midPause_dialog_starting, bool* midPause_archer_moving, bool* archer_standing, bool* frame_Video, bool* loading_screen, bool* archer_standing, int* archerY, Character* archer, Character* knight, SDL_Rect* archer_health_box, SDL_Rect* knight_health_box, SDL_Rect* soldier_health_box, SDL_Rect* mille_health_box, SDL_Rect* tower_health_box, SDL_Rect* hot_air_ballon_health_box, SDL_Rect* wolf_health_box)
-                                    
+                           
 
+                           
+                            
                             // ! Check click on Card or not
 
                             if((towerGame_Started_level1 || towerGame_Started_level2 || towerGame_Started_level3 || towerGame_Started_level4 || towerGame_Started_level5 && !gamePause)){
@@ -2237,11 +2009,30 @@ int main(int argc, char* args[]){
                                     towerGame_homemenu = true;
                                     gamePause = false;
                                     mainBackground = towerGame_homePage_backgroundTexture;
+                                    if(music){
+                                        Mix_PlayChannel(0, towerGame_backgroundMusic, 0);
+                                    }
                                 }else  if(checkButtonClick(mouseX, mouseY, &restartButton_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
                                     gamePause = false;
+                                    Mix_HaltChannel(0);
+                                    if(music){
+                                        Mix_PlayChannel(0, level1Background_Sound, 0);
+                                    }
+                                    if(level == 1){
+                                        mainBackground = towerGame_level1_background;
+                                    }else if(level ==2){
+                                        mainBackground = towerGame_level2_background;
+                                    }else if(level ==3){
+                                        mainBackground = towerGame_level3_background;
+                                    }else if(level ==4){
+                                        mainBackground = towerGame_level4_background;
+                                    }else if(level == 5){
+                                        mainBackground = towerGame_level5_background;
+                                    }
+                                    default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level, &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
                                 }else if(checkButtonClick(mouseX, mouseY, &music_pause_button_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
@@ -2269,6 +2060,10 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
+                                    Mix_HaltChannel(0);
+                                    if(music){
+                                        Mix_PlayChannel(0, towerGame_backgroundMusic, 0);
+                                    }
                                     towerGame_Started_level1 = !towerGame_Started_level1;
                                     towerGame_Started_level2 = !towerGame_Started_level2;
                                     towerGame_Started_level3 = !towerGame_Started_level3;
@@ -2284,7 +2079,33 @@ int main(int argc, char* args[]){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
                                     }
-                                    levelRestart = true;
+                                    towerGame_Started_level1 = !towerGame_Started_level1;
+                                    towerGame_Started_level2 = !towerGame_Started_level2;
+                                    towerGame_Started_level3 = !towerGame_Started_level3;
+                                    towerGame_Started_level4 = !towerGame_Started_level4;
+                                    towerGame_Started_level5 = !towerGame_Started_level5;
+                                    youWin = false;
+                                    Mix_HaltChannel(0);
+                                    if(music){
+                                        Mix_PlayChannel(0, level1Background_Sound, 0);
+                                    }
+                                    if(level == 1){
+                                        mainBackground = towerGame_level2_background;
+                                        level = 2;
+                                    }else if(level ==2){
+                                        mainBackground = towerGame_level3_background;
+                                        level = 3;
+                                    }else if(level ==3){
+                                        mainBackground = towerGame_level4_background;
+                                        level = 4;
+                                    }else if(level ==4){
+                                        mainBackground = towerGame_level5_background;
+                                        level = 5;
+                                    }else if(level == 5){
+                                        mainBackground = towerGame_level1_background;
+                                        level = 1;
+                                    }
+                                    default_game(&tower_attacker, &hot_air_balloon_rect, &tower_bomb, &tower_bomb_2,&tower_bomb_3, &tower_bomb_1_5, &tower_bomb_4, &hot_air_balloon_bomb, &archer_arrow, &towerGame_Started_level1, &towerGame_Started_level2, &towerGame_Started_level3, &towerGame_Started_level4, &towerGame_Started_level5, &all_levels_Started, &towerGame_Started, mainBackground,&towerGame_levelmenu, &towerGame_homemenu, &money, &archer_health, &knight_health, &mille_health, &soldier_health, &tower_attacker_health, &hot_air_balloon_health, &wolf_health, &archer_card_cool, &knight_card_cool, &mille_card_cool, &soldier_card_cool, &midPause, &midPause_dialog_starting, &midPause_archer_moving,&frame_Video, &loading_screen, &archer_standing, &archerY, &archer, &knight, &mille, &soldier, &wolf, &archer_health_box, &knight_health_box, &soldier_health_box, &mille_health_box, &tower_health_box,&hot_air_ballon_health_box, &wolf_health_box, &wolf_running, &wolf_attacking, &mille_rect, &soldier_rect, towerGame_level1_background, towerGame_level2_background, towerGame_level3_background, towerGame_level4_background, towerGame_level5_background, level3_towerWidth, level3_towerHeight, level4_towerWidth, level4_towerHeight, level5_towerWidth, level5_towerHeight, knight_basic_Width, knight_basic_Height, archer_basic_Width, mille_basic_Width, mille_basic_Height, soldier_basic_Width, soldier_basic_Height, &milleY, ScaleX, ScaleY, Windows_Width, Windows_Height, towerWidth, towerHeight, level, &level1_ending_scene, &archerclicked, &knightclicked, &milleclicked, &soldierclicked);
                                 }else  if(checkButtonClick(mouseX, mouseY, &homeButton_youWin_rect)){
                                     if(sound){
                                         Mix_PlayChannel(1, button_sound, 0); 
@@ -2297,7 +2118,10 @@ int main(int argc, char* args[]){
                                     towerGame_Started = false;
                                     towerGame_homemenu = true;
                                     youWin = false;
-                                    mainBackground = towerGame_homePage_backgroundTexture;                                
+                                    mainBackground = towerGame_homePage_backgroundTexture;    
+                                    if(music){
+                                        Mix_PlayChannel(0, towerGame_backgroundMusic, 0);
+                                    }                            
                                 }
                             }
                         }
