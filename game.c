@@ -2976,7 +2976,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
-                            // gameOver = true;
+                            knight.spawn = false;
+                            currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb.vx = 0;
@@ -3244,8 +3245,8 @@ int main(int argc, char* args[]){
                             if(sound){
                                 Mix_PlayChannel(4, towerDamage_sound, 0); 
                             }
-                            tower_health_box.w -= (Windows_Width*50)/1920;
-                            tower_attacker_health-=5;
+                            tower_health_box.w -= (Windows_Width*30)/1920;
+                            tower_attacker_health-=3;
                         }
                         if(tower_attacker_health<=0){
                             tower_health_box.w = 0;
@@ -3315,7 +3316,7 @@ int main(int argc, char* args[]){
                     if(knight.spawn){
                         tower_bomb.vx += knight.x/80;
                     }else if(mille.spawn){
-                        tower_bomb.vx += mille.x/80;
+                        tower_bomb.vx += mille.x/100;
                     }else{
                         tower_bomb.vx += archer.x/80;
                     }
@@ -3332,7 +3333,7 @@ int main(int argc, char* args[]){
                     if(knight.spawn){
                         tower_bomb_2.vx += knight.x/80;
                     }else if(mille.spawn){
-                        tower_bomb.vx += mille.x/80;
+                        tower_bomb_2.vx += mille.x/80;
                     }else{
                         tower_bomb_2.vx += archer.x/80;
                     }
@@ -3356,7 +3357,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
-                            // gameOver = true;
+                            knight.spawn = false;
+                            currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -3365,17 +3367,19 @@ int main(int argc, char* args[]){
                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*500)/1080; 
                     tower_bomb_2_Timer = 0.0f;
                     tower_bomb_2.active = false;
-                }else if(mille.spawn && (tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_2, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb_2, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_2, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*20)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_2, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(mille_health > 0){
-                            mille_health_box.w -= (Windows_Width*5)/1920;  
-                            mille_health -= 5;
+                            mille_health_box.w -= (Windows_Width*10)/1920;  
+                            mille_health -= 10;
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
+                            mille.spawn = false;
+                            currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -3422,7 +3426,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
-                            // gameOver = true;
+                            knight.spawn = false;
+                            currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb.vx = 0;
@@ -3432,16 +3437,18 @@ int main(int argc, char* args[]){
                     tower_attack_timer = 0.0f;
                     tower_bomb.active = false;
                 }else if(mille.spawn && (tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                    if(checkCollisionArcher(&tower_bomb, &mille,mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(mille_health > 0){
-                            mille_health_box.w -= (Windows_Width*5)/1920;  
-                            mille_health -= 5;
+                            mille_health_box.w -= (Windows_Width*10)/1920;  
+                            mille_health -= 10;
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
+                            mille.spawn = false;
+                            currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb.vx = 0;
@@ -3540,7 +3547,8 @@ int main(int argc, char* args[]){
                             }
                             if(knight_health<=0){
                                 knight_health_box.w = 0;
-                                gameOver = true;
+                                knight.spawn = false;
+                                currentFrame_Knight = 0;
                             }
                         
                     }else if(mille.spawn && checkCollisionEnemy(&wolf, &mille, mille_basic_Width, mille_basic_Height, wolf_basic_Width, wolf_basic_Height)){
@@ -3566,6 +3574,8 @@ int main(int argc, char* args[]){
                                 wolf_attack_timer += deltaTime;
                             }
                             if(mille_health<=0){
+                                mille.spawn = false;
+                                currentFrame_Mille = 0;
                                 wolf_health_box.w = character_health_Width;
                                 wolf_health = 100;
                                 wolf.spawn = false;
@@ -3799,8 +3809,8 @@ int main(int argc, char* args[]){
                             if(sound){
                                 Mix_PlayChannel(4, towerDamage_sound, 0); 
                             }
-                            tower_health_box.w -= (Windows_Width*50)/1920;
-                            tower_attacker_health-=5;
+                            tower_health_box.w -= (Windows_Width*20)/1920;
+                            tower_attacker_health-=2;
                         }
                         if(tower_attacker_health<=0){
                             tower_health_box.w = 0;
@@ -3874,8 +3884,8 @@ int main(int argc, char* args[]){
                                 if(sound){
                                     Mix_PlayChannel(4, towerDamage_sound, 0); 
                                 }
-                                tower_health_box.w -= (Windows_Width*50)/1920;
-                                tower_attacker_health-=5;
+                                tower_health_box.w -= (Windows_Width*30)/1920;
+                                tower_attacker_health-=3;
                             }
                             if(tower_attacker_health<=0){
                                 tower_health_box.w = 0;
@@ -3930,7 +3940,7 @@ int main(int argc, char* args[]){
                     if(knight.spawn){
                         tower_bomb.vx += knight.x/80;
                     }else if(mille.spawn){
-                        tower_bomb.vx += mille.x/80;
+                        tower_bomb.vx += mille.x/100;
                     }else if(soldier.spawn){
                         tower_bomb.vx += soldier.x/80;
                     }else{
@@ -3949,7 +3959,7 @@ int main(int argc, char* args[]){
                     if(knight.spawn){
                         tower_bomb_2.vx += knight.x/80;
                     }else if(mille.spawn){
-                        tower_bomb_2.vx += mille.x/80;
+                        tower_bomb_2.vx += mille.x/100;
                     }else if(soldier.spawn){
                         tower_bomb_2.vx += soldier.x/80;
                     }else{
@@ -3994,7 +4004,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
-                            // gameOver = true;
+                            knight.spawn = false;
+                            currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb_3.vx = 0;
@@ -4003,18 +4014,19 @@ int main(int argc, char* args[]){
                     tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*270)/1080; 
                     tower_bomb_3_Timer = 0.0f;
                     tower_bomb_3.active = false;
-                }else if(mille.spawn && (tower_bomb_3.x > Windows_Width || tower_bomb_3.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb_3.x > Windows_Width || tower_bomb_3.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille,mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_3, &mille,mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(mille_health > 0){
-                            mille_health_box.w -= (Windows_Width*5)/1920;  
-                            mille_health -= 5;
+                            mille_health_box.w -= (Windows_Width*10)/1920;  
+                            mille_health -= 10;
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
-                            // gameOver = true;
+                            mille.spawn = false;
+                            currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb_3.vx = 0;
@@ -4029,12 +4041,13 @@ int main(int argc, char* args[]){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(soldier_health > 0){
-                            soldier_health_box.w -= (Windows_Width*5)/1920;  
-                            soldier_health -= 5;
+                            soldier_health_box.w -= (Windows_Width*10)/1920;  
+                            soldier_health -= 10;
                         }
                         if(soldier_health<=0){
                             soldier_health_box.w = 0;
-                            // gameOver = true;
+                            soldier.spawn = false;
+                            currentFrame_Soldier = 0;
                         }
                     }
                     tower_bomb_3.vx = 0;
@@ -4080,7 +4093,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
-                            // gameOver = true;
+                            knight.spawn = false;
+                            currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -4089,18 +4103,18 @@ int main(int argc, char* args[]){
                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
                     tower_bomb_2_Timer = 0.0f;
                     tower_bomb_2.active = false;
-                }else if(mille.spawn && (tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb_2, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_2, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(mille_health > 0){
-                            mille_health_box.w -= (Windows_Width*5)/1920;  
-                            mille_health -= 5;
+                            mille_health_box.w -= (Windows_Width*10)/1920;  
+                            mille_health -= 10;
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
-                            // gameOver = true;
+                            mille.spawn = false;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -4115,12 +4129,13 @@ int main(int argc, char* args[]){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(soldier_health > 0){
-                            soldier_health_box.w -= (Windows_Width*5)/1920;  
-                            soldier_health -= 5;
+                            soldier_health_box.w -= (Windows_Width*10)/1920;  
+                            soldier_health -= 10;
                         }
                         if(soldier_health<=0){
                             soldier_health_box.w = 0;
-                            // gameOver = true;
+                            soldier.spawn = false;
+                            currentFrame_Soldier = 0;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -4167,7 +4182,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
-                            // gameOver = true;
+                            knight.spawn = false;
+                            currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb.vx = 0;
@@ -4176,18 +4192,19 @@ int main(int argc, char* args[]){
                     tower_bomb.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
                     tower_attack_timer = 0.0f;
                     tower_bomb.active = false;
-                }else if(mille.spawn && (tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb.x > Windows_Width || tower_bomb.y > Windows_Height || checkCollisionArcher(&tower_bomb, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb, &mille,mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(mille_health > 0){
-                            mille_health_box.w -= (Windows_Width*5)/1920;  
-                            mille_health -= 5;
+                            mille_health_box.w -= (Windows_Width*10)/1920;  
+                            mille_health -= 10;
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
-                            // gameOver = true;
+                            mille.spawn = false;
+                            currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb.vx = 0;
@@ -4202,12 +4219,13 @@ int main(int argc, char* args[]){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(soldier_health > 0){
-                            soldier_health_box.w -= (Windows_Width*5)/1920;  
-                            soldier_health -= 5;
+                            soldier_health_box.w -= (Windows_Width*10)/1920;  
+                            soldier_health -= 10;
                         }
                         if(soldier_health<=0){
                             soldier_health_box.w = 0;
-                            // gameOver = true;
+                            soldier.spawn = false;
+                            currentFrame_Soldier = 0;
                         }
                     }
                     tower_bomb.vx = 0;
@@ -4407,8 +4425,8 @@ int main(int argc, char* args[]){
                             if(sound){
                                 Mix_PlayChannel(4, towerDamage_sound, 0); 
                             }
-                            tower_health_box.w -= (Windows_Width*50)/1920;
-                            tower_attacker_health-=5;
+                            tower_health_box.w -= (Windows_Width*20)/1920;
+                            tower_attacker_health-=2;
                         }
                         if(tower_attacker_health<=0){
                             tower_health_box.w = 0;
@@ -4484,8 +4502,8 @@ int main(int argc, char* args[]){
                                 if(sound){
                                     Mix_PlayChannel(4, towerDamage_sound, 0); 
                                 }
-                                tower_health_box.w -= (Windows_Width*50)/1920;
-                                tower_attacker_health-=5;
+                                tower_health_box.w -= (Windows_Width*20)/1920;
+                                tower_attacker_health-=2;
                             }
                             if(tower_attacker_health<=0){
                                 tower_health_box.w = 0;
@@ -4595,6 +4613,8 @@ int main(int argc, char* args[]){
                             }
                             if(knight_health<=0){
                                 knight_health_box.w = 0;
+                                knight.spawn = false;
+                                currentFrame_Knight = 0;
                             }
                         }
                         hot_air_balloon_bomb.vx = 0;
@@ -4617,6 +4637,8 @@ int main(int argc, char* args[]){
                             }
                             if(mille_health<=0){
                                 mille_health_box.w = 0;
+                                mille.spawn = false;
+                                currentFrame_Mille = 0;
                             }
                         }
                         hot_air_balloon_bomb.vx = 0;
@@ -4639,6 +4661,8 @@ int main(int argc, char* args[]){
                             }
                             if(soldier_health<=0){
                                 soldier_health_box.w = 0;
+                                soldier.spawn = false;
+                                currentFrame_Soldier = 0;
                             }
                         }
                         hot_air_balloon_bomb.vx = 0;
@@ -4766,6 +4790,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
+                            knight.spawn = false;
+                                currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb_3.vx = 0;
@@ -4774,17 +4800,19 @@ int main(int argc, char* args[]){
                     tower_bomb_3.y = (float)tower_attacker.y + (Windows_Height*150)/1080; 
                     tower_bomb_3_Timer = 0.0f;
                     tower_bomb_3.active = false;
-                }else if(mille.spawn && (tower_bomb_3.x > Windows_Width || tower_bomb_3.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb_3.x > Windows_Width || tower_bomb_3.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
                         if(mille_health > 0){
-                            mille_health_box.w -= (Windows_Width*5)/1920;  
-                            mille_health -= 5;
+                            mille_health_box.w -= (Windows_Width*10)/1920;  
+                            mille_health -= 10;
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
+                                mille.spawn = false;
+                                currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb_3.vx = 0;
@@ -4804,6 +4832,8 @@ int main(int argc, char* args[]){
                         }
                         if(soldier_health<=0){
                             soldier_health_box.w = 0;
+                                soldier.spawn = false;
+                                currentFrame_Soldier = 0;
                         }
                     }
                     tower_bomb_3.vx = 0;
@@ -4849,6 +4879,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
+                            knight.spawn = false;
+                                currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -4857,8 +4889,8 @@ int main(int argc, char* args[]){
                     tower_bomb_2.y = (float)tower_attacker.y + (Windows_Height*350)/1080; 
                     tower_bomb_2_Timer = 0.0f;
                     tower_bomb_2.active = false;
-                }else if(mille.spawn && (tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb_2, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb_2.x > Windows_Width || tower_bomb_2.y > Windows_Height || checkCollisionArcher(&tower_bomb_3, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_2, &mille,mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
@@ -4868,6 +4900,8 @@ int main(int argc, char* args[]){
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
+                                mille.spawn = false;
+                                currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -4887,6 +4921,8 @@ int main(int argc, char* args[]){
                         }
                         if(soldier_health<=0){
                             soldier_health_box.w = 0;
+                                soldier.spawn = false;
+                                currentFrame_Soldier = 0;
                         }
                     }
                     tower_bomb_2.vx = 0;
@@ -4933,6 +4969,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
+                            knight.spawn = false;
+                                currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb_4.vx = 0;
@@ -4941,8 +4979,8 @@ int main(int argc, char* args[]){
                     tower_bomb_4.y = (float)tower_attacker.y + (Windows_Height*300)/1080; 
                     tower_bomb_4_Timer = 0.0f;
                     tower_bomb_4.active = false;
-                }else if(mille.spawn && (tower_bomb_4.x > Windows_Width || tower_bomb_4.y > Windows_Height || checkCollisionArcher(&tower_bomb_4, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb_4, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb_4.x > Windows_Width || tower_bomb_4.y > Windows_Height || checkCollisionArcher(&tower_bomb_4, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_4, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
@@ -4952,6 +4990,8 @@ int main(int argc, char* args[]){
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
+                                mille.spawn = false;
+                                currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb_4.vx = 0;
@@ -4971,6 +5011,8 @@ int main(int argc, char* args[]){
                         }
                         if(soldier_health<=0){
                             soldier_health_box.w = 0;
+                                soldier.spawn = false;
+                                currentFrame_Soldier = 0;
                         }
                     }
                     tower_bomb_4.vx = 0;
@@ -5017,6 +5059,8 @@ int main(int argc, char* args[]){
                         }
                         if(knight_health<=0){
                             knight_health_box.w = 0;
+                            knight.spawn = false;
+                                currentFrame_Knight = 0;
                         }
                     }
                     tower_bomb_1_5.vx = 0;
@@ -5025,8 +5069,8 @@ int main(int argc, char* args[]){
                     tower_bomb_1_5.y = (float)tower_attacker.y + (Windows_Height*200)/1080; 
                     tower_bomb_1_5_Timer = 0.0f;
                     tower_bomb_1_5.active = false;
-                }else if(mille.spawn && (tower_bomb_1_5.x > Windows_Width || tower_bomb_1_5.y > Windows_Height || checkCollisionArcher(&tower_bomb_1_5, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
-                    if(checkCollisionArcher(&tower_bomb_1_5, &mille, mille_basic_Width, mille_basic_Height, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
+                }else if(mille.spawn && (tower_bomb_1_5.x > Windows_Width || tower_bomb_1_5.y > Windows_Height || checkCollisionArcher(&tower_bomb_1_5, &mille, mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080))){
+                    if(checkCollisionArcher(&tower_bomb_1_5, &mille,mille_basic_Width + (Windows_Width*40)/1920, mille_basic_Height + (Windows_Height*40)/1080, (Windows_Width*20)/1920, (Windows_Height*20)/1080)){
                         if(sound){
                             Mix_PlayChannel(4, archerDamage_sound, 0); 
                         }
@@ -5036,6 +5080,8 @@ int main(int argc, char* args[]){
                         }
                         if(mille_health<=0){
                             mille_health_box.w = 0;
+                                mille.spawn = false;
+                                currentFrame_Mille = 0;
                         }
                     }
                     tower_bomb_1_5.vx = 0;
@@ -5055,6 +5101,8 @@ int main(int argc, char* args[]){
                         }
                         if(soldier_health<=0){
                             soldier_health_box.w = 0;
+                                soldier.spawn = false;
+                                currentFrame_Soldier = 0;
                         }
                     }
                     tower_bomb_1_5.vx = 0;
@@ -5153,6 +5201,8 @@ int main(int argc, char* args[]){
                             }
                             if(knight_health<=0){
                                 knight_health_box.w = 0;
+                                knight.spawn = false;
+                                currentFrame_Knight = 0;
                             }
                         
                     }else if(mille.spawn && checkCollisionEnemy(&wolf, &mille, mille_basic_Width, mille_basic_Height, wolf_basic_Width, wolf_basic_Height)){
@@ -5178,6 +5228,8 @@ int main(int argc, char* args[]){
                                 wolf_attack_timer += deltaTime;
                             }
                             if(mille_health<=0){
+                                mille.spawn = false;
+                                currentFrame_Mille = 0;
                                 wolf_health_box.w = character_health_Width;
                                 wolf_health = 100;
                                 wolf.spawn = false;
@@ -5210,6 +5262,8 @@ int main(int argc, char* args[]){
                                 wolf_attack_timer += deltaTime;
                             }
                             if(soldier_health<=0){
+                                soldier.spawn = false;
+                                currentFrame_Soldier = 0;
                                 wolf_health_box.w = character_health_Width;
                                 wolf_health = 100;
                                 wolf.spawn = false;
